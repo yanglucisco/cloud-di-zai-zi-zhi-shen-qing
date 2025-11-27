@@ -5,21 +5,21 @@ spring:
     oauth2:
       client:
         registration:
-          articles-client-oidc:
+          certification-catalog-oidc:
             provider: spring
-            client-id: articles-client
+            client-id: certification-catalog
             client-secret: secret
             authorization-grant-type: authorization_code
             redirect-uri: "http://127.0.0.1:20000/login/oauth2/code/{registrationId}"
             scope: openid
-            client-name: articles-client-oidc
-          articles-client-read:
-            provider: spring
-            client-id: articles-client-read
-            client-secret: readsecret
-            authorization-grant-type: client_credentials
-            scope: articles.read
-            client-name: Articles Client Read
+            client-name: Certification Catalog
+          # articles-client-read:
+          #   provider: spring
+          #   client-id: articles-client-read
+          #   client-secret: readsecret
+          #   authorization-grant-type: client_credentials
+          #   scope: articles.read
+          #   client-name: Articles Client Read
         provider:
           spring:
             issuer-uri: http://auth-server:20001

@@ -14,9 +14,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         // .requestMatchers("/test/**").permitAll()
                         .anyRequest().authenticated())
-                .oauth2Login(
-                        oauth2Login -> oauth2Login.loginPage(
-                                "/oauth2/authorization/articles-client-oidc"))
+                .oauth2Login(withDefaults()
+                        // oauth2Login -> oauth2Login.loginPage("/oauth2/authorization/certification-catalog-oidc")
+                )
                 .oauth2Client(withDefaults());
         return http.build();
     }
