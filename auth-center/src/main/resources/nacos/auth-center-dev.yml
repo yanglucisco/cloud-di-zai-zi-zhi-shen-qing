@@ -1,0 +1,10 @@
+server:
+  port: 20001
+  servlet:
+    session:
+      tracking-modes: cookie
+spring:
+  security:
+    oauth2:
+      authorizationserver:
+        issuer: http://auth-server:20001
