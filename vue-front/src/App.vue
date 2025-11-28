@@ -22,7 +22,7 @@ onMounted(async () => {
   loading.value = true;
   try {
     const data = await getInfo(); // 调用接口
-    userInfo.value = data.data.userName
+    userInfo.value = data.userName
   } catch (error) {
     console.error('获取用户信息失败', error);
   } finally {
