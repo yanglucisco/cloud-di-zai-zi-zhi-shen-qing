@@ -13,6 +13,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         // .requestMatchers("/test/**").permitAll()
+                        .requestMatchers("/user/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(withDefaults()
                         // oauth2Login -> oauth2Login.loginPage("/oauth2/authorization/certification-catalog-oidc")
