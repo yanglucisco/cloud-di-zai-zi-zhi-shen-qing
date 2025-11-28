@@ -10,6 +10,7 @@
     <modules>
         <module>certification-catalog</module>
         <module>auth-center</module>
+        <module>gateway</module>
     </modules>
     <name>di-zai-zi-zhi-shen-qing</name>
 
@@ -99,6 +100,11 @@
                 <groupId>org.thymeleaf.extras</groupId>
                 <artifactId>thymeleaf-extras-springsecurity6</artifactId>
                 <version>3.1.3.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-gateway</artifactId>
+                <version>4.1.9</version>
             </dependency>
 
         </dependencies>
