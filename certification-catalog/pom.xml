@@ -32,10 +32,10 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
+        </dependency> -->
         <!-- Nacos 服务发现 -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -43,12 +43,12 @@
         </dependency>
         <!--和  Nacos 服务发现 依赖包一起添加，否则提示
 No Feign Client for loadBalancing defined. Did you forget to include spring-cloud-starter-loadbalancer?
-不知道nacos-discovery为啥没有添加这个依赖
+如果本服务通过服务名调用其它服务，要添加这个包
 -->
-        <dependency>
+        <!-- <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-loadbalancer</artifactId>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-client</artifactId>

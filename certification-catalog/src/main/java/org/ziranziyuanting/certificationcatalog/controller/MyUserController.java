@@ -11,6 +11,6 @@ import org.ziranziyuanting.certificationcatalog.model.MyUser;
 public class MyUserController {
     @RequestMapping("user")
     public MyUser getMyUser(){
-        return new MyUser("yanglu " + LocalDateTime.now() , 40);
+        return new MyUser("123yanglu " + LocalDateTime.now() , 40);
     }
 }
