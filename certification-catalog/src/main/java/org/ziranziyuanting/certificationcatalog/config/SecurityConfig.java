@@ -17,7 +17,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                                 // .requestMatchers("/test/**").permitAll()
-                                .requestMatchers("/user/**").permitAll()
+                                // .requestMatchers("/user/**").permitAll()
                                 .anyRequest().authenticated()
                         )
                         // 前后端分离项目，请求后端数据时，不应该返回302，而是应该返回401

@@ -114,6 +114,20 @@ public class SecurityConfig {
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .tokenSettings(TokenSettings.builder().refreshTokenTimeToLive(Duration.ofMinutes(3)).build())
                 .build();
+        
+        RegisteredClient pkceClient = RegisteredClient.withId(UUID.randomUUID().toString())
+                .clientId("pkce-client")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .redirectUri("http://vue-front-before-gateway.clouddizai.com:20005/home")
+                .scope("openid")
+                .scope("pkce")
+                .clientSettings(
+                        ClientSettings.builder()
+                        .requireProofKey(true) // 强制 PKCE
+//                        .requireAuthorizationConsent(true)
+                        .build())
+                .build();
 
         // RegisteredClient articlesClient = RegisteredClient.withId(UUID.randomUUID().toString())
         //         .clientId("articles-client")
@@ -139,6 +153,7 @@ public class SecurityConfig {
         //         .build();
         List<RegisteredClient> clients = new ArrayList<>();
         clients.add(certificationCatalogClient);
+        clients.add(pkceClient);
 
         return new InMemoryRegisteredClientRepository(clients);
     }
