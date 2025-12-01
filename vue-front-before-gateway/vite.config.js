@@ -19,7 +19,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ''), // 使用 rewrite 函数重写路径
       },
       '/oauth': {
-        target: 'http://auth-server:9000',
+        target: 'http://auth-server:20001',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/oauth/, ''), // 使用 rewrite 函数重写路径
       },
