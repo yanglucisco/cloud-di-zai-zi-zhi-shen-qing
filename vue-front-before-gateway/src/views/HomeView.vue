@@ -8,56 +8,24 @@ import { getInfo } from '@/api/user' // 导入具体的API方法
 import { getCurrentVerifier } from '../utils/pkce-util'
 import { useRouter } from 'vue-router'
 
-const router = useRouter()
-
 const userInfo = ref(null)
 
-const exchangeCode = async (code) => {
-   
-    const verifier = getCurrentVerifier()// '8SkwXEJUZJVQLScWYs8nV9bhv4GfvnHmc9iuApguEwY';// sessionStorage.getItem('pkce_verifier');
-    console.log('verifier: ' + verifier)
-    const tokenUrl = 'http://vue-front-before-gateway.clouddizai.com:20005/oauth/oauth2/token';
-
-    const body = new URLSearchParams({
-        grant_type: 'authorization_code',
-        code,
-        redirect_uri: 'http://vue-front-before-gateway.clouddizai.com:20005/home',
-        client_id: 'pkce-client',
-        code_verifier: verifier // 关键：验证身份
-    });
-
-    try {
-        const response = await fetch(tokenUrl, {
-            method: 'POST',
-            mode: 'cors',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body
-        });
-        const tokens = await response.json();
-        console.log('Access Token:', tokens.access_token);
-        sessionStorage.setItem("token", tokens.access_token);
-        router.push('/home1')
-    } catch (error) {
-        console.error('Token exchange failed:', error);
-    }
-}
-
 onMounted(async () => {
-    console.log('home onMounted:')
-    const token = sessionStorage.getItem('token')
-    console.log('home onMounted 123:')
-    if(token){
-        console.log('home token:' + token)
-        return
-    }
-    const queryString = window.location.search
-    const params = new URLSearchParams(queryString)
+    // console.log('home onMounted:')
+    // const token = sessionStorage.getItem('token')
+    // console.log('home onMounted 123:')
+    // if(token){
+    //     console.log('home token:' + token)
+    //     return
+    // }
+    // const queryString = window.location.search
+    // const params = new URLSearchParams(queryString)
 
-    const code = params.get('code') // "alice"
-    if(code){ //从授权服务器返回来的
-        exchangeCode(code)
-        return
-    }
+    // const code = params.get('code') // "alice"
+    // if(code){ //从授权服务器返回来的
+    //     exchangeCode(code)
+    //     return
+    // }
     try {
         const data = await getInfo() // 调用接口
         userInfo.value = data.userName

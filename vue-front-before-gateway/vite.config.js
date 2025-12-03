@@ -13,12 +13,12 @@ export default defineConfig({
       'vue-front-before-gateway.clouddizai.com'
     ],
     proxy: {
-      '/api': {
-        target: 'http://127.0.0.1:20000',
+      '/gateway': {
+        target: 'http://gateway.clouddizai.com:20003',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''), // 使用 rewrite 函数重写路径
+        rewrite: (path) => path.replace(/^\/gateway/, ''), // 使用 rewrite 函数重写路径
       },
-      '/oauth': {
+      '/oauth': {//直接与授权服务器连接，不通过网关
         target: 'http://auth-server:20001',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/oauth/, ''), // 使用 rewrite 函数重写路径

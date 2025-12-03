@@ -3,7 +3,7 @@ import { generateCodeChallenge, generateCodeVerifier } from './pkce-util'
 
 // 创建axios实例，配置默认参数
 const service = axios.create({
-  baseURL: 'http://vue-front-before-gateway.clouddizai.com:20005/api', // import.meta.env.VITE_API_BASE_URL, // 从环境变量读取API基础地址[3](@ref)[4](@ref)
+  baseURL: 'http://vue-front-before-gateway.clouddizai.com:20005/gateway', // import.meta.env.VITE_API_BASE_URL, // 从环境变量读取API基础地址[3](@ref)[4](@ref)
   timeout: 10000, // 请求超时时间
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
@@ -11,20 +11,21 @@ const service = axios.create({
 })
 
 // 请求拦截器
-// service.interceptors.request.use(
-//   (config) => {
-//     // 在发送请求前做些什么：例如注入Token[1](@ref)[6](@ref)
-//     const token = localStorage.getItem('auth_token')
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`
-//     }
-//     return config
-//   },
-//   (error) => {
-//     // 对请求错误做些什么
-//     return Promise.reject(error)
-//   },
-// )
+service.interceptors.request.use(
+  (config) => {
+    // 在发送请求前做些什么：例如注入Token[1](@ref)[6](@ref)
+    const token = sessionStorage.getItem('idToken')
+    debugger
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  (error) => {
+    // 对请求错误做些什么
+    return Promise.reject(error)
+  },
+)
 
 // 响应拦截器
 service.interceptors.response.use(
@@ -41,7 +42,7 @@ service.interceptors.response.use(
         case 401:
           debugger
           console.error('未授权，请重新登录')
-          let codeChallenge = await generateCodeChallenge()
+          let codeChallenge = await generateCodeChallenge() //'hQqHvGROSi0bvuXVAUXnSj1ZN1p1pDTpnKy5HZvvAso' // await generateCodeChallenge()
           // window.open('/api/oauth2/authorization/certification-catalog-oidc', '_self')
           window.open('http://auth-server:20001/oauth2/authorize?response_type=code&client_id=pkce-client&scope=openid pkce' 
                     + '&redirect_uri=http://vue-front-before-gateway.clouddizai.com:20005/home' 

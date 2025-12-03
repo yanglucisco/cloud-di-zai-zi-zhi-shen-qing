@@ -128,32 +128,34 @@ public class SecurityConfig {
 //                        .requireAuthorizationConsent(true)
                         .build())
                 .build();
-
-        // RegisteredClient articlesClient = RegisteredClient.withId(UUID.randomUUID().toString())
-        //         .clientId("articles-client")
-        //         .clientSecret("{noop}secret")
-        //         .clientName("Articles Client")
-        //         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-        //         .authorizationGrantTypes(gts -> {
-        //             gts.add(AuthorizationGrantType.AUTHORIZATION_CODE);
-        //             gts.add(AuthorizationGrantType.REFRESH_TOKEN);
-        //             // gts.add(AuthorizationGrantType.CLIENT_CREDENTIALS);
-        //         })
-        //         .redirectUris((uris -> {
-        //             uris.add("http://127.0.0.1:20000/login/oauth2/code/articles-client-oidc");
-                    
-        //         }))
-        //         .scopes(s -> {
-        //             s.add("openid");
-        //             s.add("articles.read");
-        //             // s.add("server");
-        //         })
-        //         .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
-        //         .tokenSettings(TokenSettings.builder().refreshTokenTimeToLive(Duration.ofMinutes(3)).build())
-        //         .build();
+        
+        RegisteredClient gateway = RegisteredClient.withId(UUID.randomUUID().toString())
+                .clientId("gateway")
+                .clientSecret("{noop}gatewaysecret")
+                .clientName("gateway")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantTypes(gts -> {
+                    gts.add(AuthorizationGrantType.AUTHORIZATION_CODE);
+                    gts.add(AuthorizationGrantType.REFRESH_TOKEN);
+                    gts.add(AuthorizationGrantType.CLIENT_CREDENTIALS);
+                })
+                .redirectUris((uris -> {
+                    uris.add("http://gateway.clouddizai.com:20001/login/oauth2/code/gateway");
+                }))
+                // .postLogoutRedirectUri("http://127.0.0.1:10000")
+                .scopes(s -> {
+                    s.add("openid");
+                    s.add("articles.read");
+                    // s.add("server");
+                })
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .tokenSettings(TokenSettings.builder().refreshTokenTimeToLive(Duration.ofHours(5))
+                                                      .accessTokenTimeToLive(Duration.ofHours(5)).build())
+                .build();
         List<RegisteredClient> clients = new ArrayList<>();
         clients.add(certificationCatalogClient);
         clients.add(pkceClient);
+        clients.add(gateway);
 
         return new InMemoryRegisteredClientRepository(clients);
     }
