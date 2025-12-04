@@ -3,7 +3,7 @@ import { generateCodeChallenge, generateCodeVerifier } from './pkce-util'
 
 // 创建axios实例，配置默认参数
 const service = axios.create({
-  baseURL: 'http://vue-front-before-gateway.clouddizai.com:20005/gateway', // import.meta.env.VITE_API_BASE_URL, // 从环境变量读取API基础地址[3](@ref)[4](@ref)
+  baseURL: 'http://vue-front-before-gateway.clouddizai.com:20005/gateway/catalog', // import.meta.env.VITE_API_BASE_URL, // 从环境变量读取API基础地址[3](@ref)[4](@ref)
   timeout: 10000, // 请求超时时间
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
