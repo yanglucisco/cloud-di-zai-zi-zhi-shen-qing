@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from "vue-router"
 import HomeView from "../views/HomeView.vue"
 import Home1View from "../views/Home1View.vue"
 import { getCurrentVerifier } from '../utils/pkce-util'
-
+import { setUserIdToken } from '../userInfo/index'
+ 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -67,7 +68,8 @@ const exchangeCode = async (code) => {
         const tokens = await response.json();
         debugger
         console.log('id_token:', tokens.id_token);
-        sessionStorage.setItem("idToken", tokens.id_token);
+        // sessionStorage.setItem("idToken", tokens.id_token);
+        setUserIdToken(tokens.id_token)
         router.push('/home1')
     } catch (error) {
         console.error('Token exchange failed:', error);

@@ -25,7 +25,7 @@ public class AccessTokenCustomizerConfig {
                 context.getClaims().claim("roles", authorities);
                 
                 // 也可以添加其他自定义声明，例如用户ID
-                // context.getClaims().claim("user_id", context.getPrincipal().getName());
+                context.getClaims().claim("user_id", context.getPrincipal().getName());
             }
             else
             {
@@ -35,6 +35,8 @@ public class AccessTokenCustomizerConfig {
                         .collect(Collectors.toSet());
                 // 将权限信息作为声明添加到JWT中
                 context.getClaims().claim("roles", authorities);
+                // 也可以添加其他自定义声明，例如用户ID
+                context.getClaims().claim("user_id", context.getPrincipal().getName());
             }
         };
     }

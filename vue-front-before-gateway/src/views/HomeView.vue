@@ -5,6 +5,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getInfo } from '@/api/user' // 导入具体的API方法
+import { getCatalog } from '@/api/catalog'
 import { getCurrentVerifier } from '../utils/pkce-util'
 import { useRouter } from 'vue-router'
 
@@ -28,7 +29,7 @@ onMounted(async () => {
     // }
     try {
         const data = await getInfo() // 调用接口
-        userInfo.value = data.userName
+        userInfo.value = data
     } catch (error) {
         console.error('获取用户信息失败', error)
     } finally {

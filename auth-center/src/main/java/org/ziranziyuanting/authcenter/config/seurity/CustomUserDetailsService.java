@@ -18,7 +18,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         List<String> adminRoles = new ArrayList<>();
         adminRoles.add("ROLE_admin");
-        adminRoles.add("ROLE_normal");
+        List<String> permissions = List.of("SCOPE_catalog.read", "SCOPE_catalog.edit", "SCOPE_catalog.delete");
+        adminRoles.addAll(permissions);
         if ("admin".equals(username)) {
             return new CustomUserDetails(
                     1L,
@@ -31,6 +32,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         List<String> yangluRoles = new ArrayList<>();
         yangluRoles.add("ROLE_normal");
+        List<String> permissions1 = List.of("SCOPE_catalog.read");
+        yangluRoles.addAll(permissions1);
         return new CustomUserDetails(
                 1L,
                 "yanglu",

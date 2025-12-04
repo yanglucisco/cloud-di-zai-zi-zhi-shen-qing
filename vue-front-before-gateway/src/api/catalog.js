@@ -1,11 +1,9 @@
 // src/api/user.js
 import request from '@/utils/request' // 导入封装好的axios实例
 
-// 获取用户信息
-export function getInfo() {
-  debugger
+export function getCatalog() {
   return request({
-    url: '/user/current',
+    url: '/catalog/user/user',
     method: 'get',
   })
 }
