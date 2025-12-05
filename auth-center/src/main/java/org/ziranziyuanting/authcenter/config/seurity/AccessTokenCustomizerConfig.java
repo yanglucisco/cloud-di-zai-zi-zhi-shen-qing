@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 
@@ -16,8 +15,13 @@ public class AccessTokenCustomizerConfig {
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
         return (context) -> {
-            if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
-                // 获取当前认证主体的权限信息
+            // if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
+                
+            // }
+            // else
+            // {
+            // }
+            // 获取当前认证主体的权限信息
                 Set<String> authorities = context.getPrincipal().getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toSet());
@@ -26,18 +30,6 @@ public class AccessTokenCustomizerConfig {
                 
                 // 也可以添加其他自定义声明，例如用户ID
                 context.getClaims().claim("user_id", context.getPrincipal().getName());
-            }
-            else
-            {
-                // 获取当前认证主体的权限信息
-                Set<String> authorities = context.getPrincipal().getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toSet());
-                // 将权限信息作为声明添加到JWT中
-                context.getClaims().claim("roles", authorities);
-                // 也可以添加其他自定义声明，例如用户ID
-                context.getClaims().claim("user_id", context.getPrincipal().getName());
-            }
         };
     }
 }

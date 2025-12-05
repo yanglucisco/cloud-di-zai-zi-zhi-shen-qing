@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { generateCodeChallenge, generateCodeVerifier } from './pkce-util'
-import { getUserInfo } from '../userInfo/index'
+import { getUserInfo, cleanToken } from '../userInfo/index'
 
 // 创建axios实例，配置默认参数
 const service = axios.create({
@@ -16,7 +16,7 @@ service.interceptors.request.use(
   (config) => {
     // 在发送请求前做些什么：例如注入Token[1](@ref)[6](@ref)
     const token = getUserInfo().idToken// sessionStorage.getItem('idToken')
-    debugger
+    // debugger
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -41,11 +41,12 @@ service.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          debugger
+          // debugger
           console.error('未授权，请重新登录')
+          cleanToken()
           let codeChallenge = await generateCodeChallenge() //'hQqHvGROSi0bvuXVAUXnSj1ZN1p1pDTpnKy5HZvvAso' // await generateCodeChallenge()
           // window.open('/api/oauth2/authorization/certification-catalog-oidc', '_self')
-          window.open('http://auth-server:20001/oauth2/authorize?response_type=code&client_id=pkce-client&scope=openid pkce' 
+          window.open('http://auth-server:20001/oauth2/authorize?response_type=code&client_id=pkce-client&scope=openid' 
                     + '&redirect_uri=http://vue-front-before-gateway.clouddizai.com:20005/home' 
                     + '&code_challenge_method=S256&code_challenge=' + codeChallenge, '_self');
           //跳转到上面的网址，输入用户名和密码，授权服务器会返回到注册的回调地址，也就是下面的地址

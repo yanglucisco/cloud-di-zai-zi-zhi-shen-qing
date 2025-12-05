@@ -19,7 +19,6 @@ public class UserController {
     public Mono<String> currentUserName(Authentication authentication){
         var principal = (Jwt)authentication.getPrincipal();
         var userId = principal.getClaim("user_id");
-        var claims = authentication.getDetails();
         //从authentication中解析出用户ID，然后从数据库获取用户信息
         return Mono.just("用户名" + LocalDateTime.now());
     }

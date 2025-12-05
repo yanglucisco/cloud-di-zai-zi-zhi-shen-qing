@@ -40,7 +40,7 @@ public class SecurityConfig {
                                         )
                                 .authorizeExchange(exchange -> exchange
                                                 .pathMatchers("/favicon.ico").permitAll()
-                                                // .pathMatchers("/mytest/**").permitAll()
+                                                // .pathMatchers("/user/**").permitAll()
                                                 // .pathMatchers("/catalog/**").permitAll()
                                                 .anyExchange().authenticated())
                                 // 前后端分离项目，请求后端数据时，不应该返回302，而是应该返回401

@@ -8,6 +8,7 @@ import { getInfo } from '@/api/user' // 导入具体的API方法
 import { getCatalog } from '@/api/catalog'
 import { getCurrentVerifier } from '../utils/pkce-util'
 import { useRouter } from 'vue-router'
+import { getUserInfo } from '@/userInfo'
 
 const userInfo = ref(null)
 
@@ -29,7 +30,7 @@ onMounted(async () => {
     // }
     try {
         const data = await getInfo() // 调用接口
-        userInfo.value = data
+        userInfo.value = data + " " + getUserInfo().idToken
     } catch (error) {
         console.error('获取用户信息失败', error)
     } finally {

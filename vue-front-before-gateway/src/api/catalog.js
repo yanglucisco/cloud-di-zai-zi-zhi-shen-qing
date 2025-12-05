@@ -7,3 +7,9 @@ export function getCatalog() {
     method: 'get',
   })
 }
+export function testRole() {
+  return request({
+    url: '/catalog/role/test',
+    method: 'get',
+  })
+}

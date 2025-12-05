@@ -37,11 +37,12 @@ public class CustomJwtAuthenticationConverter implements Converter<Jwt, Abstract
             all.addAll(roles);
         }
         if (!all.isEmpty()) {
-            return all.stream()
+            Collection<GrantedAuthority> r1 = all.stream()
                     // 确保角色有ROLE_前缀（hasRole()方法要求）
                     .map(item -> item.startsWith("ROLE_") ? item : "SCOPE_" + item)
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
+            return r1;
         }
         return Collections.emptyList();
     }

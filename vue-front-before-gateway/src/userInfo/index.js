@@ -1,11 +1,14 @@
-const idTokenText = 'idToken'
+const idTokenText = 'accessToken'
 export function getUserInfo(){
-    debugger
+    // debugger
     return {
         idToken: sessionStorage.getItem(idTokenText)
     }
 }
 export function setUserIdToken(idToken){
-    debugger
+    // debugger
     sessionStorage.setItem(idTokenText, idToken)
+}
+export function cleanToken(){
+    sessionStorage.removeItem(idTokenText)
 }

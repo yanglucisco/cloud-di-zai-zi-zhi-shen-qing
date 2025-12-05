@@ -25,7 +25,7 @@ const router = createRouter({
   ],
 })
 router.beforeEach((to, from, next) => {
-  debugger
+  // debugger
   console.log("router from: " + from)
   console.log("router to: " + to)
   const token = sessionStorage.getItem("idToken")
@@ -67,9 +67,9 @@ const exchangeCode = async (code) => {
         });
         const tokens = await response.json();
         debugger
-        console.log('id_token:', tokens.id_token);
-        // sessionStorage.setItem("idToken", tokens.id_token);
-        setUserIdToken(tokens.id_token)
+        // console.log('id_token:', tokens.id_token);
+        sessionStorage.setItem("idToken", tokens.id_token);
+        setUserIdToken(tokens.access_token)
         router.push('/home1')
     } catch (error) {
         console.error('Token exchange failed:', error);

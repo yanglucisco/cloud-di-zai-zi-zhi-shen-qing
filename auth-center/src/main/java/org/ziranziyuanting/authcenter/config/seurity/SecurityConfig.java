@@ -11,6 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
@@ -118,15 +119,20 @@ public class SecurityConfig {
         RegisteredClient pkceClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("pkce-client")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantTypes(gts -> {
+                    gts.add(AuthorizationGrantType.AUTHORIZATION_CODE);
+                    gts.add(AuthorizationGrantType.REFRESH_TOKEN);
+                })
                 .redirectUri("http://vue-front-before-gateway.clouddizai.com:20005/home")
-                .scope("openid")
-                .scope("pkce")
+                .scope(OidcScopes.OPENID) //必须添加，获取id令牌
+                .scope("catalog.edit")
+                .scope("catalog.read")
                 .clientSettings(
                         ClientSettings.builder()
                         .requireProofKey(true) // 强制 PKCE
-//                        .requireAuthorizationConsent(true)
                         .build())
+                .tokenSettings(TokenSettings.builder().refreshTokenTimeToLive(Duration.ofMinutes(32))
+                                                      .accessTokenTimeToLive(Duration.ofMinutes(32)).build())
                 .build();
         
         RegisteredClient gateway = RegisteredClient.withId(UUID.randomUUID().toString())
