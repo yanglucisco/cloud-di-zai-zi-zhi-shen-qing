@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router"
 import HomeView from "../views/HomeView.vue"
 import Home1View from "../views/Home1View.vue"
+import LogoutView from '../views/Logout.vue'
 import { getCurrentVerifier } from '../utils/pkce-util'
-import { setUserIdToken } from '../userInfo/index'
+import { setUserAccessToken, setUserIdToken, getUserInfo } from '../userInfo/index'
  
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,17 +23,24 @@ const router = createRouter({
       name: "home1",
       component: Home1View,
     },
+    {
+      path: "/logout",
+      name: "logout",
+      component: LogoutView,
+    }
   ],
 })
 router.beforeEach((to, from, next) => {
   // debugger
   console.log("router from: " + from)
   console.log("router to: " + to)
-  const token = sessionStorage.getItem("idToken")
-  if (token) {
+  const accessToken = getUserInfo().accessToken
+  if (accessToken) {
     next()
   } else {
-    isFromAuthorServer().then(() => next())
+    isFromAuthorServer().then((r) => {
+      next()
+    })
   }
 })
 async function isFromAuthorServer() {
@@ -42,8 +50,9 @@ async function isFromAuthorServer() {
   if (code) {
     //从授权服务器返回来的
     await exchangeCode(code)
-    return
+    return true
   }
+  return false
 }
 const exchangeCode = async (code) => {
     const verifier = getCurrentVerifier()// '8SkwXEJUZJVQLScWYs8nV9bhv4GfvnHmc9iuApguEwY';// sessionStorage.getItem('pkce_verifier');
@@ -69,7 +78,8 @@ const exchangeCode = async (code) => {
         debugger
         // console.log('id_token:', tokens.id_token);
         sessionStorage.setItem("idToken", tokens.id_token);
-        setUserIdToken(tokens.access_token)
+        setUserAccessToken(tokens.access_token)
+        setUserIdToken(tokens.id_token)
         router.push('/home1')
     } catch (error) {
         console.error('Token exchange failed:', error);

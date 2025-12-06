@@ -124,6 +124,7 @@ public class SecurityConfig {
                     gts.add(AuthorizationGrantType.REFRESH_TOKEN);
                 })
                 .redirectUri("http://vue-front-before-gateway.clouddizai.com:20005/home")
+                .postLogoutRedirectUri("http://vue-front-before-gateway.clouddizai.com:20005")
                 .scope(OidcScopes.OPENID) //必须添加，获取id令牌
                 .scope("catalog.edit")
                 .scope("catalog.read")

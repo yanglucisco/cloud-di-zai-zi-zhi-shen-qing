@@ -30,7 +30,7 @@ onMounted(async () => {
     // }
     try {
         const data = await getInfo() // 调用接口
-        userInfo.value = data + " " + getUserInfo().idToken
+        userInfo.value = data + " " + getUserInfo().accessToken
     } catch (error) {
         console.error('获取用户信息失败', error)
     } finally {

@@ -21,7 +21,7 @@ onMounted(async () => {
     }
     try {
         const data = await getCatalog() // 调用接口
-        userInfo.value = data.userName + " " + getUserInfo().idToken
+        userInfo.value = data.userName + " " + getUserInfo().accessToken
         const testrolev = await testRole()
         testrole.value = testrolev + " idtoken:" + sessionStorage.getItem("idToken")
     } catch (error) {
