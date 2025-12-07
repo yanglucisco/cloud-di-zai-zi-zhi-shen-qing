@@ -1,0 +1,67 @@
+services:
+  nacos:
+    image: nacos/nacos-server:v2.3.2
+    container_name: nacos-standalone
+    environment:
+      - PREFER_HOST_MODE=hostname
+      - MODE=standalone
+      - NACOS_AUTH_ENABLE=true 
+      - NACOS_AUTH_IDENTITY_KEY=serverIdentity
+      - NACOS_AUTH_IDENTITY_VALUE=security
+      - NACOS_AUTH_TOKEN=VGhpc0lzTXlDdXN0b21TZWNyZXRLZXkwMTIzNDU2Nzg=
+    volumes:
+      - d:/nacos2.3.2/standalone-logs/:/home/nacos/logs
+    ports:
+      - "8080:8080"
+      - "8848:8848"
+      - "9848:9848"
+    networks:
+      - app-network # 将服务连接到自定义网络，便于其他容器访问
+  auth-center:
+    build: ./auth-center  # 使用Dockerfile构建镜像的路径
+    container_name: auth-center
+    # 如果不想构建，可以直接使用已有的镜像，例如：
+    # image: your-dockerhub-username/your-springboot-app:latest
+    expose:
+      - "20001"  # 暴露容器内部的8080端口给其他服务访问
+    ports:
+      - "20001:20001" # 端口映射：宿主机端口:容器内端口
+    environment:
+      - NACOS_HOST=nacos
+      - NACOS_PASSWORD=Htht123.com
+      - AUTH_CENTER_HOST=auth-center
+      # - AUTH_CENTER=auth-center
+    # 如果应用依赖数据库，可以在这里定义，并使用depends_on
+    # depends_on:
+    #   - mysql-db
+    networks:
+      - app-network # 将服务连接到自定义网络，便于其他容器访问
+  certification-catalog:
+    build: ./certification-catalog  # 使用Dockerfile构建镜像的路径
+    container_name: certification-catalog
+    expose:
+      - "20000"  # 暴露容器内部的8080端口给其他服务访问
+    ports:
+      - "20000:20000" # 端口映射：宿主机端口:容器内端口
+    environment:
+      - NACOS_HOST=nacos
+      - NACOS_PASSWORD=Htht123.com
+      - AUTH_CENTER_HOST=auth-center
+    networks:
+      - app-network # 将服务连接到自定义网络，便于其他容器访问
+  gateway:
+    build: ./gateway  # 使用Dockerfile构建镜像的路径
+    container_name: gateway
+    expose:
+      - "20003"  # 暴露容器内部的8080端口给其他服务访问
+    ports:
+      - "20003:20003" # 端口映射：宿主机端口:容器内端口
+    environment:
+      - NACOS_HOST=nacos
+      - NACOS_PASSWORD=Htht123.com
+      - AUTH_CENTER_HOST=auth-center
+    networks:
+      - app-network # 将服务连接到自定义网络，便于其他容器访问
+networks:
+  app-network:
+    driver: bridge

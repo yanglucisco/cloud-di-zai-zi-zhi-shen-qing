@@ -3,14 +3,14 @@ spring:
     name: certification-catalog
   cloud:
     nacos:
-      server-addr: 127.0.0.1:8848 #nacos配置中心地址，配置信息都从这里获取
+      server-addr: ${NACOS_HOST:127.0.0.1}:8848 #nacos配置中心地址，配置信息都从这里获取
       username: nacos
       password: ${NACOS_PASSWORD:nacos}
       group: DI_ZAI_ZI_ZHI_SHEN_QING
       file-extension: yml
       # nacos服务发现
       discovery:
-       server-addr: 127.0.0.1:8848
+       server-addr: ${NACOS_HOST:127.0.0.1}:8848
   config:
     import:
       - optional:file:.env[.properties]
