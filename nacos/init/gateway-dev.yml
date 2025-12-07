@@ -1,0 +1,60 @@
+server:
+ port: 20003
+spring:
+  application:
+    name: gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://auth-server:20001
+  # oauth2:
+  #   client:
+  #     registration:
+  #         gateway:
+  #           provider: spring
+  #           client-id: gateway
+  #           client-secret: gatewaysecret
+  #           authorization-grant-type: authorization_code
+  #           redirect-uri: "http://gateway.clouddizai.com:20001/login/oauth2/code/{registrationId}"
+  #           scope: 
+  #            - openid
+  #           client-name: gateway
+  #     provider:
+  #       spring:
+  #         issuer-uri: http://auth-server:20001
+  cloud:
+    # 配置Nacos服务发现
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      # 开启与服务发现组件的集成
+      discovery:
+        locator:
+          enabled: true # 启用基于服务发现的路由定位器
+          lower-case-service-id: true # 建议开启，将服务名转为小写，便于路由
+      httpclient:
+        connect-timeout: 1000   # 连接超时时间，单位毫秒 (ms)
+        response-timeout: 2s   
+      routes:
+        - id: certification-catalog
+          uri: lb://certification-catalog
+          predicates:
+            - Path=/catalog/**
+          filters:
+            - StripPrefix=1
+        - id: authserver
+          uri: http://auth-server:20001
+          predicates:
+            - Path=/authserver/**
+          filters:
+            - StripPrefix=1
+        # - id: front
+        #   uri: http://127.0.0.1:9002   # nginx的端口
+        #   predicates:
+        #    - Path=/,/*.css,/*.js,/favicon.ico,/assets/**
+        - id: test_sina
+          uri: http://www.sina.com.cn/
+          predicates:
+            - Path=/sina/**

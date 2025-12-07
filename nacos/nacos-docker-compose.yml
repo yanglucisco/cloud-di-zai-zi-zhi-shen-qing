@@ -12,6 +12,8 @@ services:
       - NACOS_AUTH_TOKEN=VGhpc0lzTXlDdXN0b21TZWNyZXRLZXkwMTIzNDU2Nzg=
     volumes:
       - d:/nacos2.3.2/standalone-logs/:/home/nacos/logs
+      # 挂载初始化脚本和配置文件
+      - ./nacos/init:/home/nacos/init.d
     ports:
       - "8080:8080"
       - "8848:8848"

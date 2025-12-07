@@ -1,0 +1,13 @@
+server:
+ port: 20000
+spring:
+  cloud:
+    # 配置Nacos服务发现
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848 # 你的Nacos服务器地址
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://auth-server:20001
