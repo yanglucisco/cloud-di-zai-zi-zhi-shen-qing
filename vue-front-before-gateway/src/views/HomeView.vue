@@ -1,6 +1,7 @@
 <template>
     <span>首页</span>
     <div>{{ userInfo }}</div>
+    <div>pina {{ pkceStore.currentVerifier }}</div>
 </template>
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -10,10 +11,13 @@ import { getCurrentVerifier } from '../utils/pkce-util'
 import { useRouter } from 'vue-router'
 import { getUserInfo } from '@/userInfo'
 import { testState } from './Home1View.vue'
+import { usePkceStore } from '@/store/pkce'
 
 const userInfo = ref(null)
+const pkceStore = usePkceStore()
 
 onMounted(async () => {
+    console.log('pkce 的值: ' + pkceStore.currentVerifier)
     // console.log('home onMounted:')
     // const token = sessionStorage.getItem('token')
     // console.log('home onMounted 123:')

@@ -16,7 +16,6 @@ service.interceptors.request.use(
   (config) => {
     // 在发送请求前做些什么：例如注入Token[1](@ref)[6](@ref)
     const token = getUserInfo().accessToken// sessionStorage.getItem('idToken')
-    debugger
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }

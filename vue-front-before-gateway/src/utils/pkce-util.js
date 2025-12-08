@@ -1,7 +1,10 @@
 import CryptoJS from 'crypto-js'
+import { usePkceStore } from '@/store/pkce'
+
+// const pkceStore = usePkceStore()
 
 export function getCurrentVerifier() {
-  const currentVerifier = sessionStorage.getItem('currentVerifier')
+  const currentVerifier =  sessionStorage.getItem('currentVerifier')
   if (currentVerifier && currentVerifier.trim().length > 0) {
     return currentVerifier
   }

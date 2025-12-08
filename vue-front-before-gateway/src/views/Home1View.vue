@@ -1,30 +1,43 @@
 <template>
     <span>首页11111</span>
+    <div>
+        <button @click="testPina">测试pina</button>
+    </div>
     <div>{{ userInfo }}</div>
     <div>测试角色</div>
     <div>{{ testrole }}</div>
+    <div>{{ pkceStore.currentVerifier }}</div>
+    <div>
+        <button @click="toHome">转到home页面</button>
+    </div>
 </template>
 <script>
 import { ref, onMounted } from 'vue'
 import { getInfo } from '@/api/user' // 导入具体的API方法
 import { getCatalog, testRole } from '@/api/catalog'
 import { getUserInfo } from '@/userInfo'
+import { usePkceStore } from '@/store/pkce'
+import { useRouter } from 'vue-router'
 
 export default {
     data() {
         return {
+            router: useRouter(),
+            pkceStore: usePkceStore(),
             userInfo: ref({}),
             testrole: ref({})
         }
     },
-    methods() {
-
+    methods: {
+        testPina() {
+            this.pkceStore.setVer()
+        },
+        toHome() {
+            this.router.push('/home')
+        }
     },
     async mounted() {
-        debugger
-        console.log('home1 onMounted:')
         const token = getUserInfo().accessToken// sessionStorage.getItem('idToken')
-        console.log('home1 onMounted 123:')
         if (token) {
             console.log('home1 idToken:' + token)
         }
@@ -39,5 +52,5 @@ export default {
         }
     }
 }
-export const testState = ref({name: 'yanglu'})
+export const testState = ref({ name: 'yanglu' })
 </script>
