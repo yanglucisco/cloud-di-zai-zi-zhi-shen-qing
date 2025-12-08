@@ -9,8 +9,8 @@ spring:
       group: DI_ZAI_ZI_ZHI_SHEN_QING
       file-extension: yml
       # nacos服务发现
-      discovery:
-       server-addr: ${NACOS_HOST:127.0.0.1}:8848
+      # discovery:
+      #  server-addr: ${NACOS_HOST:127.0.0.1}:8848
   config:
     import:
       - optional:file:.env[.properties]
