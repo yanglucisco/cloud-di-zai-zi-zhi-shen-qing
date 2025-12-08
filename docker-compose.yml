@@ -17,7 +17,7 @@ services:
       - "9848:9848"
     networks:
       - app-network # 将服务连接到自定义网络，便于其他容器访问
-  auth-center:
+  auth-center: #spring oauth2 授权服务器
     build: ./auth-center  # 使用Dockerfile构建镜像的路径
     container_name: auth-center
     # 如果不想构建，可以直接使用已有的镜像，例如：
@@ -47,6 +47,8 @@ services:
       - NACOS_HOST=nacos
       - NACOS_PASSWORD=Htht123.com
       - AUTH_CENTER_HOST=auth-center
+    depends_on:
+      - auth-center
     networks:
       - app-network # 将服务连接到自定义网络，便于其他容器访问
   gateway:
@@ -60,6 +62,8 @@ services:
       - NACOS_HOST=nacos
       - NACOS_PASSWORD=Htht123.com
       - AUTH_CENTER_HOST=auth-center
+    depends_on:
+      - auth-center
     networks:
       - app-network # 将服务连接到自定义网络，便于其他容器访问
 networks:
