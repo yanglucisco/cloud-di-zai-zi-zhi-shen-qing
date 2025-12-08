@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers("/login.html", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                         .requestMatchers("/custom-login", "/login").permitAll()
                         .requestMatchers("/home").permitAll()
+                        .requestMatchers("/test/yltest").permitAll()
                         .anyRequest()
                         .authenticated())
                 .formLogin(
