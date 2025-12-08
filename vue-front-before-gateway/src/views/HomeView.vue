@@ -9,6 +9,7 @@ import { getCatalog } from '@/api/catalog'
 import { getCurrentVerifier } from '../utils/pkce-util'
 import { useRouter } from 'vue-router'
 import { getUserInfo } from '@/userInfo'
+import { testState } from './Home1View.vue'
 
 const userInfo = ref(null)
 
@@ -30,7 +31,7 @@ onMounted(async () => {
     // }
     try {
         const data = await getInfo() // 调用接口
-        userInfo.value = data + " " + getUserInfo().accessToken
+        userInfo.value = testState.value.name + data + " " + getUserInfo().accessToken
     } catch (error) {
         console.error('获取用户信息失败', error)
     } finally {
