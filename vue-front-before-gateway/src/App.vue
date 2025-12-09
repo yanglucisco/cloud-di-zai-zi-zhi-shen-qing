@@ -1,26 +1,30 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import { cleanToken, getUserIdToken } from './userInfo'
+import i18n from '@/locales'
+
+const locale = i18n.global.messages.value[i18n.global.locale.value].lang
 const test = () => {
   console.log('cleanToken')
-  
   const idToken = getUserIdToken()
-  window.location.href=`http://auth-server:20001/connect/logout?id_token_hint=${idToken}&post_logout_redirect_uri=http://vue-front-before-gateway.clouddizai.com:20005`
+  window.location.href = `http://auth-server:20001/connect/logout?id_token_hint=${idToken}&post_logout_redirect_uri=http://vue-front-before-gateway.clouddizai.com:20005`
   cleanToken()
   console.log('注销注销注销注销')
 }
 </script>
 
 <template>
-  <div class="header">
-    <RouterLink to="/home" style="margin: 10px">首页</RouterLink>
-  </div>
-  <div>
-    <button @click="test">退出登录</button>
-  </div>
-  <div>
-    <RouterView />
-  </div>
+  <a-config-provider :locale="locale">
+    <div class="header">
+      <RouterLink to="/home" style="margin: 10px">首页</RouterLink>
+    </div>
+    <div>
+      <button @click="test">退出登录</button>
+    </div>
+    <div>
+      <RouterView />
+    </div>
+  </a-config-provider>
 </template>
 
 <style scoped>
