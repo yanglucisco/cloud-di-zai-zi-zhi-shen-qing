@@ -1,5 +1,6 @@
 <template>
     <span>首页11111</span>
+    <!-- <h1>测试i18n {{ $t('message.searchButton') }}</h1> -->
     <div>
         <button @click="testPina">测试pina</button>
     </div>
@@ -18,6 +19,7 @@ import { getCatalog, testRole } from '@/api/catalog'
 import { getUserInfo } from '@/userInfo'
 import { usePkceStore } from '@/store/pkce'
 import { useRouter } from 'vue-router'
+// import { useI18n } from 'vue-i18n'
 
 export default {
     data() {
