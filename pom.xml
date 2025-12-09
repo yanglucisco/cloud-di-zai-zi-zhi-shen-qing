@@ -26,6 +26,7 @@
         <spring.cloud.dependencies.version>2023.0.1</spring.cloud.dependencies.version>
         <spring.boot.version>3.2.4</spring.boot.version>
         <spring.cloud.alibaba.version>2023.0.1.0</spring.cloud.alibaba.version>
+        <flyway.version>9.22.3</flyway.version>
     </properties>
     <dependencyManagement>
         <dependencies>
