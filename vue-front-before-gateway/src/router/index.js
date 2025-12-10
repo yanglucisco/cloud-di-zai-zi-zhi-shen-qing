@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router"
+import { createRouter, createWebHistory, createWebHashHistory } from "vue-router"
 import HomeView from "../views/HomeView.vue"
 import Home1View from "../views/Home1View.vue"
 import LogoutView from '../views/Logout.vue'
@@ -6,7 +6,7 @@ import { getCurrentVerifier } from '../utils/pkce-util'
 import { setUserAccessToken, setUserIdToken, getUserInfo } from '../userInfo/index'
  
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),//createWebHistory(),
   routes: [
     {
       path: "/",
