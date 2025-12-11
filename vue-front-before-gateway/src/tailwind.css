@@ -1,0 +1,5 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+/* 将原来的 @tailwind 指令替换为 */
+@import "tailwindcss";

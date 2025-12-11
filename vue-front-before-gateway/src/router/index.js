@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, createWebHashHistory } from "vue-router"
+import Home from "../layout/index.vue"
 import HomeView from "../views/HomeView.vue"
 import Home1View from "../views/Home1View.vue"
 import LogoutView from '../views/Logout.vue'
@@ -11,7 +12,7 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: HomeView,
+      component: Home,
     },
     {
       path: "/home",
