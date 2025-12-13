@@ -35,10 +35,17 @@ services:
       - DB_NAME=auth_center
       - DB_USER=auth_center
       - DB_PASSWORD=Htht123.com
+    # 关键配置：指定日志驱动
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: "tcp://fluent-bit:24224"  # 指向 Fluent Bit 服务 这里要使用IP地址，先启动fluetn-bit，查询它的IP地址
+        # tag: "auth-center.service"  # 为日志设置标签，便于在 Fluent Bit 中路由
     # 如果应用依赖数据库，可以在这里定义，并使用depends_on
     depends_on:
       - auth-center-mysql-db
       - nacos
+      - fluent-bit
     networks:
       - app-network # 将服务连接到自定义网络，便于其他容器访问
   auth-center-mysql-db: 
@@ -105,11 +112,12 @@ services:
     container_name: fluent-bit
     ports:
       - "24224:24224" # 端口映射：宿主机端口:容器内端口
-      - "9880:9880"
     volumes:
       # 挂载主配置文件
       - ./fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
-      - ./fluent-bit/fluent-bit-docker.db:/fluent-bit/etc/db/docker.db
+      # - ./fluent-bit/fluent-bit-docker.db:/fluent-bit/etc/db/docker.db
+    networks:
+      - app-network # 将服务连接到自定义网络，便于其他容器访问
 networks:
   app-network:
     driver: bridge
