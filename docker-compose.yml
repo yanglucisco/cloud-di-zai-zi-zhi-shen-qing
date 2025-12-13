@@ -38,6 +38,7 @@ services:
     # 如果应用依赖数据库，可以在这里定义，并使用depends_on
     depends_on:
       - auth-center-mysql-db
+      - nacos
     networks:
       - app-network # 将服务连接到自定义网络，便于其他容器访问
   auth-center-mysql-db: 
@@ -80,6 +81,7 @@ services:
       - AUTH_CENTER_HOST=auth-center
     depends_on:
       - auth-center
+      - nacos
     networks:
       - app-network # 将服务连接到自定义网络，便于其他容器访问
   gateway:
@@ -95,8 +97,19 @@ services:
       - AUTH_CENTER_HOST=auth-center
     depends_on:
       - auth-center
+      - nacos
     networks:
       - app-network # 将服务连接到自定义网络，便于其他容器访问
+  fluent-bit:
+    image: fluent/fluent-bit:4.0.0
+    container_name: fluent-bit
+    ports:
+      - "24224:24224" # 端口映射：宿主机端口:容器内端口
+      - "9880:9880"
+    volumes:
+      # 挂载主配置文件
+      - ./fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./fluent-bit/fluent-bit-docker.db:/fluent-bit/etc/db/docker.db
 networks:
   app-network:
     driver: bridge
