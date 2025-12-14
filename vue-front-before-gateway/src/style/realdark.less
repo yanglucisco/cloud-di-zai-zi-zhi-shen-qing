@@ -1,35 +1,35 @@
-[snowy-theme=realdark] {
-  .ant-btn-primary{
-    color: #fff;
-    &:hover, &:focus{
-      color: #fff;
-    }
-  }
+// [snowy-theme=realdark] {
+//   .ant-btn-primary{
+//     color: #fff;
+//     &:hover, &:focus{
+//       color: #fff;
+//     }
+//   }
 
-}
-.fade() {
-  @functions: ~`(function() {
-    this.fade = function(color, amount) {
-      if (String(color).indexOf('var(') === 0) {
-        /*
-          (var(--primary-color), 7) -> var(--primary-7)
-        */
-        if (color.indexOf('--primary-color') !== -1 ) {
-          var m = amount > 10 ? amount/10 :amount
-          return color.replace('-color)',  '-' + m + ')')
-        }
-        /*
-          (var(--error-color), 70%) ===> var(--error-color--fade-7)
-        */
-        return color.replace(')',  '--fade--' + parseInt(amount) + ')')
-      }
-      return color
-    }
-  })()`;
-}
-.fade();
+// }
+// .fade() {
+//   @functions: ~`(function() {
+//     this.fade = function(color, amount) {
+//       if (String(color).indexOf('var(') === 0) {
+//         /*
+//           (var(--primary-color), 7) -> var(--primary-7)
+//         */
+//         if (color.indexOf('--primary-color') !== -1 ) {
+//           var m = amount > 10 ? amount/10 :amount
+//           return color.replace('-color)',  '-' + m + ')')
+//         }
+//         /*
+//           (var(--error-color), 70%) ===> var(--error-color--fade-7)
+//         */
+//         return color.replace(')',  '--fade--' + parseInt(amount) + ')')
+//       }
+//       return color
+//     }
+//   })()`;
+// }
+// .fade();
 
-@import 'ant-design-vue/es/style/themes/default.less';
+// @import 'ant-design-vue/es/style/themes/default.less';
 
 
 //@import '../themes/default.less';
