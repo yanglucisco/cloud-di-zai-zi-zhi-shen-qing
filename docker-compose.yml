@@ -17,6 +17,19 @@ services:
       - "9848:9848"
     networks:
       - app-network # 将服务连接到自定义网络，便于其他容器访问
+  sentinel-dashboard:
+    image: bladex/sentinel-dashboard:1.8.6
+    container_name: sentinel-dashboard-1.8.6
+    ports:
+      - "8858:8858"
+    environment:
+      # 设置控制台登录用户名，默认为 sentinel
+      - sentinel.dashboard.auth.username=sentinel
+      # 设置控制台登录密码，默认为 sentinel
+      - sentinel.dashboard.auth.password=sentinel
+      # 设置服务器Session过期时间，如7200秒
+      - server.servlet.session.timeout=7200
+    restart: always
   auth-center: #spring oauth2 授权服务器
     build: ./auth-center  # 使用Dockerfile构建镜像的路径
     container_name: auth-center
@@ -36,10 +49,10 @@ services:
       - DB_USER=auth_center
       - DB_PASSWORD=Htht123.com
     # 关键配置：指定日志驱动
-    logging:
-      driver: fluentd
-      options:
-        fluentd-address: "tcp://fluent-bit:24224"  # 指向 Fluent Bit 服务 这里要使用IP地址，先启动fluetn-bit，查询它的IP地址
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     fluentd-address: "tcp://fluent-bit:24224"  # 指向 Fluent Bit 服务 这里要使用IP地址，先启动fluetn-bit，查询它的IP地址
         # tag: "auth-center.service"  # 为日志设置标签，便于在 Fluent Bit 中路由
     # 如果应用依赖数据库，可以在这里定义，并使用depends_on
     depends_on:

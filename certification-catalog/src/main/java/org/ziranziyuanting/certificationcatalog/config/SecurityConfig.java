@@ -22,7 +22,7 @@ public class SecurityConfig {
                     jwt->jwt.jwtAuthenticationConverter(customJwtAuthenticationConverter)
                     ))
         .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                                // .requestMatchers("/test/**").permitAll()
+                                .requestMatchers("/test/**").permitAll()
                                 // .requestMatchers("/user/**").permitAll()
                                 .requestMatchers("/user/**").hasAuthority("SCOPE_catalog.read")
                                 .requestMatchers("/role/**").hasRole("admin")
