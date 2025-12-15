@@ -1,0 +1,22 @@
+[
+  {
+    "resource": "mytest",
+    "count": 1
+  },
+  {
+    "resource": "certification-catalog",
+    "count": 2,
+    "paramItem": {
+      "parseStrategy": 2,
+      "fieldName": "Spring-Cloud-Alibaba"
+    }
+  },
+  {
+    "resource": "certification-catalog",
+    "count": 3,
+    "paramItem": {
+      "parseStrategy": 3,
+      "fieldName": "name"
+    }
+  }
+]
