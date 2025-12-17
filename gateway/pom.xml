@@ -35,7 +35,7 @@ No Feign Client for loadBalancing defined. Did you forget to include spring-clou
 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-loadbalancer</artifactId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
         <!-- <dependency>
             <groupId>org.springframework.boot</groupId>
