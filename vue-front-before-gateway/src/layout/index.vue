@@ -13,7 +13,7 @@
             </p>
         </div>
         <div>
-            <button @click="btnClick">展开/收起</button>
+            <button @click="btnClick" class="btn">展开/收起</button>
             <h1>
                 {{ menuIsCollapse }}
             </h1>
@@ -28,6 +28,9 @@
 					    </div>
 				    </div>
                 </header>
+                <div>
+                    <h1>菜单</h1>
+                </div>
             </a-layout-sider>
             <a-layout>
                 <h1>h2</h1>
@@ -43,6 +46,7 @@ import { cleanToken, getUserIdToken } from '../userInfo'
 import { RouterLink } from 'vue-router'
 import { ThemeModeEnum } from '@/utils/enum'
 import { computed, ref } from 'vue'
+import {  }
 const menuIsCollapseA = ref(false)
 // const theme = computed(() => {
 //     return store.theme
@@ -66,7 +70,8 @@ const test = () => {
     window.location.href = `http://auth-server:20001/connect/logout?id_token_hint=${idToken}&post_logout_redirect_uri=http://vue-front-before-gateway.clouddizai.com:20005`
 }
 </script>
-<style scoped>
+<style scoped lang="less">
+@import "../style/test-less.less";
 .header {
     vertical-align: middle;
     text-align: center;

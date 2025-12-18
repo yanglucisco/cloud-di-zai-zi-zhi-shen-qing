@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import tailwindcss from '@tailwindcss/vite'
-import Less2CssVariablePlugin from 'antd-less-to-css-variable'
+// import Less2CssVariablePlugin from 'antd-less-to-css-variable'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -36,7 +36,7 @@ export default defineConfig({
 			preprocessorOptions: {
 				less: {
 					javascriptEnabled: true,
-					plugins: [new Less2CssVariablePlugin()]
+					// plugins: [new Less2CssVariablePlugin()]
 				}
 			}
 	},
