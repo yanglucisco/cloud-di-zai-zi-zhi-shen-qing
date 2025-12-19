@@ -12,6 +12,11 @@ public class MyTestController {
     
     @GetMapping("test")
     public String test(){
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return "test/test 现在时间 : " + LocalDateTime.now();
     }
 }
