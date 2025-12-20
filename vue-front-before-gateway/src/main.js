@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 import Antd from 'ant-design-vue'
 import i18n from './locales'
 import 'ant-design-vue/dist/reset.css'
+import 'vue3-ui/dist/index.es.css'
 import './tailwind.css'
 import './style/index.less'
 

@@ -1,11 +1,4 @@
 <template>
-    <!-- <h1>layout index</h1> -->
-    <!-- <div class="header">
-        <RouterLink to="/home" style="margin: 10px">首页</RouterLink>
-    </div>
-    <div>
-        <button @click="test">退出登录</button>
-    </div> -->
     <div>
         <div>
             <p class="bg-lightBlue">
@@ -13,6 +6,9 @@
             </p>
         </div>
         <div>
+            <MyButton :color="'#4e35a8'">
+                <h1>测试</h1>
+            </MyButton>
             <button @click="btnClick" class="btn">展开/收起</button>
             <h1>
                 {{ menuIsCollapse }}
@@ -46,7 +42,9 @@ import { cleanToken, getUserIdToken } from '../userInfo'
 import { RouterLink } from 'vue-router'
 import { ThemeModeEnum } from '@/utils/enum'
 import { computed, ref } from 'vue'
-import {  }
+import { MyButton } from 'vue3-ui'
+import 'ant-design-vue/dist/reset.css'
+
 const menuIsCollapseA = ref(false)
 // const theme = computed(() => {
 //     return store.theme
