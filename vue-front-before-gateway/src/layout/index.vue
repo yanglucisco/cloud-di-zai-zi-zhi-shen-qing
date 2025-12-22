@@ -38,16 +38,16 @@
                     </a-menu>
                 </div>
                 <div style="display: flex;">
-                    <FullscreenOutlined v-if="!isFullScreen" @click="fullScreenClick" />
-                    <FullscreenExitOutlined v-if="isFullScreen" @click="fullScreenClick"/>
-                    <a-menu class="layout-items-center">
+                    <UserBar></UserBar>
+                    
+                    <!-- <a-menu class="layout-items-center">
                         <a-menu-item key="xiTong1">
                             <span>系统</span>
                         </a-menu-item>
                         <a-menu-item key="yeWu1">
                             <span>业务</span>
                         </a-menu-item>
-                    </a-menu>
+                    </a-menu> -->
                 </div>
             </a-layout-header>
             <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
@@ -60,19 +60,13 @@
 import { ref } from 'vue'
 import {
     MenuUnfoldOutlined, MenuFoldOutlined, VideoCameraOutlined, UserOutlined, UploadOutlined, AppstoreAddOutlined,
-    AppstoreOutlined, FullscreenOutlined, FullscreenExitOutlined
+    AppstoreOutlined
 } from '@ant-design/icons-vue'
-import screenFull from 'screenfull'
+
+import UserBar from './UserBar.vue'
 const selectedKeys = ref(['1'])
 const collapsed = ref(false)
-const isFullScreen = ref(false)
-const fullScreenClick = () => {
-    isFullScreen.value = !isFullScreen.value
-    const element = document.documentElement
-    if (screenFull.isEnabled) {
-        screenFull.toggle(element)
-    }
-}
+
 </script>
 <style scoped>
 .contentheader {
