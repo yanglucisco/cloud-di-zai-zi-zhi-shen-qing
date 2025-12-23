@@ -54,13 +54,7 @@ const fullScreenClick = () => {
 }
 
 .user-bar .item:hover {
-background-color: #d2e1f1; /* 悬浮时的背景色，例如浅蓝色 */
-}
-
-.user-bar {
-    display: flex;
-    align-items: center;
-    height: 100%;
+    background-color: #d2e1f1; /* 悬浮时的背景色，例如浅蓝色 */
 }
 
 .user-bar .user-avatar {
