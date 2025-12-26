@@ -1,41 +1,10 @@
-@import 'ant-design-vue/dist/reset.css';
-@import './realdark';
-@import './default';
-.ant-layout-sider-dark{
-	.snowy-header-logo{
-		color: #fff;
-	}
-}
-.snowy-header-logo {
-	height: 50px;
-	display: flex;
-	justify-content: space-between;
-	border-bottom: 10px solid rgba(170, 106, 106, 0.04);
-}
-.snowy-header-left {
-	display: flex;
-	align-items: center;
-	padding-left: 20px;
+/* 在项目的全局样式文件中（如 App.vue 或 index.css） */
+html, body {
+  margin: 0;
+  padding: 0;
 }
 
-.snowy-header-left .menu-unfold-outlined {
-	padding: 0 12px
-}
-
-// .snowy-header-logo-primary-color {
-// 	color: white;
-// 	background-color: var(--primary-color);
-// }
-
-.snowy-header-logo .logo-bar {
-	font-weight: bold;
-	display: flex;
-	align-items: center;
-	font-size: 20px;
-}
-
-.snowy-header-logo .logo-bar .logo {
-	margin-right: 10px;
-	width: 35px;
-	height: 35px;
+/* 确保你的根元素或全屏容器高度设置正确 */
+#app {
+  height: 100vh; /* 或采用下文更优的方案 */
 }
