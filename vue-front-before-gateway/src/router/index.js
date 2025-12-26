@@ -4,9 +4,8 @@ import HomeView from "../views/HomeView.vue"
 import Home1View from "../views/Home1View.vue"
 import LogoutView from '../views/Logout.vue'
 import Login from '../views/Login.vue'
-import { getCurrentVerifier } from '../utils/pkce-util'
+import { getCurrentVerifier, generateCodeChallenge, gotoLoginPage } from '../utils/pkce-util'
 import { setUserAccessToken, setUserIdToken, getUserInfo } from '../userInfo/index'
- 
 const router = createRouter({
   history: createWebHistory(),//createWebHistory(),
   routes: [
@@ -47,6 +46,11 @@ router.beforeEach((to, from, next) => {
   } else {
     isFromAuthorServer().then((r) => {
       next()
+    }).catch(error => {
+      console.log(error.message)
+      generateCodeChallenge().then(codeChallenge => {
+        gotoLoginPage(codeChallenge)
+      })
     })
   }
 })
@@ -57,9 +61,8 @@ async function isFromAuthorServer() {
   if (code) {
     //从授权服务器返回来的
     await exchangeCode(code)
-    return true
   }
-  return false
+  throw new Error('请登录')
 }
 const exchangeCode = async (code) => {
     const verifier = getCurrentVerifier()// '8SkwXEJUZJVQLScWYs8nV9bhv4GfvnHmc9iuApguEwY';// sessionStorage.getItem('pkce_verifier');

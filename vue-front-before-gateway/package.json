@@ -23,7 +23,7 @@
     "vue": "^3.5.25",
     "vue-i18n": "^11.2.2",
     "vue-router": "^4.6.3",
-    "vue3-ui": "file:../../vue3-ui-js"
+    "vue3-ui": "file:D:/study/vue3-component-study"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.17",

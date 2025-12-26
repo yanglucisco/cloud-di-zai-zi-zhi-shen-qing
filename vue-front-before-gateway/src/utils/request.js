@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { generateCodeChallenge, generateCodeVerifier } from './pkce-util'
+import { generateCodeChallenge, gotoLoginPage } from './pkce-util'
 import { getUserInfo, cleanToken } from '../userInfo/index'
 
 // 创建axios实例，配置默认参数
@@ -45,9 +45,7 @@ service.interceptors.response.use(
           cleanToken()
           let codeChallenge = await generateCodeChallenge() //'hQqHvGROSi0bvuXVAUXnSj1ZN1p1pDTpnKy5HZvvAso' // await generateCodeChallenge()
           // window.open('/api/oauth2/authorization/certification-catalog-oidc', '_self')
-          window.open('http://auth-server:20001/oauth2/authorize?response_type=code&client_id=pkce-client&scope=openid' 
-                    + '&redirect_uri=http://vue-front-before-gateway.clouddizai.com:20005/home' 
-                    + '&code_challenge_method=S256&code_challenge=' + codeChallenge, '_self');
+          gotoLoginPage(codeChallenge)
           //跳转到上面的网址，输入用户名和密码，授权服务器会返回到注册的回调地址，也就是下面的地址
           //http://vue-front-before-gateway.clouddizai.com:20005/home?
           // code=iBOnqwJZ7rvWXoX3Ba6N764IVlREs4DHrrmqYH4eWgstgfc8HBWkuaj8hCNxtzy5_BiumZpFipcPvGoQeSUcbrwtnwQwPXvrhlCT5ckMvagW6-0ZGaiewy5siOmGMIO2
