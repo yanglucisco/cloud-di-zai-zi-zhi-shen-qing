@@ -3,6 +3,7 @@ import Home from "../layout/index.vue"
 import HomeView from "../views/HomeView.vue"
 import Home1View from "../views/Home1View.vue"
 import LogoutView from '../views/Logout.vue'
+import Login from '../views/Login.vue'
 import { getCurrentVerifier } from '../utils/pkce-util'
 import { setUserAccessToken, setUserIdToken, getUserInfo } from '../userInfo/index'
  
@@ -28,6 +29,11 @@ const router = createRouter({
       path: "/logout",
       name: "logout",
       component: LogoutView,
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: Login,
     }
   ],
 })

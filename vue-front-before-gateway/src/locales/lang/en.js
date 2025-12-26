@@ -30,6 +30,7 @@ export default {
 		bizUser: 'bizUser'
 	},
 	login: {
+		systemName: 'XXX',
 		signInTitle: 'Sign in',
 		forgetPassword: 'Forget password',
 		signIn: 'Sign in',

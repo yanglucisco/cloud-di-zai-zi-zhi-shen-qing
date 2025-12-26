@@ -1,5 +1,5 @@
 <template>
-    <a-layout>
+    <a-layout style="min-height: 98vh;">
         <a-layout-sider class="left-column" v-model:collapsed="collapsed" :trigger="null" collapsible>
             <div class="logo">
                 <img class="img"
@@ -34,6 +34,42 @@
                     <a-menu-item key="6">
                         <upload-outlined />
                         <span>nav 3</span>
+                    </a-menu-item>
+                    <a-menu-item key="7">
+                        <user-outlined />
+                        <span>nav 1</span>
+                    </a-menu-item>
+                    <a-menu-item key="8">
+                        <video-camera-outlined />
+                        <span>nav 2</span>
+                    </a-menu-item>
+                    <a-menu-item key="9">
+                        <upload-outlined />
+                        <span>nav 9</span>
+                    </a-menu-item>
+                    <a-menu-item key="10">
+                        <user-outlined />
+                        <span>nav 1</span>
+                    </a-menu-item>
+                    <a-menu-item key="11">
+                        <video-camera-outlined />
+                        <span>nav 2</span>
+                    </a-menu-item>
+                    <a-menu-item key="12">
+                        <upload-outlined />
+                        <span>nav 3</span>
+                    </a-menu-item>
+                    <a-menu-item key="12">
+                        <user-outlined />
+                        <span>nav 1</span>
+                    </a-menu-item>
+                    <a-menu-item key="14">
+                        <video-camera-outlined />
+                        <span>nav 2</span>
+                    </a-menu-item>
+                    <a-menu-item key="15">
+                        <upload-outlined />
+                        <span>nav 15</span>
                     </a-menu-item>
                 </a-menu>
             </div>

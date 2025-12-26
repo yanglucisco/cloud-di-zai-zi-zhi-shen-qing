@@ -32,6 +32,7 @@ export default {
 		bizUser: '人员'
 	},
 	login: {
+		systemName: 'XXX系统',
 		signInTitle: '用户登录',
 		forgetPassword: '忘记密码',
 		signIn: '登录',
