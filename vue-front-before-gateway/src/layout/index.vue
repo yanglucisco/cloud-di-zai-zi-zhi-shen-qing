@@ -11,9 +11,9 @@
             </div>
             <div class="scrollable-menu-container">
                 <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-                    <a-menu-item key="1">
+                    <a-menu-item key="1" @click="openUser">
                         <user-outlined />
-                        <span>nav 1</span>
+                        <span>User</span>
                     </a-menu-item>
                     <a-menu-item key="2">
                         <video-camera-outlined />
@@ -104,7 +104,7 @@
                 </div>
             </a-layout-header>
             <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
-                Content
+                <router-view></router-view>
             </a-layout-content>
         </a-layout>
     </a-layout>
@@ -117,9 +117,15 @@ import {
 } from '@ant-design/icons-vue'
 
 import UserBar from './UserBar.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 const selectedKeys = ref(['1'])
 const collapsed = ref(false)
-
+const openUser = () => {
+    console.log('ceshiceshiceshi')
+    router.push('/user')
+}
 </script>
 <style scoped>
 /* 可滚动的菜单容器 */

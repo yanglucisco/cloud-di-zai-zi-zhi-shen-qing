@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView.vue"
 import Home1View from "../views/Home1View.vue"
 import LogoutView from '../views/Logout.vue'
 import Login from '../views/Login.vue'
+import User from '../views/User/Index.vue'
 import { getCurrentVerifier, generateCodeChallenge, gotoLoginPage } from '../utils/pkce-util'
 import { setUserAccessToken, setUserIdToken, getUserInfo } from '../userInfo/index'
 const router = createRouter({
@@ -13,11 +14,16 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: Home,
+      children: [{
+        path: "user",
+        name: "user",
+        component: User,
+      }]
     },
     {
       path: "/home",
       name: "home2",
-      component: HomeView,
+      component: Home,
     },
     {
       path: "/home1",

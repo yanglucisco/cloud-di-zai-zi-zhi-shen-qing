@@ -7,7 +7,7 @@ export function getUserInfo(){
     }
 }
 export function setUserAccessToken(accessToken){
-    // debugger
+    debugger
     localStorage.setItem(accessTokenText, accessToken)
 }
 export function cleanToken(){
