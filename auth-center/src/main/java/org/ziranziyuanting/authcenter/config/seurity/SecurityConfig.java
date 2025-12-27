@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -23,6 +24,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.ziranziyuanting.authcenter.utils.PasswordUtil;
 import org.springframework.security.config.Customizer;
 
 @Configuration
@@ -58,13 +60,14 @@ public class SecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        // .requestMatchers("/test/**").permitAll()
+                        .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/login.html", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                         .requestMatchers("/custom-login", "/login").permitAll()
                         .requestMatchers("/home").permitAll()
-                        .requestMatchers("/test/yltest").permitAll()
+                        .requestMatchers("/test/**").permitAll()
                         .anyRequest()
                         .authenticated())
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/test/**", "/user/**"))
                 .formLogin(
                         formLogin -> formLogin
                                 // 指定自定义登录页的URL
@@ -90,8 +93,10 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
-
-
+    @Bean
+    PasswordEncoder PasswordEncoder(){
+        return PasswordUtil.BCryptPasswordEncoder();
+    }
     @Bean
     RegisteredClientRepository registeredClientRepository() {
         RegisteredClient certificationCatalogClient = RegisteredClient.withId(UUID.randomUUID().toString())

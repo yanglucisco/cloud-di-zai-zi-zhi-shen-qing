@@ -34,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             return new CustomUserDetails(
                     1L,
                     "admin",
-                    "{noop}adminpwd",
+                    "{bcrypt}$2a$10$1iJD6E53ylce/IRQjXC2JOGgMN9I2ZALydYj.5LP0zvbINf14AJi2",
                     "",
                     adminRoles,
                     true, true, true, true 
