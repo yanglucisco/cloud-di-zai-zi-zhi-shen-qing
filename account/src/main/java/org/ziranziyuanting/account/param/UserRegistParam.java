@@ -1,4 +1,4 @@
-package org.ziranziyuanting.authcenter.param;
+package org.ziranziyuanting.account.param;
 
 import lombok.Data;
 

@@ -8,8 +8,8 @@ const registUser = () => {
     const r = getUserInfo()
     debugger
     request({
-        url: '/account/mytest/test',
-        method: 'get',
+        url: '/account/user/all',
+        method: 'get'
     }).then(res => {
         console.log(res)
     })

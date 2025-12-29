@@ -1,4 +1,4 @@
-package org.ziranziyuanting.config;
+package org.ziranziyuanting.account.config;
 
 import java.util.ArrayList;
 import java.util.Collection;

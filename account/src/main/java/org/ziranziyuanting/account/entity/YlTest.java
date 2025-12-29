@@ -1,0 +1,9 @@
+package org.ziranziyuanting.account.entity;
+
+import lombok.Data;
+
+@Data
+public class YlTest {
+    private String id;
+    private String name;
+}
