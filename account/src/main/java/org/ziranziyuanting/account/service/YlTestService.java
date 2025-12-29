@@ -2,8 +2,10 @@ package org.ziranziyuanting.account.service;
 
 import org.ziranziyuanting.account.entity.YlTest;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import reactor.core.publisher.Flux;
 
-public interface YlTestService extends IService<YlTest> {
+public interface YlTestService {
+
+    Flux<YlTest> all();
     
 }

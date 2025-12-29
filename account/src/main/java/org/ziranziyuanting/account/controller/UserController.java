@@ -10,6 +10,7 @@ import org.ziranziyuanting.account.entity.YlTest;
 import org.ziranziyuanting.account.param.UserRegistParam;
 import org.ziranziyuanting.account.service.YlTestService;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,9 +35,9 @@ public class UserController {
         return Mono.just(ResponseEntity.ok("post注册成功: " + userRegistParam.getUserName()));
     }
     @GetMapping("all")
-    public ResponseEntity<Mono<List<YlTest>>> all() {
-        List<YlTest> r = ylTestService.list();
-        return ResponseEntity.ok((Mono.just(r)));
+    public ResponseEntity<Flux<YlTest>> all() {
+       Flux<YlTest> r = ylTestService.all();
+        return ResponseEntity.ok(r);
     }
     @GetMapping("test")
     public ResponseEntity<Mono<String>> test() {
