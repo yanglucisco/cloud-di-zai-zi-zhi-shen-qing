@@ -8,8 +8,14 @@ const registUser = () => {
     const r = getUserInfo()
     debugger
     request({
-        url: '/account/user/all',
-        method: 'get'
+        url: '/account/org/add',
+        method: 'post',
+        data: {
+            sortCode: 1,
+            parentId: 0,
+            name: 'name1',
+            category: '类别'
+        }
     }).then(res => {
         console.log(res)
     })
