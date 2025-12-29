@@ -18,7 +18,7 @@ public class PasswordUtil {
         return new DelegatingPasswordEncoder(idForEncode, encoders);
     }
 
-public static PasswordEncoder BCryptPasswordEncoder(int factor) {
+    public static PasswordEncoder BCryptPasswordEncoder(int factor) {
         return new BCryptPasswordEncoder(factor);
     }
 }

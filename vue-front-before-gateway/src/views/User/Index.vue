@@ -8,10 +8,10 @@ const registUser = () => {
     const r = getUserInfo()
     debugger
     request({
-        url: '/authserver/user/regist',
-        method: 'post',
+        url: '/account/mytest/test',
+        method: 'get',
     }).then(res => {
-        debugger
+        console.log(res)
     })
 }
 </script>

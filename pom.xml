@@ -11,6 +11,7 @@
         <module>certification-catalog</module>
         <module>auth-center</module>
         <module>gateway</module>
+        <module>account</module>
     </modules>
     <name>di-zai-zi-zhi-shen-qing</name>
 
