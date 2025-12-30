@@ -8,6 +8,7 @@ import org.ziranziyuanting.account.service.SysOrgService;
 
 import jakarta.validation.Valid;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,7 @@ public class SysOrgController {
     }
     @PostMapping("add")
     public ResponseEntity<String> add(@Valid @RequestBody AddOrgParam addOrgParam){
-        service.save(addOrgParam);
-        return ResponseEntity.ok("新增成功: " + addOrgParam.getName());
+        Mono<SysOrg> r = service.save(addOrgParam);
+        return ResponseEntity.ok("新增成功: " + r.block().getName());
     }
 }

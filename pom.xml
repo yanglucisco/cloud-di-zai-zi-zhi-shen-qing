@@ -12,6 +12,7 @@
         <module>auth-center</module>
         <module>gateway</module>
         <module>account</module>
+        <module>common</module>
     </modules>
     <name>di-zai-zi-zhi-shen-qing</name>
 
@@ -28,6 +29,7 @@
         <spring.boot.version>3.2.4</spring.boot.version>
         <spring.cloud.alibaba.version>2023.0.1.0</spring.cloud.alibaba.version>
         <flyway.version>9.22.3</flyway.version>
+        <common.version>${project.version}</common.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -78,6 +80,17 @@
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
                 <version>8.3.0</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-core</artifactId>
+                <version>5.8.30</version>
+            </dependency>
+            <!-- 管理内部模块的版本 -->
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>common</artifactId>
+                <version>${common.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
