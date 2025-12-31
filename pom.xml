@@ -12,7 +12,6 @@
         <module>auth-center</module>
         <module>gateway</module>
         <module>account</module>
-        <module>common</module>
     </modules>
     <name>di-zai-zi-zhi-shen-qing</name>
 
@@ -88,9 +87,9 @@
             </dependency>
             <!-- 管理内部模块的版本 -->
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>org.ziranziyuanting</groupId>
                 <artifactId>common</artifactId>
-                <version>${common.version}</version>
+                <version>1.0-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

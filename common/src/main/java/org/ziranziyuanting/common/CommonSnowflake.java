@@ -1,17 +1,13 @@
 package org.ziranziyuanting.common;
 
-import org.springframework.stereotype.Component;
-import org.ziranziyuanting.common.config.SnowflakeConfig;
+import java.util.Date;
 
 import cn.hutool.core.lang.Snowflake;
 
-@Component
 public class CommonSnowflake {
-    // private cn.hutool.core.lang.Snowflake snowflake;
     private Snowflake snowflake;
-    public CommonSnowflake(SnowflakeConfig snowflakeConfig) {
-        this.snowflake = new Snowflake(snowflakeConfig.getStartTimestamp(), snowflakeConfig.getWorkerId(), snowflakeConfig.getDatacenterId(), true);
-        // this.snowflake = snowflake;
+    public CommonSnowflake(Date epochDate, long workerId, long dataCenterId, boolean isUseSystemClock) {
+        this.snowflake = new Snowflake(epochDate, workerId, dataCenterId, isUseSystemClock);
     }
     public Long nextId() {
         return snowflake.nextId();
