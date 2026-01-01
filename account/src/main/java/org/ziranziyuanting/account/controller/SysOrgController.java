@@ -10,10 +10,14 @@ import jakarta.validation.Valid;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -33,5 +37,10 @@ public class SysOrgController {
     public ResponseEntity<String> add(@Valid @RequestBody AddOrgParam addOrgParam){
         Mono<SysOrg> r = service.save(addOrgParam);
         return ResponseEntity.ok("新增成功: " + r.block().getName());
+    }
+    @GetMapping("test")
+    public String test() {
+        service.test();
+        return LocalDateTime.now().toString();
     }
 }

@@ -4,8 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
+import org.springframework.lang.Nullable;
 
 /**
  * <p>
@@ -16,28 +21,41 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class CommonEntity implements Serializable {
+public abstract class CommonEntity implements Persistable<Long> {
+    @Id
+    private Long id;
 
+    @JsonIgnore
+    @Transient
+    private boolean isNew = true;
     /** 删除标志 */
     @JsonIgnore
     private String deleteFlag;
 
     /** 创建时间 */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /** 创建人 */
-    private String createUser;
-
-    /** 创建人名称 */
-    private String createUserName;
+    private Long createUser;
 
     /** 更新时间 */
-   private Date updateTime;
+   private LocalDateTime updateTime;
 
     /** 更新人 */
-    private String updateUser;
+    private Long updateUser;
 
-    /** 更新人名称 */
-    private String updateUserName;
+    @Override
+    @Nullable
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
 }
 

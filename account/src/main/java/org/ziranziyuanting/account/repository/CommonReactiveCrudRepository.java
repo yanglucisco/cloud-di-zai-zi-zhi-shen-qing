@@ -1,0 +1,23 @@
+package org.ziranziyuanting.account.repository;
+
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.ziranziyuanting.account.entity.CommonEntity;
+
+import reactor.core.publisher.Mono;
+
+public interface CommonReactiveCrudRepository<T extends CommonEntity> extends ReactiveCrudRepository<T, Long> {
+    // @SuppressWarnings("null")
+    // default Mono<T> saveWithCheck(T t) {
+    //     return existsById(t.getId())
+    //         .flatMap(exists -> {
+    //             if (exists) {
+    //                 // 数据库中已存在
+    //                 t.setNew(false);
+    //             } else if (!exists) {
+    //                 // 数据库中不存在
+    //                 t.setNew(true);
+    //             }
+    //             return save(t);
+    //         });
+    // }
+}

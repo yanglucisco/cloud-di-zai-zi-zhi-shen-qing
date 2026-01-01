@@ -13,14 +13,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=false)
 public class SysOrg extends CommonEntity {
 
-    /** id */
-    private String id;
-
     /** 父id */
-    private String parentId;
+    private Long parentId;
 
     /** 主管id */
-    private String directorId;
+    private Long directorId;
 
     /** 名称 */
     private String name;
@@ -40,7 +37,7 @@ public class SysOrg extends CommonEntity {
         SysOrg r = new SysOrg();
         r.setCategory(category);
         r.setSortCode(sortCode);
-        r.setParentId(parentId.toString());
+        r.setParentId(parentId.longValue());
         r.setName(name);
         return r;
     }
