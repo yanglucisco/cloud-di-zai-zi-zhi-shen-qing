@@ -2,8 +2,7 @@ package org.ziranziyuanting.account.service.impl;
 
 import java.time.LocalDateTime;
 
-import org.springframework.data.repository.ListCrudRepository;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.ziranziyuanting.account.entity.SysOrg;
 import org.ziranziyuanting.account.param.AddOrgParam;
@@ -17,43 +16,58 @@ import reactor.core.publisher.Mono;
 
 @Service
 @Slf4j
-public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysOrgService {
+public class SysOrgServiceImpl
+ extends CommonServiceImpl<SysOrg> 
+ implements SysOrgService {
     private final SysOrgRepository repository;
-    // private final CommonTest commonTest;
-    // private final CommonSnowflake snowflake;
-
+    @Autowired
+    private CommonSnowflake snowflake;
     public SysOrgServiceImpl(SysOrgRepository repository){
         super(repository);
         this.repository = repository;
-        // this.commonTest = commonTest;
-        // this.snowflake = snowflake;
     }
-
     @Override
-    public Flux<SysOrg> findAll() {
-        return repository.findAll();
+    public Mono<SysOrg> saveOrUpdate(SysOrg t) {
+        if(t.getId() == null) {
+            t.setId(snowflake.nextId());
+            t.setNew(true);
+            return repository.save(t);
+        }
+        t.setNew(false);
+        return repository.save(t);
     }
-
     @Override
     public Mono<SysOrg> save(AddOrgParam parm) {
-        Long id = 1l;//snowflake.nextId();
         SysOrg org = SysOrg.of(parm.getSortCode(), parm.getParentId(), parm.getName(), parm.getCategory());
-        org.setId(id);
-        return repository.save(org);
+        return saveOrUpdate(org);
     }
-
     @SuppressWarnings("null")
     @Override
+    public Mono<SysOrg> update(AddOrgParam parm) {
+        return repository.findById(parm.getId()).flatMap(item -> {
+            item.setSortCode(parm.getSortCode());
+            item.setParentId(parm.getParentId());
+            item.setName(parm.getName());
+            item.setCategory(parm.getCategory());
+            return saveOrUpdate(item);
+        });
+    }
+    @Override
     public void test() {
-        SysOrg org = SysOrg.of(1, 0, "测试组织" + LocalDateTime.now(), "测试类别");
-        saveWithCheck(org).flatMap(item -> {
+        SysOrg org = SysOrg.of(1, 0L, "测试组织" + LocalDateTime.now(), "测试类别");
+        saveOrUpdate(org).flatMap(item -> {
+            @SuppressWarnings("null")
             Mono<SysOrg> r = repository.findById(item.getId());
             return r;
         }).flatMap(item -> {
             item.setUpdateTime(LocalDateTime.now());
-            return saveWithCheck(item);
+            return saveOrUpdate(item);
         }).subscribe(item -> {
             log.info("测试完成: {}", item);
         });
+    }
+    @Override
+    public Flux<SysOrg> findAll() {
+        return repository.findAll();
     }
 }

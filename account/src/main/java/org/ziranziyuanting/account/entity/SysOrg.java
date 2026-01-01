@@ -33,11 +33,11 @@ public class SysOrg extends CommonEntity {
 
     /** 扩展信息 */
     private String extJson;
-    public static SysOrg of(int sortCode, Integer parentId, String name, String category){
+    public static SysOrg of(int sortCode, Long parentId, String name, String category){
         SysOrg r = new SysOrg();
         r.setCategory(category);
         r.setSortCode(sortCode);
-        r.setParentId(parentId.longValue());
+        r.setParentId(parentId);
         r.setName(name);
         return r;
     }

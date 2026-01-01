@@ -3,9 +3,9 @@ package org.ziranziyuanting.account.repository;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.ziranziyuanting.account.entity.CommonEntity;
 
-import reactor.core.publisher.Mono;
-
-public interface CommonReactiveCrudRepository<T extends CommonEntity> extends ReactiveCrudRepository<T, Long> {
+public abstract interface CommonReactiveCrudRepository<T extends CommonEntity> 
+extends ReactiveCrudRepository<T, Long> 
+{
     // @SuppressWarnings("null")
     // default Mono<T> saveWithCheck(T t) {
     //     return existsById(t.getId())

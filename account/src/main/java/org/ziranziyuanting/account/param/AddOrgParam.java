@@ -14,10 +14,11 @@ public class AddOrgParam {
   "category": "COMPANY"
 }
     */
+   private Long id;
    @NotNull(message =  "sortCode不能为空")
    private int sortCode;
    @NotNull(message =  "parentId不能为空")
-   private int parentId;
+   private Long parentId;
    @NotBlank(message =  "name不能为空")
    private String name;
    @NotBlank(message =  "类别不能为空")
