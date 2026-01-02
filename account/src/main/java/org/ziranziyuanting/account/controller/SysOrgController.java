@@ -13,12 +13,14 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDateTime;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("org")
+@Validated
 public class SysOrgController {
     private final SysOrgService service;
     public SysOrgController(SysOrgService sysOrgService)
@@ -31,8 +33,8 @@ public class SysOrgController {
     }
     @PostMapping("add")
     public ResponseEntity<String> add(@Valid @RequestBody AddOrgParam addOrgParam){
-        Mono<SysOrg> r = service.save(addOrgParam);
-        return ResponseEntity.ok("新增成功: " + r.block().getName());
+        service.save(addOrgParam);
+        return ResponseEntity.ok("新增成功: " + LocalDateTime.now());
     }
     @GetMapping("test")
     public String test() {
