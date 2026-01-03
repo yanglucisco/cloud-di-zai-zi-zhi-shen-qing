@@ -1,22 +1,39 @@
 <template>
-    <a-button @click="registUser">注册用户</a-button>
+    <a-button @click="addOrg">新增机构</a-button>
+    <a-button @click="addDict">新增字典</a-button>
 </template>
 <script setup>
 import request from '@/utils/request'
-import { getUserInfo } from "@/userInfo/index"
-const registUser = () => {
-    const r = getUserInfo()
-    // debugger
+import { useMessage } from '@/utils/useMessage';
+
+const { success, error, warning, loading } = useMessage();
+const addOrg = () => {
     request({
         url: '/account/org/add',
         method: 'post',
         data: {
             sortCode: 1,
             parentId: '662110244318613506',
-            name: 'name123',
-            category: '类别'
+            name: '机构名称',
+            category: '机构类别'
         }
     }).then(res => {
+        success(res)
+        console.log(res)
+    })
+}
+const addDict = () => {
+    request({
+        url: '/account/dict/add',
+        method: 'post',
+        data: {
+            sortCode: 1,
+            parentId: '662110244318613506',
+            name: '字典名称',
+            category: '字典类别'
+        }
+    }).then(res => {
+        success(res)
         console.log(res)
     })
 }

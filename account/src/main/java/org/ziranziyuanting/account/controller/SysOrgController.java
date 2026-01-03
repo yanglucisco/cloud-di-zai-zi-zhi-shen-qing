@@ -36,19 +36,8 @@ public class SysOrgController {
         return ResponseEntity.ok(service.findAll());
     }
     @PostMapping("add")
-    public ResponseEntity<Mono<SysOrg>> add(@Valid @RequestBody AddOrgParam addOrgParam, Authentication authentication) {
-        // var r = ReactiveSecurityContextHolder.getContext()
-        //     .map(SecurityContext::getAuthentication).map(s -> {
-        //         System.out.println("当前认证信息: " + s);
-        //         var sget = (Jwt)(s.getPrincipal());
-        //         String user_id1 = sget.getClaimAsString("user_id");
-        //         System.out.println("当前用户ID: " + user_id1);
-        //         Jwt jwt = (Jwt)(authentication.getPrincipal());
-        //         String user_id = jwt.getClaimAsString("user_id");
-        //         service.save(addOrgParam);
-        //         return "新增成功: " + LocalDateTime.now();
-        //     });
-        return ResponseEntity.ok(service.save(addOrgParam));
+    public ResponseEntity<Mono<String>> add(@Valid @RequestBody AddOrgParam addOrgParam, Authentication authentication) {
+        return ResponseEntity.ok(service.save(addOrgParam).map(s -> "新增机构成功"));
     }
     @GetMapping("test")
     public String test() {
