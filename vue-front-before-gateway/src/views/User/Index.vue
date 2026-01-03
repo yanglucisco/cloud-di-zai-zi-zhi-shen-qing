@@ -61,8 +61,8 @@ const addUser = () => {
         method: 'post',
         data: {
             gender: 'MALE',
-            account: 'yanglu1',
-            name: '杨璐1',
+            account: 'yanglu',
+            name: '杨璐',
             orgId: '662517722747375616',
             positionId: '662536651490332672'
         }

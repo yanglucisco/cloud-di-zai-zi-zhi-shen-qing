@@ -17,6 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 // 示例：一个包含用户ID和手机号等额外信息的自定义UserDetails
 // 添加以下注解
@@ -26,6 +27,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class CustomUserDetails implements UserDetails {
     @Serial
     private static final long serialVersionUID = 3795011598734000565L;
