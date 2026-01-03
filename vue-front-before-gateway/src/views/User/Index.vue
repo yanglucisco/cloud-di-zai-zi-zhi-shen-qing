@@ -1,6 +1,7 @@
 <template>
     <a-button @click="addOrg">新增机构</a-button>
     <a-button @click="addDict">新增字典</a-button>
+    <a-button @click="addPosition">新增职位</a-button>
 </template>
 <script setup>
 import request from '@/utils/request'
@@ -31,6 +32,21 @@ const addDict = () => {
             parentId: '662110244318613506',
             name: '字典名称',
             category: '字典类别'
+        }
+    }).then(res => {
+        success(res)
+        console.log(res)
+    })
+}
+const addPosition = () => {
+    request({
+        url: '/account/position/add',
+        method: 'post',
+        data: {
+            sortCode: 1,
+            orgId: '662110244318613506',
+            name: '职位名称',
+            category: '职位类别'
         }
     }).then(res => {
         success(res)
