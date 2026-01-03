@@ -32,7 +32,6 @@ public class SysPositionController {
                     .sortCode(p.getSortCode())
                     .build();
             return service.saveOrUpdate(position);
-            
         }).map(savedPosition -> {
             return "新增职位成功: " + savedPosition.getId();
         }));

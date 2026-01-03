@@ -2,10 +2,12 @@
     <a-button @click="addOrg">新增机构</a-button>
     <a-button @click="addDict">新增字典</a-button>
     <a-button @click="addPosition">新增职位</a-button>
+    <a-button @click="addUser">新增用户</a-button>
 </template>
 <script setup>
 import request from '@/utils/request'
 import { useMessage } from '@/utils/useMessage';
+import { CodeFilled } from '@ant-design/icons-vue';
 
 const { success, error, warning, loading } = useMessage();
 const addOrg = () => {
@@ -14,9 +16,9 @@ const addOrg = () => {
         method: 'post',
         data: {
             sortCode: 1,
-            parentId: '662110244318613506',
-            name: '机构名称',
-            category: '机构类别'
+            parentId: '0',
+            name: '地质一队',
+            category: 'COMPANY'
         }
     }).then(res => {
         success(res)
@@ -29,9 +31,9 @@ const addDict = () => {
         method: 'post',
         data: {
             sortCode: 1,
-            parentId: '662110244318613506',
-            name: '字典名称',
-            category: '字典类别'
+            parentId: '662582222380994560',
+            name: '女',
+            code: 'FEMALE',
         }
     }).then(res => {
         success(res)
@@ -44,9 +46,25 @@ const addPosition = () => {
         method: 'post',
         data: {
             sortCode: 1,
-            orgId: '662110244318613506',
-            name: '职位名称',
-            category: '职位类别'
+            orgId: '662517722747375616',
+            name: '报盘申请',
+            category: 'JI_CENG'
+        }
+    }).then(res => {
+        success(res)
+        console.log(res)
+    })
+}
+const addUser = () => {
+    request({
+        url: '/account/sysUser/add',
+        method: 'post',
+        data: {
+            gender: 'MALE',
+            account: 'yanglu1',
+            name: '杨璐1',
+            orgId: '662517722747375616',
+            positionId: '662536651490332672'
         }
     }).then(res => {
         success(res)

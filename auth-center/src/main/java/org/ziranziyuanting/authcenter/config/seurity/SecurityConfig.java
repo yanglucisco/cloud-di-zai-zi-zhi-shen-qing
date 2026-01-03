@@ -139,7 +139,7 @@ public class SecurityConfig {
                         .requireProofKey(true) // 强制 PKCE
                         .build())
                 .tokenSettings(TokenSettings.builder().refreshTokenTimeToLive(Duration.ofMinutes(32))
-                                                      .accessTokenTimeToLive(Duration.ofMinutes(32)).build())
+                                                      .accessTokenTimeToLive(Duration.ofMinutes(320)).build())
                 .build();
         
         RegisteredClient gateway = RegisteredClient.withId(UUID.randomUUID().toString())

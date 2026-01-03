@@ -32,7 +32,7 @@ public abstract class CommonEntity implements Persistable<Long> {
     private boolean isNew = true;
     /** 删除标志 */
     @JsonIgnore
-    private String deleteFlag;
+    private String deleteFlag = "NOT_DELETED";
 
     /** 创建时间 */
     private LocalDateTime createTime;
