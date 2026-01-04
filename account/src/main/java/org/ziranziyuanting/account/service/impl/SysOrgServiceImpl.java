@@ -46,8 +46,4 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
             log.info("测试完成: {}", item);
         });
     }
-    @Override
-    public Flux<SysOrg> findAll() {
-        return findAll();
-    }
 }

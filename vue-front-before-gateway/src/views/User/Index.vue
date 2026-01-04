@@ -3,6 +3,10 @@
     <a-button @click="addDict">新增字典</a-button>
     <a-button @click="addPosition">新增职位</a-button>
     <a-button @click="addUser">新增用户</a-button>
+    <a-button @click="addRole">新增角色</a-button>
+    <a-button @click="getAllOrgs">获取所有机构</a-button>
+    <a-button @click="addMoudle">新增模块</a-button>
+    <a-button @click="getAllResources">获取所有资源</a-button>
 </template>
 <script setup>
 import request from '@/utils/request'
@@ -31,9 +35,9 @@ const addDict = () => {
         method: 'post',
         data: {
             sortCode: 1,
-            parentId: '662582222380994560',
-            name: '女',
-            code: 'FEMALE',
+            parentId: '662926245759160320',
+            name: '机构',
+            code: 'ORG',
         }
     }).then(res => {
         success(res)
@@ -69,6 +73,50 @@ const addUser = () => {
     }).then(res => {
         success(res)
         console.log(res)
+    })
+}
+const addRole = () => {
+    request({
+        url: '/rolemanage/sysrole/add',
+        method: 'post',
+        data: {
+            sortCode: 1,
+            // orgId: '662517722747375616',
+            name: '系统管理员',
+            category: 'SYS_ADMIN'
+        }
+    }).then(res => {
+        success(res)
+    })
+}
+const getAllResources = () => {
+    request({
+        url: '/rolemanage/sysresource/all',
+        method: 'get'
+    }).then(res => {
+        success(res)
+    })
+}
+const getAllOrgs = () => {
+    request({
+        url: '/account/org/all',
+        method: 'get'
+    }).then(res => {
+        success(res)
+    })
+}
+const addMoudle = () => {
+    request({
+        url: '/rolemanage/sysmodule/add',
+        method: 'post',
+        data: {
+            sortCode: 1,
+            title: '业务',
+            icon: 'CodeFilled',
+            color: '#000000',
+        }
+    }).then(res => {
+        success(res)
     })
 }
 </script>
