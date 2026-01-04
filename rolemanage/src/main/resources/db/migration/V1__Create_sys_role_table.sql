@@ -1,0 +1,40 @@
+/*
+ Navicat Premium Dump SQL
+
+ Source Server         : di_zai
+ Source Server Type    : MySQL
+ Source Server Version : 80026 (8.0.26)
+ Source Host           : 192.168.1.249:3307
+ Source Schema         : dizaizizhiguanli
+
+ Target Server Type    : MySQL
+ Target Server Version : 80026 (8.0.26)
+ File Encoding         : 65001
+
+ Date: 04/01/2026 09:39:11
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for sys_role
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_role`;
+CREATE TABLE `sys_role`  (
+  `ID` bigint NOT NULL,
+  `ORG_ID` bigint COMMENT '组织id',
+  `NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '名称',
+  `CODE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '编码',
+  `CATEGORY` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '分类',
+  `SORT_CODE` int NULL DEFAULT NULL COMMENT '排序码',
+  `EXT_JSON` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '扩展信息',
+  `DELETE_FLAG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '删除标志',
+  `CREATE_TIME` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `CREATE_USER` bigint NULL DEFAULT NULL COMMENT '创建用户',
+  `UPDATE_TIME` datetime NULL DEFAULT NULL COMMENT '修改时间',
+  `UPDATE_USER` bigint NULL DEFAULT NULL COMMENT '修改用户',
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色' ROW_FORMAT = DYNAMIC;
+
+SET FOREIGN_KEY_CHECKS = 1;

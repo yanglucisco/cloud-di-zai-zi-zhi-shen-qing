@@ -1,7 +1,7 @@
-package org.ziranziyuanting.account.repository;
+package org.ziranziyuanting.common.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
-import org.ziranziyuanting.account.entity.CommonEntity;
+import org.ziranziyuanting.common.entity.CommonEntity;
 
 public abstract interface CommonReactiveCrudRepository<T extends CommonEntity> 
 extends ReactiveCrudRepository<T, Long> 

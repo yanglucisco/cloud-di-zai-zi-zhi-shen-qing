@@ -1,4 +1,4 @@
-package org.ziranziyuanting.account.config;
+package org.ziranziyuanting.common.config;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;

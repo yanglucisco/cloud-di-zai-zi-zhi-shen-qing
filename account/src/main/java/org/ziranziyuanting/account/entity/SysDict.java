@@ -1,5 +1,7 @@
 package org.ziranziyuanting.account.entity;
 
+import org.ziranziyuanting.common.entity.CommonEntity;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

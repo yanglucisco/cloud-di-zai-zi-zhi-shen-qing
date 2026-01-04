@@ -7,7 +7,7 @@ import org.ziranziyuanting.account.entity.SysOrg;
 import org.ziranziyuanting.account.param.AddOrgParam;
 import org.ziranziyuanting.account.repository.SysOrgRepository;
 import org.ziranziyuanting.account.service.SysOrgService;
-
+import org.ziranziyuanting.common.service.impl.CommonServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

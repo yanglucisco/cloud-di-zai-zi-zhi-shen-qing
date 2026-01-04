@@ -1,4 +1,4 @@
-package org.ziranziyuanting.account.entity;
+package org.ziranziyuanting.rolemanage.entity;
 
 import org.ziranziyuanting.common.entity.CommonEntity;
 
@@ -9,10 +9,9 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Builder
-public class SysPosition extends CommonEntity {
-
+public class SysRole extends CommonEntity {
     /** 组织id */
-    private Long orgId;
+    private String orgId;
 
     /** 名称 */
     private String name;
@@ -29,3 +28,4 @@ public class SysPosition extends CommonEntity {
     /** 扩展信息 */
     private String extJson;
 }
+

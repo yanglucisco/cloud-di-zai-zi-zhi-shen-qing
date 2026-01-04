@@ -1,5 +1,7 @@
 package org.ziranziyuanting.account.entity;
 
+import org.ziranziyuanting.common.entity.CommonEntity;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

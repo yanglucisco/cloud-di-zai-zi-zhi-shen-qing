@@ -1,14 +1,14 @@
-package org.ziranziyuanting.account.service.impl;
+package org.ziranziyuanting.common.service.impl;
 
 import java.time.LocalDateTime;
 
 import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.ziranziyuanting.account.config.ReactiveSecurityContext;
-import org.ziranziyuanting.account.entity.CommonEntity;
-import org.ziranziyuanting.account.repository.CommonReactiveCrudRepository;
-import org.ziranziyuanting.account.service.CommonService;
+import org.ziranziyuanting.common.entity.CommonEntity;
+import org.ziranziyuanting.common.repository.CommonReactiveCrudRepository;
+import org.ziranziyuanting.common.service.CommonService;
 import org.ziranziyuanting.common.CommonSnowflake;
+import org.ziranziyuanting.common.config.ReactiveSecurityContext;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

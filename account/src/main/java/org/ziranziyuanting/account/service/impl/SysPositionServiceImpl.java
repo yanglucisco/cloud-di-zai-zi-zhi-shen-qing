@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.ziranziyuanting.account.entity.SysPosition;
 import org.ziranziyuanting.account.repository.SysPositionRepository;
 import org.ziranziyuanting.account.service.SysPositionService;
-
+import org.ziranziyuanting.common.service.impl.CommonServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

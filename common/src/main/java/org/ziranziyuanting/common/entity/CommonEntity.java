@@ -1,13 +1,8 @@
-package org.ziranziyuanting.account.entity;
+package org.ziranziyuanting.common.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -27,11 +22,9 @@ public abstract class CommonEntity implements Persistable<Long> {
     @Id
     private Long id;
 
-    @JsonIgnore
     @Transient
     private boolean isNew = true;
     /** 删除标志 */
-    @JsonIgnore
     private String deleteFlag = "NOT_DELETED";
 
     /** 创建时间 */
@@ -60,4 +53,5 @@ public abstract class CommonEntity implements Persistable<Long> {
         return isNew;
     }
 }
+
 

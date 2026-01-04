@@ -1,7 +1,7 @@
-package org.ziranziyuanting.account.service;
+package org.ziranziyuanting.common.service;
 
 import org.reactivestreams.Publisher;
-import org.ziranziyuanting.account.entity.CommonEntity;
+import org.ziranziyuanting.common.entity.CommonEntity;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -45,3 +45,4 @@ public abstract interface CommonService<T extends CommonEntity> {
 
     Mono<Void> deleteAll();
 }
+
