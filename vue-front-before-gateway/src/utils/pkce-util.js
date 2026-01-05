@@ -28,6 +28,7 @@ export function generateCodeVerifier() {
   return text
 }
 export async function generateCodeChallenge() {
+  
   const f = getCurrentVerifier()
   console.log('f: ' + f)
   var r1 = CryptoJS.SHA256(f)
@@ -36,7 +37,7 @@ export async function generateCodeChallenge() {
   return r
 }
 export function gotoLoginPage(codeChallenge){
-  // debugger
+  // 
   window.open('http://auth-server:20001/oauth2/authorize?response_type=code&client_id=pkce-client&scope=openid' 
                     + '&redirect_uri=http://vue-front-before-gateway.clouddizai.com:20005/home' 
                     + '&code_challenge_method=S256&code_challenge=' + codeChallenge, '_self')

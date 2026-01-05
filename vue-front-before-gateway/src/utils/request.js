@@ -14,6 +14,7 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   (config) => {
+    
     // 在发送请求前做些什么：例如注入Token[1](@ref)[6](@ref)
     const token = getUserInfo().accessToken// sessionStorage.getItem('idToken')
     if (token) {
@@ -40,10 +41,10 @@ service.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          // debugger
+          // 
           console.error('未授权，请重新登录')
           cleanToken()
-          let codeChallenge = await generateCodeChallenge() //'hQqHvGROSi0bvuXVAUXnSj1ZN1p1pDTpnKy5HZvvAso' // await generateCodeChallenge()
+          let codeChallenge = await generateCodeChallenge() //'hQqHvGROSi0bvuXVAUXnSj1ZN1p1pDTpnKy5HZvvAso'
           // window.open('/api/oauth2/authorization/certification-catalog-oidc', '_self')
           gotoLoginPage(codeChallenge)
           //跳转到上面的网址，输入用户名和密码，授权服务器会返回到注册的回调地址，也就是下面的地址

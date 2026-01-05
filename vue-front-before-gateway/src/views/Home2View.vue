@@ -12,7 +12,7 @@ import { getUserInfo } from '@/userInfo'
 const userInfo = ref(null)
 const testrole = ref(null)
 onMounted(async () => {
-    // debugger
+    // 
     console.log('home1 onMounted:')
     const token = getUserInfo().accessToken// sessionStorage.getItem('idToken')
     console.log('home1 onMounted 123:')

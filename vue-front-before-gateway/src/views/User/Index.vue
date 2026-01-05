@@ -98,6 +98,7 @@ const getAllResources = () => {
     })
 }
 const getAllOrgs = () => {
+    
     request({
         url: '/account/org/all',
         method: 'get'

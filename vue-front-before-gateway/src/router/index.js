@@ -43,9 +43,9 @@ const router = createRouter({
   ],
 })
 router.beforeEach((to, from, next) => {
-  // debugger
-  console.log("router from: " + from)
-  console.log("router to: " + to)
+  
+  console.log("router from: " + from.fullPath)
+  console.log("router to: " + to.fullPath)
   const accessToken = getUserInfo().accessToken
   if (accessToken) {
     next()
@@ -53,7 +53,7 @@ router.beforeEach((to, from, next) => {
     isFromAuthorServer().then((r) => {
       next()
     }).catch(error => {
-      console.log(error.message)
+      console.log('与授权服务器交换exchagecode时出错：' + error.message)
       generateCodeChallenge().then(codeChallenge => {
         gotoLoginPage(codeChallenge)
       })
@@ -68,7 +68,10 @@ async function isFromAuthorServer() {
     //从授权服务器返回来的
     await exchangeCode(code)
   }
-  throw new Error('请登录')
+  else
+  {
+    throw new Error('请登录')
+  }
 }
 const exchangeCode = async (code) => {
     const verifier = getCurrentVerifier()// '8SkwXEJUZJVQLScWYs8nV9bhv4GfvnHmc9iuApguEwY';// sessionStorage.getItem('pkce_verifier');
@@ -91,12 +94,11 @@ const exchangeCode = async (code) => {
             body
         });
         const tokens = await response.json();
-        debugger
+        
         // console.log('id_token:', tokens.id_token);
         sessionStorage.setItem("idToken", tokens.id_token);
         setUserAccessToken(tokens.access_token)
         setUserIdToken(tokens.id_token)
-        router.push('/home1')
     } catch (error) {
         console.error('Token exchange failed:', error);
     }
