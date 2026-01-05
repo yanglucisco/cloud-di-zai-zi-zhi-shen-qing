@@ -24,6 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         SysUser sysUser = sysUserService.getOneOpt(new LambdaQueryWrapper<>(SysUser.class).eq(SysUser::getAccount, username)).orElse(new SysUser());
         List<String> adminRoles = new ArrayList<>();
         adminRoles.add("ROLE_admin");
+        adminRoles.add("ROLE_ADMIN123123123");
         List<String> permissions = List.of(
             "catalog.read", "catalog.edit", "catalog.delete",
             "employee.read", "employee.edit", "employee.delete",
