@@ -9,27 +9,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SysRole extends CommonEntity {
-    /** 组织id */
-    private String orgId;
-
-    /** 名称 */
-    private String name;
-
-    /** 编码 */
-    private String code;
-
-    /** 分类 */
+@Builder
+@EqualsAndHashCode(callSuper=false)
+public class SysRelation extends CommonEntity {
+    private Long objectId;
+    private Long targetId;
     private String category;
-
-    /** 排序码 */
-    private Integer sortCode;
-
-    /** 扩展信息 */
     private String extJson;
 }
-

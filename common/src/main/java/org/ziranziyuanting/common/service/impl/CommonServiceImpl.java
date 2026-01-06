@@ -1,6 +1,7 @@
 package org.ziranziyuanting.common.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +26,31 @@ public abstract class CommonServiceImpl<T extends CommonEntity> implements Commo
     @Override
     public Mono<T> saveOrUpdate(T t) {
         return ReactiveSecurityContext.getCurrentUserId().flatMap(userId -> {
-            if (t.getId() == null) {
-                t.setId(snowflake.nextId());
-                t.setNew(true);
-                t.setCreateTime(LocalDateTime.now());
-                t.setCreateUser(userId);
-                return repository.save(t);
-            }
+            setId(t, userId);
+            return repository.save(t);
+        });
+    }
+
+    private void setId(T t, Long userId) {
+        if (t.getId() == null) {
+            t.setId(snowflake.nextId());
+            t.setNew(true);
+            t.setCreateTime(LocalDateTime.now());
+            t.setCreateUser(userId);
+        } else {
             t.setNew(false);
             t.setUpdateTime(LocalDateTime.now());
             t.setUpdateUser(userId);
-            return repository.save(t);
+        }
+    }
+
+    @Override
+    public Flux<T> saveOrUpdateAll(List<T> ts) {
+        return ReactiveSecurityContext.getCurrentUserId().flatMapMany(userId -> {
+            for (T t : ts) {
+                setId(t, userId);
+            }
+            return repository.saveAll(ts);
         });
     }
 

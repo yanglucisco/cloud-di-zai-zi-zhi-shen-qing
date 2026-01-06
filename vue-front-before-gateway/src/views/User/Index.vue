@@ -11,6 +11,10 @@
         <a-button @click="addMenu">新增菜单</a-button>
         <a-button @click="addMulu">新增目录</a-button>
         <a-button @click="addZiCaiDan">新增子菜单</a-button>
+        <a-button @click="addButton">新增按钮</a-button>
+    </div>
+    <div>
+        <a-button @click="jueSeShouQuan">角色授权</a-button>
     </div>
 </template>
 <script setup>
@@ -19,6 +23,26 @@ import { useMessage } from '@/utils/useMessage';
 import { CodeFilled } from '@ant-design/icons-vue';
 
 const { success, error, warning, loading } = useMessage();
+const jueSeShouQuan = () => {
+    request({
+        url: '/rolemanage/sysrole/shouQuanCaiDan',
+        method: 'post',
+        data: {
+            roleId: '1',
+            sysRoleShouQuanCaiDans:
+                [
+                    {
+                        id: "3",
+                        btnIds: []
+                    },
+                    {
+                        id: "4",
+                        btnIds: ["41", "42"]
+                    }
+                ]
+        }
+    }).then(res => success(res))
+}
 const addMenu = () => {
     request({
         url: '/rolemanage/sysmenu/add',
@@ -35,7 +59,21 @@ const addMenu = () => {
             name: "index",
             icon: "home-outlined"
         }
-    }).then(res => { 
+    }).then(res => {
+        success(res)
+    })
+}
+const addButton = () => {
+    request({
+        url: '/rolemanage/sysbtn/add',
+        method: 'post',
+        data: {
+            sortCode: 2,
+            parentId: '663268255410036736',
+            name: "新增",
+            code: "add"
+        }
+    }).then(res => {
         success(res)
     })
 }
@@ -53,7 +91,7 @@ const addMulu = () => {
             module: "662992182143229952",
             name: 'ORG'
         }
-    }).then(res => { 
+    }).then(res => {
         success(res)
     })
 }
@@ -73,7 +111,7 @@ const addZiCaiDan = () => {
             name: "sysPosition",
             icon: "home-outlined"
         }
-    }).then(res => { 
+    }).then(res => {
         success(res)
     })
 }

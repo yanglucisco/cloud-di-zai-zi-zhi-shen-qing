@@ -1,5 +1,7 @@
 package org.ziranziyuanting.common.service;
 
+import java.util.List;
+
 import org.reactivestreams.Publisher;
 import org.ziranziyuanting.common.entity.CommonEntity;
 
@@ -8,6 +10,7 @@ import reactor.core.publisher.Mono;
 
 public abstract interface CommonService<T extends CommonEntity> {
     Mono<T> saveOrUpdate(T t);
+    Flux<T> saveOrUpdateAll(List<T> ts);
     
     <S extends T> Mono<S> save(S entity);
 
