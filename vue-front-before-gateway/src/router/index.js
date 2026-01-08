@@ -14,11 +14,28 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: Home,
-      children: [{
+      children: [
+      {
+        path: "index",
+        name: "index",
+        component: User,
+      },
+      {
         path: "user",
         name: "user",
         component: User,
-      }]
+      },
+      {
+        path: "logout",
+        name: "logout",
+        component: LogoutView,
+      },
+      {
+        path: "login",
+        name: "login",
+        component: Login,
+      }
+    ]
     },
     {
       path: "/home",
@@ -26,18 +43,18 @@ const router = createRouter({
       component: Home,
     },
     {
-      path: "/home1",
+      path: "/home11",
       name: "home1",
       component: Home1View,
     },
     {
-      path: "/logout",
-      name: "logout",
+      path: "/logout1",
+      name: "logout1",
       component: LogoutView,
     },
     {
-      path: "/login",
-      name: "login",
+      path: "/login1",
+      name: "login1",
       component: Login,
     }
   ],

@@ -11,23 +11,23 @@
             </div>
             <div class="scrollable-menu-container">
                 <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" v-for="icon in iconList">
-                    <a-sub-menu :key="icon.name" v-if="icon.type === 'subMenu'">
+                    <a-sub-menu :key="icon.key" v-if="icon.type === 'subMenu'">
                         <template #title>
                             <span>
-                                <component :is="icon.component" />
+                                <component :is="icons.get(icon.icon)" />
                                 {{ icon.text }}
                             </span>
                         </template>
                         <div v-for="item in icon.children">
-                            <a-menu-item :key="item.name">
-                                <component :is="item.component" />
+                            <a-menu-item :key="item.key" @click="openUser(item)">
+                                <component :is="icons.get(item.icon)" />
                                 <span>{{ item.text }}</span>
                             </a-menu-item>
                         </div>
                     </a-sub-menu>
-                    <a-menu-item :key="icon.name" v-else>
-                            <component :is="icon.component" />
-                            <span>{{ icon.text }}</span>
+                    <a-menu-item :key="icon.key" v-else @click="openUser(icon)">
+                        <component :is="icons.get(icon.icon)" />
+                        <span>{{ icon.text }}</span>
                     </a-menu-item>
                 </a-menu>
             </div>
@@ -50,18 +50,9 @@
                 </div>
                 <div style="display: flex;">
                     <UserBar></UserBar>
-
-                    <!-- <a-menu class="layout-items-center">
-                        <a-menu-item key="xiTong1">
-                            <span>系统</span>
-                        </a-menu-item>
-                        <a-menu-item key="yeWu1">
-                            <span>业务</span>
-                        </a-menu-item>
-                    </a-menu> -->
                 </div>
             </a-layout-header>
-            <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
+            <a-layout-content :style="{ margin: '12px 12px', padding: '12px', background: '#fff', minHeight: '280px' }">
                 <router-view></router-view>
             </a-layout-content>
         </a-layout>
@@ -76,27 +67,57 @@ import {
 
 import UserBar from './UserBar.vue'
 import { useRouter } from 'vue-router'
+import { useMessage } from '@/utils/useMessage';
+import { onMounted } from 'vue'
+import request from '@/utils/request'
+const icons = new Map()
+icons.set('UserOutlined', UserOutlined)
+const { success, error, warning, loading } = useMessage();
 
-const iconList = ref([
-    { component: UserOutlined, text: '用户', name: '1', type: 'menu' },
-    { component: HomeOutlined, text: '首页', name: '2', type: 'subMenu', children:[
-        { component: UserOutlined, text: '首页1', name: '2-1', type: 'menu' },
-        { component: UserOutlined, text: '首页2', name: '2-2', type: 'menu' }
-    ] },
-    { component: SettingOutlined, text: '设置', name: '3', type: 'menu' },
-    { component: SettingOutlined, text: '设置1', name: '4', type: 'menu' },
-    { component: HomeOutlined, text: '首页123', name: '5', type: 'subMenu', children:[
-        { component: UserOutlined, text: '首页1123123', name: '5-1', type: 'menu' },
-        { component: UserOutlined, text: '首页2123123123', name: '5-2', type: 'menu' }
-    ] },
-]);
+const iconList = ref([]);
 const router = useRouter()
 const selectedKeys = ref([])
 const collapsed = ref(false)
-const openUser = () => {
-    console.log('ceshiceshiceshi')
-    router.push('/user')
+const openUser = (item) => {
+    console.log(item.name)
+    success(item.name)
+    router.push(item.path)
 }
+// mounted 生命周期
+onMounted(() => {
+    debugger
+    // let menus = localStorage.getItem('menus')
+    // if(menus){
+    //     iconList.value = JSON.parse(menus)
+    //     return
+    // }
+    request({
+        url: '/rolemanage/sysrole/get',
+        method: 'get'
+    }).then(res => {
+        iconList.value = res
+        localStorage.setItem('menus', JSON.stringify(res))
+        success('获取菜单数据成功')
+    })
+    // [
+    //     { icon: UserOutlined, text: '用户', key: '1', type: 'menu', path: '/user' },
+    //     {
+    //         icon: HomeOutlined, text: '首页', key: '2', type: 'subMenu', path: '/login', children: [
+    //             { icon: UserOutlined, text: '首页1', key: '2-1', type: 'menu', path: '/user' },
+    //             { icon: UserOutlined, text: '首页2', key: '2-2', type: 'menu', path: '/logout' }
+    //         ]
+    //     },
+    //     { icon: SettingOutlined, text: '设置', key: '3', type: 'menu', path: '/user' },
+    //     { icon: SettingOutlined, text: '设置1', key: '4', type: 'menu', path: '/login' },
+    //     {
+    //         icon: HomeOutlined, text: '首页123', key: '5', type: 'subMenu', path: '/logout', children: [
+    //             { icon: UserOutlined, text: '首页1123123', key: '5-1', type: 'menu', path: '/logout' },
+    //             { icon: UserOutlined, text: '首页2123123123', key: '5-2', type: 'menu', path: '/user' }
+    //         ]
+    //     },
+    //     { icon: SettingOutlined, text: '设置112312321', key: '4', type: 'menu', path: '/login' },
+    // ]
+})
 </script>
 <style scoped>
 /* 可滚动的菜单容器 */

@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.ziranziyuanting.rolemanage.entity.SysRelation;
 import org.ziranziyuanting.rolemanage.entity.SysRole;
+import org.ziranziyuanting.rolemanage.model.SysMenu;
 import org.ziranziyuanting.rolemanage.param.SysRoleParam;
 import org.ziranziyuanting.rolemanage.param.SysRoleShouQuanCaiDanParam;
 import org.ziranziyuanting.rolemanage.service.SysRelationService;
@@ -20,6 +21,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -50,4 +53,58 @@ public class SysRoleController {
     public ResponseEntity<Mono<String>> shouQuanCaiDan(@Valid @RequestBody SysRoleShouQuanCaiDanParam param) {
         return ResponseEntity.ok(sysRelationService.shouQuanCaiDan(param).map(s -> "新增授权成功"));
     }
+    @GetMapping("get")
+    public ResponseEntity<Flux<SysMenu>> get() {
+        /**
+         * // [
+    //     { icon: UserOutlined, text: '用户', key: '1', type: 'menu', path: '/user' },
+    //     {
+    //         icon: HomeOutlined, text: '首页', key: '2', type: 'subMenu', path: '/login', children: [
+    //             { icon: UserOutlined, text: '首页1', key: '2-1', type: 'menu', path: '/user' },
+    //             { icon: UserOutlined, text: '首页2', key: '2-2', type: 'menu', path: '/logout' }
+    //         ]
+    //     },
+    //     { icon: SettingOutlined, text: '设置', key: '3', type: 'menu', path: '/user' },
+    //     { icon: SettingOutlined, text: '设置1', key: '4', type: 'menu', path: '/login' },
+    //     {
+    //         icon: HomeOutlined, text: '首页123', key: '5', type: 'subMenu', path: '/logout', children: [
+    //             { icon: UserOutlined, text: '首页1123123', key: '5-1', type: 'menu', path: '/logout' },
+    //             { icon: UserOutlined, text: '首页2123123123', key: '5-2', type: 'menu', path: '/user' }
+    //         ]
+    //     },
+    //     { icon: SettingOutlined, text: '设置112312321', key: '4', type: 'menu', path: '/login' },
+    // ]
+         */
+        SysMenu m1 = SysMenu.builder()
+            .icon("UserOutlined")
+            .text("用户")
+            .key("1")
+            .type("menu")
+            .path("/logout").build();
+        SysMenu m21 = SysMenu.builder()
+            .icon("UserOutlined")
+            .text("首页1")
+            .key("2-1")
+            .type("menu")
+            .path("/user").build();
+        SysMenu m22 = SysMenu.builder()
+            .icon("UserOutlined")
+            .text("首页2")
+            .key("2-2")
+            .type("menu")
+            .path("/user").build();
+        
+        SysMenu m2 = SysMenu.builder()
+            .icon("UserOutlined")
+            .text("首页")
+            .key("2")
+            .type("subMenu")
+            .path("/login")
+            .build();
+        m2.addSysMenu(m21);
+        m2.addSysMenu(m22);
+        Flux<SysMenu> r = Flux.just(m1, m2);
+        return ResponseEntity.ok(r);
+    }
+    
 }
