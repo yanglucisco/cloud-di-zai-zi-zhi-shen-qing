@@ -1,5 +1,5 @@
 <template>
-    <a-layout style="min-height: 98vh;">
+    <a-layout style="margin: 3px; padding: 3px; background-color: transparent; border-radius: 10px;">
         <a-layout-sider class="left-column" v-model:collapsed="collapsed" :trigger="null" collapsible>
             <div class="logo">
                 <img class="img"
@@ -32,11 +32,11 @@
                 </a-menu>
             </div>
         </a-layout-sider>
-        <a-layout class="sider">
-            <a-layout-header class="heder contentheader">
+        <a-layout class="right-column">
+            <a-layout-header class="contentheader">
                 <div style="display: flex;">
-                    <menu-unfold-outlined v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)" />
-                    <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+                    <menu-unfold-outlined style="margin-left: 5px;" v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)" />
+                    <menu-fold-outlined style="margin-left: 5px;" v-else class="trigger" @click="() => (collapsed = !collapsed)" />
                     <a-menu class="layout-items-center">
                         <a-menu-item key="xiTong" style="width: auto; overflow: visible;">
                             <AppstoreAddOutlined />
@@ -52,7 +52,7 @@
                     <UserBar></UserBar>
                 </div>
             </a-layout-header>
-            <a-layout-content :style="{ margin: '12px 12px', padding: '12px', background: '#fff', minHeight: '280px' }">
+            <a-layout-content class="content">
                 <router-view></router-view>
             </a-layout-content>
         </a-layout>
@@ -96,7 +96,9 @@ onMounted(() => {
         method: 'get'
     }).then(res => {
         iconList.value = res
-        localStorage.setItem('menus', JSON.stringify(res))
+        success(res[0].path)
+        router.push(res[0].path)
+        // localStorage.setItem('menus', JSON.stringify(res))
         success('获取菜单数据成功')
     })
     // [
@@ -132,9 +134,16 @@ onMounted(() => {
 
 .left-column {
     height: calc(100vh - 64px);
+    border-radius: 10px 0px 0px 10px;
+}
+
+.right-column {
+    height: calc(100vh - 64px);
+    border-radius: 0px 10px 10px 0px;
 }
 
 .contentheader {
+    border-radius: 0px 10px 0px 0px;
     background: #fff;
     padding: 0;
     display: flex;
@@ -151,6 +160,7 @@ onMounted(() => {
 
 .heder .trigger:hover {
     color: #1890ff;
+    
 }
 
 .logo .img {
@@ -173,5 +183,14 @@ onMounted(() => {
 .layout-items-center {
     display: flex;
     align-items: center;
+}
+
+.content {
+/* :style="{ margin: '1px 1px', padding: '3px', background: '#fff', minHeight: '280px' } */
+    margin: 10px;
+    padding: 3px;
+    background-color: #fff;
+    min-height: 280px;
+    border-radius: 0px 0px 10px 0px;
 }
 </style>
