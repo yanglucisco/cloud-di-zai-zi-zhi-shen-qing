@@ -21,10 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
-
-
 
 @RestController
 @RequestMapping("sysrole")
@@ -75,36 +71,6 @@ public class SysRoleController {
     //     { icon: SettingOutlined, text: '设置112312321', key: '4', type: 'menu', path: '/login' },
     // ]
          */
-        SysMenu m1 = SysMenu.builder()
-            .icon("UserOutlined")
-            .text("用户")
-            .key("1")
-            .type("menu")
-            .path("/logout").build();
-        SysMenu m21 = SysMenu.builder()
-            .icon("UserOutlined")
-            .text("首页1")
-            .key("2-1")
-            .type("menu")
-            .path("/user").build();
-        SysMenu m22 = SysMenu.builder()
-            .icon("UserOutlined")
-            .text("首页2")
-            .key("2-2")
-            .type("menu")
-            .path("/user").build();
-        
-        SysMenu m2 = SysMenu.builder()
-            .icon("UserOutlined")
-            .text("首页")
-            .key("2")
-            .type("subMenu")
-            .path("/login")
-            .build();
-        m2.addSysMenu(m21);
-        m2.addSysMenu(m22);
-        Flux<SysMenu> r = Flux.just(m1, m2);
-        return ResponseEntity.ok(r);
+        return ResponseEntity.ok(sysRoleService.findResourceWithUserId(1l));
     }
-    
 }
