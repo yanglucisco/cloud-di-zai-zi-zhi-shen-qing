@@ -4,12 +4,13 @@ import { usePkceStore } from '@/store/pkce'
 // const pkceStore = usePkceStore()
 
 export function getCurrentVerifier() {
-  const currentVerifier =  sessionStorage.getItem('currentVerifier')
+  // return 'RTgjJYtFG7GCPqe9uxRcCzo99SeuHivcqgAOckR5BccJ7pvkd9bxT60mJj7Oakz8'
+  const currentVerifier =  localStorage.getItem('currentVerifier')
   if (currentVerifier && currentVerifier.trim().length > 0) {
     return currentVerifier
   }
   const r = generateCodeVerifier()
-  sessionStorage.setItem('currentVerifier', r)
+  localStorage.setItem('currentVerifier', r)
   return r
 }
 export function base64URL(str) {
@@ -28,7 +29,7 @@ export function generateCodeVerifier() {
   return text
 }
 export async function generateCodeChallenge() {
-  
+  // return '5ZbQopS699K0xepPT6hNqAwEnhAUWyI2zJOSoGA1eXs'
   const f = getCurrentVerifier()
   console.log('f: ' + f)
   var r1 = CryptoJS.SHA256(f)
@@ -37,7 +38,7 @@ export async function generateCodeChallenge() {
   return r
 }
 export function gotoLoginPage(codeChallenge){
-  // 
+  //http://vue-front-before-gateway.clouddizai.com:20005/oauth
   window.open('http://auth-server:20001/oauth2/authorize?response_type=code&client_id=pkce-client&scope=openid' 
                     + '&redirect_uri=http://vue-front-before-gateway.clouddizai.com:20005/home' 
                     + '&code_challenge_method=S256&code_challenge=' + codeChallenge, '_self')

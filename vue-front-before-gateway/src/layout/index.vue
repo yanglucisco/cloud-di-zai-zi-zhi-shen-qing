@@ -13,8 +13,8 @@
                 <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" v-for="icon in iconList">
                     <a-sub-menu :key="icon.key" v-if="icon.type === 'subMenu'">
                         <template #title>
+                            <component :is="icons.get(icon.icon)" />
                             <span>
-                                <component :is="icons.get(icon.icon)" />
                                 {{ icon.text }}
                             </span>
                         </template>
@@ -35,8 +35,10 @@
         <a-layout class="right-column">
             <a-layout-header class="contentheader">
                 <div style="display: flex;">
-                    <menu-unfold-outlined style="margin-left: 5px;" v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)" />
-                    <menu-fold-outlined style="margin-left: 5px;" v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+                    <menu-unfold-outlined style="margin-left: 5px;" v-if="collapsed" class="trigger"
+                        @click="() => (collapsed = !collapsed)" />
+                    <menu-fold-outlined style="margin-left: 5px;" v-else class="trigger"
+                        @click="() => (collapsed = !collapsed)" />
                     <a-menu class="layout-items-center">
                         <a-menu-item key="xiTong" style="width: auto; overflow: visible;">
                             <AppstoreAddOutlined />
@@ -70,6 +72,8 @@ import { useRouter } from 'vue-router'
 import { useMessage } from '@/utils/useMessage';
 import { onMounted } from 'vue'
 import request from '@/utils/request'
+import { sysinfoStore } from '@/store/sysinfo'
+import appConfig from '@/store/Singleton'
 const icons = new Map()
 icons.set('UserOutlined', UserOutlined)
 const { success, error, warning, loading } = useMessage();
@@ -85,22 +89,20 @@ const openUser = (item) => {
 }
 // mounted 生命周期
 onMounted(() => {
-    debugger
+    iconList.value = appConfig.getData('menus')
     // let menus = localStorage.getItem('menus')
     // if(menus){
     //     iconList.value = JSON.parse(menus)
     //     return
     // }
-    request({
-        url: '/rolemanage/sysrole/get',
-        method: 'get'
-    }).then(res => {
-        iconList.value = res
-        success(res[0].path)
-        router.push(res[0].path)
-        // localStorage.setItem('menus', JSON.stringify(res))
-        success('获取菜单数据成功')
-    })
+    // request({
+    //     url: '/rolemanage/sysrole/get',
+    //     method: 'get'
+    // }).then(res => {
+    //     iconList.value = res
+    //     success(res[0].path)
+    //     success('获取菜单数据成功')
+    // })
     // [
     //     { icon: UserOutlined, text: '用户', key: '1', type: 'menu', path: '/user' },
     //     {
@@ -160,7 +162,7 @@ onMounted(() => {
 
 .heder .trigger:hover {
     color: #1890ff;
-    
+
 }
 
 .logo .img {
@@ -186,7 +188,7 @@ onMounted(() => {
 }
 
 .content {
-/* :style="{ margin: '1px 1px', padding: '3px', background: '#fff', minHeight: '280px' } */
+    /* :style="{ margin: '1px 1px', padding: '3px', background: '#fff', minHeight: '280px' } */
     margin: 10px;
     padding: 3px;
     background-color: #fff;

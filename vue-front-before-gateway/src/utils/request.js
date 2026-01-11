@@ -41,7 +41,6 @@ service.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          debugger
           // 
           console.error('未授权，请重新登录')
           cleanToken()

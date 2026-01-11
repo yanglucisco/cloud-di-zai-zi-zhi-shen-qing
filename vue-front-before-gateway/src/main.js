@@ -8,11 +8,12 @@ import i18n from './locales'
 import 'vue3-ui/dist/index.es.css'
 // import './tailwind.css'
 import './style/index.less'
-
+debugger
 const app = createApp(App)
-app.use(router)
 const pinia = createPinia()
 app.use(pinia)
+app.use(router)
+console.log('after use pinia')
 app.use(Antd)
 app.use(i18n)
 app.mount('#app')

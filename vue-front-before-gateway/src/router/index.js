@@ -5,62 +5,59 @@ import Home1View from "../views/Home1View.vue"
 import LogoutView from '../views/Logout.vue'
 import Login from '../views/Login.vue'
 import User from '../views/User/Index.vue'
+import Index from '../views/Index.vue'
+import Sys from '../views/Sys/Index.vue'
+import SysOrg from '../views/Sys/Org/Index.vue'
+import SysUser from '../views/Sys/User/Index.vue'
+import { sysinfoStore } from "@/store/sysinfo"
 import { getCurrentVerifier, generateCodeChallenge, gotoLoginPage } from '../utils/pkce-util'
 import { setUserAccessToken, setUserIdToken, getUserInfo } from '../userInfo/index'
+import request from '@/utils/request'
+import appConfig from '@/store/Singleton'
+appConfig.setData('name', 'yanglu')
+debugger
+console.log('route index')
 const router = createRouter({
   history: createWebHistory(),//createWebHistory(),
   routes: [
     {
       path: "/",
-      name: "home",
+      name: "root",
       component: Home,
       children: [
-      {
-        path: "index",
-        name: "index",
-        component: User,
-      },
-      {
-        path: "user",
-        name: "user",
-        component: User,
-      },
-      {
-        path: "logout",
-        name: "logout",
-        component: LogoutView,
-      },
-      {
-        path: "login",
-        name: "login",
-        component: Login,
-      }
-    ]
-    },
-    {
-      path: "/home",
-      name: "home2",
-      component: Home,
-    },
-    {
-      path: "/home11",
-      name: "home1",
-      component: Home1View,
-    },
-    {
-      path: "/logout1",
-      name: "logout1",
-      component: LogoutView,
-    },
-    {
-      path: "/login1",
-      name: "login1",
-      component: Login,
+        {
+          path: "home",
+          name: "home",
+          component: Index, //() => import('@/views/Index.vue'),
+        },
+        // {
+        //   path: "index",
+        //   name: "index",
+        //   component: Index, //() => import('@/views/Index.vue'),
+        // },
+        // {
+        //   path: "sys",
+        //   name: "sys",
+        //   component: Sys, //() => import('@/views/Sys/Index.vue'),
+        //   children: [
+        //     {
+        //       path: "org",
+        //       name: "sysorg",
+        //       component: SysOrg, //() => import('@/views/Sys/Org/Index.vue'),
+        //     },
+        //     {
+        //       path: "user",
+        //       name: "sysuser",
+        //       component: SysUser, //() => import('@/views/Sys/User/Index.vue'),
+        //     }
+        //   ]
+        // },
+      ]
     }
   ],
 })
 router.beforeEach((to, from, next) => {
-  
+  console.log('route before each')
   console.log("router from: " + from.fullPath)
   console.log("router to: " + to.fullPath)
   const accessToken = getUserInfo().accessToken
@@ -85,39 +82,44 @@ async function isFromAuthorServer() {
     //从授权服务器返回来的
     await exchangeCode(code)
   }
-  else
-  {
+  else {
     throw new Error('请登录')
   }
 }
 const exchangeCode = async (code) => {
-    const verifier = getCurrentVerifier()// '8SkwXEJUZJVQLScWYs8nV9bhv4GfvnHmc9iuApguEwY';// sessionStorage.getItem('pkce_verifier');
-    console.log('verifier: ' + verifier)
-    const tokenUrl = 'http://vue-front-before-gateway.clouddizai.com:20005/oauth/oauth2/token';
+  const verifier = getCurrentVerifier()// '8SkwXEJUZJVQLScWYs8nV9bhv4GfvnHmc9iuApguEwY';// sessionStorage.getItem('pkce_verifier');
+  console.log('verifier: ' + verifier)
+  const tokenUrl = 'http://vue-front-before-gateway.clouddizai.com:20005/oauth/oauth2/token'
+  // const tokenUrl = 'http://auth-server:20001/oauth2/token';
 
-    const body = new URLSearchParams({
-        grant_type: 'authorization_code',
-        code,
-        redirect_uri: 'http://vue-front-before-gateway.clouddizai.com:20005/home',
-        client_id: 'pkce-client',
-        code_verifier: verifier // 关键：验证身份
+  const body = new URLSearchParams({
+    grant_type: 'authorization_code',
+    code,
+    redirect_uri: 'http://vue-front-before-gateway.clouddizai.com:20005/home',
+    client_id: 'pkce-client',
+    code_verifier: verifier // 关键：验证身份
+  });
+
+  try {
+    const response = await fetch(tokenUrl, {
+      method: 'POST',
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body
     });
-
-    try {
-        const response = await fetch(tokenUrl, {
-            method: 'POST',
-            mode: 'cors',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body
-        });
-        const tokens = await response.json();
-        
-        // console.log('id_token:', tokens.id_token);
-        sessionStorage.setItem("idToken", tokens.id_token);
-        setUserAccessToken(tokens.access_token)
-        setUserIdToken(tokens.id_token)
-    } catch (error) {
-        console.error('Token exchange failed:', error);
-    }
+    const tokens = await response.json();
+    sessionStorage.setItem("idToken", tokens.id_token);
+    setUserAccessToken(tokens.access_token)
+    setUserIdToken(tokens.id_token)
+    console.log('exchange')
+    const res = await request({
+      url: '/rolemanage/sysrole/get',
+      method: 'get'
+    })
+    console.log('res:' + res)
+    appConfig.setData('menus', res)
+  } catch (error) {
+    console.error('Token exchange failed:', error);
+  }
 }
 export default router

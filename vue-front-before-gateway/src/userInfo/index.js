@@ -3,20 +3,20 @@ const idTokenText = 'idToken'
 export function getUserInfo(){
     // 
     return {
-        accessToken: localStorage.getItem(accessTokenText)
+        accessToken: sessionStorage.getItem(accessTokenText)
     }
 }
 export function setUserAccessToken(accessToken){
     // 
-    localStorage.setItem(accessTokenText, accessToken)
+    sessionStorage.setItem(accessTokenText, accessToken)
 }
 export function cleanToken(){
-    localStorage.removeItem(accessTokenText)
+    sessionStorage.removeItem(accessTokenText)
 }
 export function setUserIdToken(idToken){
     // 
-    localStorage.setItem(idTokenText, idToken)
+    sessionStorage.setItem(idTokenText, idToken)
 }
 export function getUserIdToken(){
-    return localStorage.getItem(idTokenText)
+    return sessionStorage.getItem(idTokenText)
 }
