@@ -90,37 +90,6 @@ const openUser = (item) => {
 // mounted 生命周期
 onMounted(() => {
     iconList.value = appConfig.getData('menus')
-    // let menus = localStorage.getItem('menus')
-    // if(menus){
-    //     iconList.value = JSON.parse(menus)
-    //     return
-    // }
-    // request({
-    //     url: '/rolemanage/sysrole/get',
-    //     method: 'get'
-    // }).then(res => {
-    //     iconList.value = res
-    //     success(res[0].path)
-    //     success('获取菜单数据成功')
-    // })
-    // [
-    //     { icon: UserOutlined, text: '用户', key: '1', type: 'menu', path: '/user' },
-    //     {
-    //         icon: HomeOutlined, text: '首页', key: '2', type: 'subMenu', path: '/login', children: [
-    //             { icon: UserOutlined, text: '首页1', key: '2-1', type: 'menu', path: '/user' },
-    //             { icon: UserOutlined, text: '首页2', key: '2-2', type: 'menu', path: '/logout' }
-    //         ]
-    //     },
-    //     { icon: SettingOutlined, text: '设置', key: '3', type: 'menu', path: '/user' },
-    //     { icon: SettingOutlined, text: '设置1', key: '4', type: 'menu', path: '/login' },
-    //     {
-    //         icon: HomeOutlined, text: '首页123', key: '5', type: 'subMenu', path: '/logout', children: [
-    //             { icon: UserOutlined, text: '首页1123123', key: '5-1', type: 'menu', path: '/logout' },
-    //             { icon: UserOutlined, text: '首页2123123123', key: '5-2', type: 'menu', path: '/user' }
-    //         ]
-    //     },
-    //     { icon: SettingOutlined, text: '设置112312321', key: '4', type: 'menu', path: '/login' },
-    // ]
 })
 </script>
 <style scoped>

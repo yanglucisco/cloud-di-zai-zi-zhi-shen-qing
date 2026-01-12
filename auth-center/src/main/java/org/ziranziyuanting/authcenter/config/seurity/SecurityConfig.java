@@ -74,8 +74,6 @@ public class SecurityConfig {
                                 .loginPage("/custom-login")
                                 // 指定处理登录认证的POST请求地址，与HTML表单action一致
                                 .loginProcessingUrl("/login")
-                // 登录成功后的默认跳转页面
-                // .defaultSuccessUrl("/home", true)
                 );
         return http.build();
     }
