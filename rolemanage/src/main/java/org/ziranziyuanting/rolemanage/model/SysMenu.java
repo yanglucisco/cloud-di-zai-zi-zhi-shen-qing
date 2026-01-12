@@ -13,14 +13,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SysMenu {
-    /**
-     * icon: HomeOutlined, text: '首页', key: '2', type: 'subMenu', path: '/login', children:
-     */
     private String icon;
-    private String text;
-    private String key;
+    private String title;
+    private String name;
     private String type;
     private String path;
+    private String component;
     private Long id;
     private Long pid;
     @Builder.Default

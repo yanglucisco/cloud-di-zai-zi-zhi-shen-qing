@@ -10,24 +10,24 @@
                 </div>
             </div>
             <div class="scrollable-menu-container">
-                <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" v-for="icon in iconList">
-                    <a-sub-menu :key="icon.key" v-if="icon.type === 'subMenu'">
+                <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" v-for="menu in menuList">
+                    <a-sub-menu :key="menu.name" v-if="menu.type === 'subMenu'">
                         <template #title>
-                            <component :is="icons.get(icon.icon)" />
+                            <component :is="icons.get(menu.icon)" />
                             <span>
-                                {{ icon.text }}
+                                {{ menu.title }}
                             </span>
                         </template>
-                        <div v-for="item in icon.children">
-                            <a-menu-item :key="item.key" @click="openUser(item)">
-                                <component :is="icons.get(item.icon)" />
-                                <span>{{ item.text }}</span>
+                        <div v-for="item in menu.children">
+                            <a-menu-item :key="item.name" @click="clickMenu(item)">
+                                <component :is="icons.get(menu.icon)" />
+                                <span>{{ menu.title }}</span>
                             </a-menu-item>
                         </div>
                     </a-sub-menu>
-                    <a-menu-item :key="icon.key" v-else @click="openUser(icon)">
-                        <component :is="icons.get(icon.icon)" />
-                        <span>{{ icon.text }}</span>
+                    <a-menu-item :key="menu.name" v-else @click="clickMenu(menu)">
+                        <component :is="icons.get(menu.icon)" />
+                        <span>{{ menu.title }}</span>
                     </a-menu-item>
                 </a-menu>
             </div>
@@ -78,18 +78,17 @@ const icons = new Map()
 icons.set('UserOutlined', UserOutlined)
 const { success, error, warning, loading } = useMessage();
 
-const iconList = ref([]);
+const menuList = ref([]);
 const router = useRouter()
 const selectedKeys = ref([])
 const collapsed = ref(false)
-const openUser = (item) => {
-    console.log(item.name)
+const clickMenu = (item) => {
     success(item.name)
     router.push(item.path)
 }
 // mounted 生命周期
 onMounted(() => {
-    iconList.value = appConfig.getData('menus')
+    menuList.value = appConfig.getData('menus')
 })
 </script>
 <style scoped>

@@ -8,7 +8,6 @@ import i18n from './locales'
 import 'vue3-ui/dist/index.es.css'
 // import './tailwind.css'
 import './style/index.less'
-debugger
 const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)

@@ -18,7 +18,6 @@ import { computed } from "vue"
 import routerMap from './RouterPath.js'
 
 appConfig.setData('name', 'yanglu')
-debugger
 console.log('route index')
 const router = createRouter({
   history: createWebHistory(),//createWebHistory(),
@@ -70,7 +69,7 @@ async function isFromAuthorServer() {
 const dynamicCreateRouter = (parentName, routerItems) => {
   routerItems.forEach(item => {
     router.addRoute(parentName, {
-        path: item.path,//'sys',
+        path: item.component,//'sys',
         name: item.name,//'sys',
         component: routerMap.routerMap.get(item.name)
     })
@@ -107,29 +106,8 @@ const exchangeCode = async (code) => {
       url: '/rolemanage/sysrole/get',
       method: 'get'
     })
-    dynamicCreateRouter('root', [
-      {
-        name: 'index',
-        path: 'index',
-        children: []
-      },
-      {
-        name: 'sys',
-        path: 'sys',
-        children: [
-          {
-            name: 'sysOrg',
-            path: 'org',
-            children: []
-          },
-          {
-            name: 'sysUser',
-            path: 'user',
-            children: []
-          }
-        ]
-      }
-    ])
+    debugger
+    dynamicCreateRouter('root', res)
     console.log('res:' + res)
     appConfig.setData('menus', res)
   } catch (error) {
