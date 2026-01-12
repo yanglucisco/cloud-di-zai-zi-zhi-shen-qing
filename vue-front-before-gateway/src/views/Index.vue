@@ -4,36 +4,35 @@
 </template>
 <script setup>
 import MyTestMenu from './Component/MyTestMenu.vue'
-const myUser = {
-    name: 'menu1',
-    menu: [
-        {
-            deep: 1, text: '菜单1', children: {
-                name: 'menu1-1',
-                menu: [
-                    {
-                        deep: 2,
-                        text: '菜单1-1',
-                        children:
+const myUser = [
+    {
+        deep: 1,
+        text: '菜单1',
+        children: [
+            {
+                deep: 2,
+                text: '菜单1-1',
+                children:
+                    [
                         {
-                            name: 'menu1-1-1',
-                            menu: [
-                                {
-                                    deep: 3,
-                                    text: '菜单1-1-1',
-                                    children: []
-                                }
-                            ]
+                            deep: 3,
+                            text: '菜单1-1-1',
+                            children: []
                         }
-                    },
+                    ]
+            },
+            {
+                deep: 2,
+                text: '菜单1-2',
+                children: [
                     {
-                        deep: 1,
-                        text: '菜单1-2',
+                        deep: 3,
+                        text: '菜单1-2-1111',
                         children: []
                     }
                 ]
             }
-        }
-    ]
-}
+        ]
+    }
+]
 </script>

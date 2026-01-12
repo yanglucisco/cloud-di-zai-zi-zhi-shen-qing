@@ -10,25 +10,30 @@
                 </div>
             </div>
             <div class="scrollable-menu-container">
-                <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" v-for="menu in menuList">
-                    <a-sub-menu :key="menu.name" v-if="menu.type === 'subMenu'">
-                        <template #title>
-                            <component :is="icons.get(menu.icon)" />
-                            <span>
-                                {{ menu.title }}
-                            </span>
-                        </template>
-                        <div v-for="item in menu.children">
-                            <a-menu-item :key="item.name" @click="clickMenu(item)">
+                <!-- <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" v-for="menu in menuList">
+                    <div>
+                        <a-sub-menu :key="menu.name" v-if="menu.type === 'subMenu'">
+                            <template #title>
                                 <component :is="icons.get(menu.icon)" />
-                                <span>{{ menu.title }}</span>
-                            </a-menu-item>
-                        </div>
-                    </a-sub-menu>
-                    <a-menu-item :key="menu.name" v-else @click="clickMenu(menu)">
-                        <component :is="icons.get(menu.icon)" />
-                        <span>{{ menu.title }}</span>
-                    </a-menu-item>
+                                <span>
+                                    {{ menu.title }}
+                                </span>
+                            </template>
+                            <div v-for="item in menu.children">
+                                <a-menu-item :key="item.name" @click="clickMenu(item)">
+                                    <component :is="icons.get(menu.icon)" />
+                                    <span>{{ menu.title }}</span>
+                                </a-menu-item>
+                            </div>
+                        </a-sub-menu>
+                        <a-menu-item :key="menu.name" v-else @click="clickMenu(menu)">
+                            <component :is="icons.get(menu.icon)" />
+                            <span>{{ menu.title }}</span>
+                        </a-menu-item>
+                    </div>
+                </a-menu> -->
+                <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
+                    <LayoutMenu :menuList="menuList"></LayoutMenu>
                 </a-menu>
             </div>
         </a-layout-sider>
@@ -69,11 +74,13 @@ import {
 
 import UserBar from './UserBar.vue'
 import { useRouter } from 'vue-router'
-import { useMessage } from '@/utils/useMessage';
+import { useMessage } from '@/utils/useMessage'
 import { onMounted } from 'vue'
 import request from '@/utils/request'
 import { sysinfoStore } from '@/store/sysinfo'
 import appConfig from '@/store/Singleton'
+import LayoutMenu from './LayoutMenu.vue'
+
 const icons = new Map()
 icons.set('UserOutlined', UserOutlined)
 const { success, error, warning, loading } = useMessage();
