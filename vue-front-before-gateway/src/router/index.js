@@ -14,6 +14,9 @@ import { getCurrentVerifier, generateCodeChallenge, gotoLoginPage } from '../uti
 import { setUserAccessToken, setUserIdToken, getUserInfo } from '../userInfo/index'
 import request from '@/utils/request'
 import appConfig from '@/store/Singleton'
+import { computed } from "vue"
+import routerMap from './RouterPath.js'
+
 appConfig.setData('name', 'yanglu')
 debugger
 console.log('route index')
@@ -29,29 +32,7 @@ const router = createRouter({
           path: "home",
           name: "home",
           component: Index, //() => import('@/views/Index.vue'),
-        },
-        // {
-        //   path: "index",
-        //   name: "index",
-        //   component: Index, //() => import('@/views/Index.vue'),
-        // },
-        // {
-        //   path: "sys",
-        //   name: "sys",
-        //   component: Sys, //() => import('@/views/Sys/Index.vue'),
-        //   children: [
-        //     {
-        //       path: "org",
-        //       name: "sysorg",
-        //       component: SysOrg, //() => import('@/views/Sys/Org/Index.vue'),
-        //     },
-        //     {
-        //       path: "user",
-        //       name: "sysuser",
-        //       component: SysUser, //() => import('@/views/Sys/User/Index.vue'),
-        //     }
-        //   ]
-        // },
+        }
       ]
     }
   ],
@@ -86,6 +67,16 @@ async function isFromAuthorServer() {
     throw new Error('请登录')
   }
 }
+const dynamicCreateRouter = (parentName, routerItems) => {
+  routerItems.forEach(item => {
+    router.addRoute(parentName, {
+        path: item.path,//'sys',
+        name: item.name,//'sys',
+        component: routerMap.routerMap.get(item.name)
+    })
+    dynamicCreateRouter(item.name, item.children)
+  })
+}
 const exchangeCode = async (code) => {
   const verifier = getCurrentVerifier()// '8SkwXEJUZJVQLScWYs8nV9bhv4GfvnHmc9iuApguEwY';// sessionStorage.getItem('pkce_verifier');
   console.log('verifier: ' + verifier)
@@ -98,7 +89,7 @@ const exchangeCode = async (code) => {
     redirect_uri: 'http://vue-front-before-gateway.clouddizai.com:20005/home',
     client_id: 'pkce-client',
     code_verifier: verifier // 关键：验证身份
-  });
+  })
 
   try {
     const response = await fetch(tokenUrl, {
@@ -116,10 +107,34 @@ const exchangeCode = async (code) => {
       url: '/rolemanage/sysrole/get',
       method: 'get'
     })
+    dynamicCreateRouter('root', [
+      {
+        name: 'index',
+        path: 'index',
+        children: []
+      },
+      {
+        name: 'sys',
+        path: 'sys',
+        children: [
+          {
+            name: 'sysOrg',
+            path: 'org',
+            children: []
+          },
+          {
+            name: 'sysUser',
+            path: 'user',
+            children: []
+          }
+        ]
+      }
+    ])
     console.log('res:' + res)
     appConfig.setData('menus', res)
   } catch (error) {
     console.error('Token exchange failed:', error);
   }
 }
+
 export default router
