@@ -41,24 +41,16 @@ services:
       - "20001:20001" # 端口映射：宿主机端口:容器内端口
     environment:
       - NACOS_HOST=nacos
-      - NACOS_PASSWORD=Htht123.com
+      - NACOS_PASSWORD=${NACOS_PASSWORD}
       - AUTH_CENTER_HOST=auth-center
       - DB_HOST=auth-center-mysql-db
       - DB_PORT=3306
       - DB_NAME=auth_center
       - DB_USER=auth_center
-      - DB_PASSWORD=Htht123.com
-    # 关键配置：指定日志驱动
-    # logging:
-    #   driver: fluentd
-    #   options:
-    #     fluentd-address: "tcp://fluent-bit:24224"  # 指向 Fluent Bit 服务 这里要使用IP地址，先启动fluetn-bit，查询它的IP地址
-        # tag: "auth-center.service"  # 为日志设置标签，便于在 Fluent Bit 中路由
-    # 如果应用依赖数据库，可以在这里定义，并使用depends_on
+      - DB_PASSWORD=${AUTH_CENTER_DB_PASSWORD}
     depends_on:
       - auth-center-mysql-db
       - nacos
-      - fluent-bit
     networks:
       - app-network # 将服务连接到自定义网络，便于其他容器访问
   auth-center-mysql-db: 
@@ -68,10 +60,10 @@ services:
     ports:
       - "13306:3306" # 端口映射：宿主机端口:容器内端口
     environment:
-      MYSQL_ROOT_PASSWORD: Htht123.com
+      MYSQL_ROOT_PASSWORD: ${AUTH_CENTER_DB_PASSWORD}
       MYSQL_DATABASE: auth_center
       MYSQL_USER: auth_center
-      MYSQL_PASSWORD: Htht123.com
+      MYSQL_PASSWORD: ${AUTH_CENTER_DB_PASSWORD}
       TZ: Asia/Shanghai # 设置容器时区[2](@ref)
     volumes:
       # 数据持久化：将容器内的数据目录映射到宿主机
@@ -95,10 +87,10 @@ services:
     ports:
       - "13307:3306" # 端口映射：宿主机端口:容器内端口
     environment:
-      MYSQL_ROOT_PASSWORD: Htht123.com
+      MYSQL_ROOT_PASSWORD: ${ROLE_MANAGE_DB_PASSWORD}
       MYSQL_DATABASE: role_manage
       MYSQL_USER: role_manage
-      MYSQL_PASSWORD: Htht123.com
+      MYSQL_PASSWORD: ${ROLE_MANAGE_DB_PASSWORD}
       TZ: Asia/Shanghai # 设置容器时区[2](@ref)
     volumes:
       # 数据持久化：将容器内的数据目录映射到宿主机
@@ -114,6 +106,27 @@ services:
       retries: 5
       start_period: 30s
     networks:
+      - app-network 
+  role-manage-app: 
+    build: ./rolemanage  
+    container_name: role-manage-app
+    expose:
+      - "20007"  # 暴露容器内部的端口给其他服务访问
+    ports:
+      - "20007:20007" # 端口映射：宿主机端口:容器内端口
+    environment:
+      - NACOS_HOST=nacos
+      - NACOS_PASSWORD=${NACOS_PASSWORD}
+      - AUTH_CENTER_HOST=auth-center
+      - ROLE_MANAGE_DB_HOST=role-manage-mysql-db
+      - ROLE_MANAGE_DB_PORT=3306
+      - ROLE_MANAGE_DB_NAME=role_manage
+      - ROLE_MANAGE_DB_USER=role_manage
+      - ROLE_MANAGE_DB_PASSWORD=${ROLE_MANAGE_DB_PASSWORD}
+    depends_on:
+      - role-manage-mysql-db
+      - nacos
+    networks:
       - app-network # 将服务连接到自定义网络，便于其他容器访问
   certification-catalog:
     build: ./certification-catalog  # 使用Dockerfile构建镜像的路径
@@ -124,11 +137,29 @@ services:
       - "20000:20000" # 端口映射：宿主机端口:容器内端口
     environment:
       - NACOS_HOST=nacos
-      - NACOS_PASSWORD=Htht123.com
+      - NACOS_PASSWORD=${NACOS_PASSWORD}
       - AUTH_CENTER_HOST=auth-center
     depends_on:
       - auth-center
       - nacos
+    networks:
+      - app-network # 将服务连接到自定义网络，便于其他容器访问
+  nginx:
+    image: nginx:stable-alpine # nginx:stable-alpine
+    container_name: di_zai_nginx
+    ports:
+      - "8089:80"  # 将主机的80端口映射到容器的80端口
+    volumes:
+      - "./nginx/html:/usr/share/nginx/html"
+      - "./nginx/config/nginx.conf:/etc/nginx/nginx.conf"
+      - "./nginx/logs:/var/log/nginx"
+    depends_on:
+     - gateway
+     - auth-center
+    # 使用links确保nginx可以通过服务名"app"访问到后端应用[1](@ref)[2](@ref)
+    links:
+     - gateway
+     - auth-center
     networks:
       - app-network # 将服务连接到自定义网络，便于其他容器访问
   gateway:
@@ -140,7 +171,7 @@ services:
       - "20003:20003" # 端口映射：宿主机端口:容器内端口
     environment:
       - NACOS_HOST=nacos
-      - NACOS_PASSWORD=Htht123.com
+      - NACOS_PASSWORD=${NACOS_PASSWORD}
       - AUTH_CENTER_HOST=auth-center
     depends_on:
       - auth-center

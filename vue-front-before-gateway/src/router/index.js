@@ -106,7 +106,6 @@ const exchangeCode = async (code) => {
       url: '/rolemanage/sysrole/get',
       method: 'get'
     })
-    debugger
     dynamicCreateRouter('root', res)
     console.log('res:' + res)
     appConfig.setData('menus', res)
