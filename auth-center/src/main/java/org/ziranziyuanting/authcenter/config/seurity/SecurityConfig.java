@@ -24,6 +24,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.ziranziyuanting.authcenter.service.RegisteredClientService;
 import org.ziranziyuanting.authcenter.utils.PasswordUtil;
 import org.springframework.security.config.Customizer;
 
@@ -96,79 +97,22 @@ public class SecurityConfig {
         return PasswordUtil.BCryptPasswordEncoder();
     }
     @Bean
-    RegisteredClientRepository registeredClientRepository() {
-        RegisteredClient certificationCatalogClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("certification-catalog")
-                .clientSecret("{noop}secret")
-                .clientName("Certification Catalog")
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantTypes(gts -> {
-                    gts.add(AuthorizationGrantType.AUTHORIZATION_CODE);
-                    gts.add(AuthorizationGrantType.REFRESH_TOKEN);
-                    // gts.add(AuthorizationGrantType.CLIENT_CREDENTIALS);
-                })
-                .redirectUris((uris -> {
-                    uris.add("http://127.0.0.1:20000/login/oauth2/code/certification-catalog-oidc");
-                    
-                }))
-                .scopes(s -> {
-                    s.add("openid");
-                //     s.add("articles.read");
-                    // s.add("server");
-                })
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
-                .tokenSettings(TokenSettings.builder().refreshTokenTimeToLive(Duration.ofMinutes(3)).build())
-                .build();
-        
-        RegisteredClient pkceClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("pkce-client")
-                .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
-                .authorizationGrantTypes(gts -> {
-                    gts.add(AuthorizationGrantType.AUTHORIZATION_CODE);
-                    gts.add(AuthorizationGrantType.REFRESH_TOKEN);
-                })
-                .redirectUri("http://vue-front-before-gateway.clouddizai.com:20005/home")
-                .postLogoutRedirectUri("http://vue-front-before-gateway.clouddizai.com:20005")
-                .scope(OidcScopes.OPENID) //必须添加，获取id令牌
-                .scope("catalog.edit")
-                .scope("catalog.read")
-                .clientSettings(
-                        ClientSettings.builder()
-                        .requireProofKey(true) // 强制 PKCE
-                        .build())
-                .tokenSettings(TokenSettings.builder().refreshTokenTimeToLive(Duration.ofMinutes(32))
-                                                      .accessTokenTimeToLive(Duration.ofMinutes(320)).build())
-                .build();
-        
-        RegisteredClient gateway = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("gateway")
-                .clientSecret("{noop}gatewaysecret")
-                .clientName("gateway")
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantTypes(gts -> {
-                    gts.add(AuthorizationGrantType.AUTHORIZATION_CODE);
-                    gts.add(AuthorizationGrantType.REFRESH_TOKEN);
-                    gts.add(AuthorizationGrantType.CLIENT_CREDENTIALS);
-                })
-                .redirectUris((uris -> {
-                    uris.add("http://gateway.clouddizai.com:20001/login/oauth2/code/gateway");
-                }))
-                // .postLogoutRedirectUri("http://127.0.0.1:10000")
-                .scopes(s -> {
-                    s.add("openid");
-                    s.add("articles.read");
-                    // s.add("server");
-                })
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
-                .tokenSettings(TokenSettings.builder().refreshTokenTimeToLive(Duration.ofHours(5))
-                                                      .accessTokenTimeToLive(Duration.ofHours(5)).build())
-                .build();
-        List<RegisteredClient> clients = new ArrayList<>();
-        clients.add(certificationCatalogClient);
-        clients.add(pkceClient);
-        clients.add(gateway);
-
-        return new InMemoryRegisteredClientRepository(clients);
+    RegisteredClientRepository registeredClientRepository1(RegisteredClientService service) {
+        return new RegisteredClientRepository() {
+            @Override
+            public void save(RegisteredClient registeredClient) {
+                // service.save(registeredClient);
+            }
+            
+            @Override
+            public RegisteredClient findById(String id) {
+                return null;// service.getById(1l).toOAuthClient();
+            }
+            
+            @Override
+            public RegisteredClient findByClientId(String clientId) {
+                return service.findByClientId(clientId);
+            }
+        };
     }
-
 }
