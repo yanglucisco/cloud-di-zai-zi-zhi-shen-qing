@@ -1,19 +1,18 @@
 import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig, loadEnv } from 'vite'
-import { resolve } from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import tailwindcss from '@tailwindcss/vite'
-// import Less2CssVariablePlugin from 'antd-less-to-css-variable'
 
 // https://vite.dev/config/
 export default defineConfig(({ command, mode }) => {
   // 加载环境变量
   const env = loadEnv(mode, process.cwd(), '')
+  // const port = import.meta.env.VITE_API_PORT
   return {
     server: {
-      port: 20005,
+      port: env.VITE_API_PORT,
       host: true, // 可选：允许局域网内的其他设备访问，便于真机调试
       allowedHosts: [
         'vue-front-before-gateway.clouddizai.com'

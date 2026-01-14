@@ -16,6 +16,7 @@ import request from '@/utils/request'
 import appConfig from '@/store/Singleton'
 import { computed } from "vue"
 import routerMap from './RouterPath.js'
+import EnvUtil from '../utils/EnvUtil'
 
 appConfig.setData('name', 'yanglu')
 console.log('route index')
@@ -55,6 +56,7 @@ router.beforeEach((to, from, next) => {
   }
 })
 async function isFromAuthorServer() {
+  debugger
   const queryString = window.location.search
   const params = new URLSearchParams(queryString)
   const code = params.get("code") // "alice"
@@ -79,17 +81,16 @@ const dynamicCreateRouter = (parentName, routerItems) => {
 const exchangeCode = async (code) => {
   const verifier = getCurrentVerifier()// '8SkwXEJUZJVQLScWYs8nV9bhv4GfvnHmc9iuApguEwY';// sessionStorage.getItem('pkce_verifier');
   console.log('verifier: ' + verifier)
-  const tokenUrl = 'http://vue-front-before-gateway.clouddizai.com:20005/oauth/oauth2/token'
-  // const tokenUrl = 'http://auth-server:20001/oauth2/token';
+  const tokenUrl = 'http://vue-front-before-gateway.clouddizai.com:' + EnvUtil.apiPort + '/oauth/oauth2/token'
 
   const body = new URLSearchParams({
     grant_type: 'authorization_code',
     code,
-    redirect_uri: 'http://vue-front-before-gateway.clouddizai.com:20005/home',
+    redirect_uri: 'http://vue-front-before-gateway.clouddizai.com:' + EnvUtil.apiPort + '/home',
     client_id: 'pkce-client',
     code_verifier: verifier // 关键：验证身份
   })
-
+  debugger
   try {
     const response = await fetch(tokenUrl, {
       method: 'POST',
