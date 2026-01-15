@@ -48,9 +48,23 @@ services:
       - DB_NAME=auth_center
       - DB_USER=auth_center
       - DB_PASSWORD=${AUTH_CENTER_DB_PASSWORD}
+      - AUTH_CENTER_REDIS_HOST=auth-center-redis
+      - AUTH_CENTER_REDIS_PORT=6379
     depends_on:
       - auth-center-mysql-db
       - nacos
+      - auth-center-redis
+    networks:
+      - app-network # 将服务连接到自定义网络，便于其他容器访问
+  auth-center-redis:
+    image: redis:latest
+    container_name: auth-center-redis
+    ports:
+      - "16379:6379"
+    volumes:
+      - ./redis/data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
     networks:
       - app-network # 将服务连接到自定义网络，便于其他容器访问
   auth-center-mysql-db: 

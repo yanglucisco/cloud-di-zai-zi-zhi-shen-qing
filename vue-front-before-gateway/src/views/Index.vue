@@ -4,6 +4,8 @@
 </template>
 <script setup>
 import MyTestMenu from './Component/MyTestMenu.vue'
+import request from '@/utils/request'
+import { onMounted } from 'vue'
 const myUser = [
     {
         deep: 1,
@@ -35,4 +37,10 @@ const myUser = [
         ]
     }
 ]
+onMounted(() => {
+    request({
+      url: '/rolemanage/sysresource/all',
+      method: 'get'
+    }).then(res => console.log(res))
+})
 </script>

@@ -37,6 +37,7 @@ import {
     FullscreenOutlined, FullscreenExitOutlined, UserOutlined, Loading3QuartersOutlined, ExportOutlined
 } from '@ant-design/icons-vue'
 import { getUserIdToken, cleanToken } from '../userInfo/index'
+import EnvUtil from '@/utils/EnvUtil'
 const isFullScreen = ref(false)
 const fullScreenClick = () => {
     isFullScreen.value = !isFullScreen.value
@@ -48,7 +49,9 @@ const fullScreenClick = () => {
 const logout = () => {
     console.log('cleanToken')
     const idToken = getUserIdToken()
-    window.location.href = `http://auth-server:20001/connect/logout?id_token_hint=${idToken}&post_logout_redirect_uri=http://vue-front-before-gateway.clouddizai.com:20005`
+    const href = `http://auth-server:20001/connect/logout?id_token_hint=${idToken}&post_logout_redirect_uri=http://vue-front-before-gateway.clouddizai.com:${EnvUtil.apiPort}`
+    
+    window.location.href = href
     cleanToken()
     console.log('注销成功')
 }

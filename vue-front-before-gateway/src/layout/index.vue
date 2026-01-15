@@ -80,6 +80,7 @@ import request from '@/utils/request'
 import { sysinfoStore } from '@/store/sysinfo'
 import appConfig from '@/store/Singleton'
 import LayoutMenu from './LayoutMenu.vue'
+import routerMap from '../router/RouterPath.js'
 
 const icons = new Map()
 icons.set('UserOutlined', UserOutlined)
@@ -93,9 +94,21 @@ const clickMenu = (item) => {
     success(item.name)
     router.push(item.path)
 }
+const dynamicCreateRouter = (parentName, routerItems) => {
+  routerItems.forEach(item => {
+    router.addRoute(parentName, {
+        path: item.component,//'sys',
+        name: item.name,//'sys',
+        component: routerMap.routerMap.get(item.name)
+    })
+    dynamicCreateRouter(item.name, item.children)
+  })
+}
 // mounted 生命周期
 onMounted(() => {
-    menuList.value = appConfig.getData('menus')
+    const menus = appConfig.getData('menus')
+    dynamicCreateRouter('root', menus)
+    menuList.value = menus
 })
 </script>
 <style scoped>

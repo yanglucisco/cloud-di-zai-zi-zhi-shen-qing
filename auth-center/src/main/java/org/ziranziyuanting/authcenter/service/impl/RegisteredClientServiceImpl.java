@@ -23,6 +23,16 @@ public class RegisteredClientServiceImpl extends ServiceImpl<RegisteredClientMap
         RegisteredClientEntity entity = getOne(
             new LambdaQueryWrapper<>(
                 RegisteredClientEntity.class).eq(RegisteredClientEntity::getClientId, clientId));
+        return get(entity);
+    }
+
+    @Override
+    public RegisteredClient findById(String id) {
+        RegisteredClientEntity entity = getById(id);
+        return get(entity);
+    }
+    private RegisteredClient get(RegisteredClientEntity entity)
+    {
         var requireAuthorizationConsent = entity.getRequireAuthorizationConsent() == 1 ? true : false;
         var requireProofKey = entity.getRequireProofKey() == 1 ? true : false;
         var r = RegisteredClient.withId(entity.getId().toString())
