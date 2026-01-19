@@ -32,6 +32,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.ziranziyuanting.authcenter.service.RegisteredClientService;
 import org.ziranziyuanting.authcenter.utils.PasswordUtil;
 
@@ -59,6 +62,7 @@ public class SecurityConfig {
                 .oidc(Customizer.withDefaults()) // Enable OpenID Connect 1.0
         ;
         http
+                .cors(Customizer.withDefaults())
                 // 配置异常处理，当需要认证时重定向到我们的自定义登录页
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/custom-login")))
@@ -74,6 +78,7 @@ public class SecurityConfig {
     @Order(2)
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/login.html", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
@@ -94,31 +99,43 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // @Bean
-    // RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-    //     RedisTemplate<String, Object> template = new RedisTemplate<>();
-    //     template.setConnectionFactory(connectionFactory);
-    //     // 配置序列化器
-    //     ObjectMapper objectMapper = new ObjectMapper();
-    //     // 注册JSR-310模块
-    //     objectMapper.registerModule(new JavaTimeModule());
-    //     // 禁用WRITE_DATES_AS_TIMESTAMPS，以便日期以ISO-8601格式存储
-    //     objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    //     // 关键配置：启用默认类型信息
-    //     objectMapper.activateDefaultTyping(
-    //         objectMapper.getPolymorphicTypeValidator(),
-    //         ObjectMapper.DefaultTyping.NON_FINAL,  // 为非final类启用类型信息
-    //         JsonTypeInfo.As.PROPERTY               // 类型信息作为JSON属性
-    //     );
-    //     GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+    @Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration config = new CorsConfiguration();
+		config.addAllowedHeader("*");
+		config.addAllowedMethod("*");
+		config.addAllowedOrigin("http://vue-front-before-gateway.clouddizai.com:8089");
+		config.setAllowCredentials(true);
+		source.registerCorsConfiguration("/**", config);
+		return source;
+	}
 
-    //     template.setKeySerializer(new StringRedisSerializer());
-    //     template.setValueSerializer(serializer);
-    //     template.setHashKeySerializer(new StringRedisSerializer());
-    //     template.setHashValueSerializer(serializer);
-    //     template.afterPropertiesSet();
-    //     return template;
-    // }
+    @Bean
+    RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        // 配置序列化器
+        ObjectMapper objectMapper = new ObjectMapper();
+        // 注册JSR-310模块
+        objectMapper.registerModule(new JavaTimeModule());
+        // 禁用WRITE_DATES_AS_TIMESTAMPS，以便日期以ISO-8601格式存储
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        // 关键配置：启用默认类型信息
+        objectMapper.activateDefaultTyping(
+            objectMapper.getPolymorphicTypeValidator(),
+            ObjectMapper.DefaultTyping.EVERYTHING,  // 为非final类启用类型信息
+            JsonTypeInfo.As.PROPERTY               // 类型信息作为JSON属性
+        );
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(serializer);
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(serializer);
+        template.afterPropertiesSet();
+        return template;
+    }
 
     // @Bean
     // SessionRegistry sessionRegistry(RedisTemplate<String, Object> redisTemplate) {
@@ -157,6 +174,7 @@ public class SecurityConfig {
             @Override
             public void save(RegisteredClient registeredClient) {
                 // service.save(registeredClient);
+                System.out.println("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest");
             }
 
             @Override

@@ -81,7 +81,8 @@ const dynamicCreateRouter = (parentName, routerItems) => {
 const exchangeCode = async (code) => {
   const verifier = getCurrentVerifier()// '8SkwXEJUZJVQLScWYs8nV9bhv4GfvnHmc9iuApguEwY';// sessionStorage.getItem('pkce_verifier');
   console.log('verifier: ' + verifier)
-  const tokenUrl = 'http://vue-front-before-gateway.clouddizai.com:' + EnvUtil.apiPort + '/oauth/oauth2/token'
+  // const tokenUrl = 'http://vue-front-before-gateway.clouddizai.com:' + EnvUtil.apiPort + '/oauth/oauth2/token'
+  const tokenUrl = 'http://auth-server:20001' + '/oauth2/token'
 
   const body = new URLSearchParams({
     grant_type: 'authorization_code',

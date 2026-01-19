@@ -22,12 +22,7 @@ export default defineConfig(({ command, mode }) => {
           target: 'http://gateway.clouddizai.com:20003',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/gateway/, ''), // 使用 rewrite 函数重写路径
-        },
-        '/oauth': {//直接与授权服务器连接，不通过网关
-          target: 'http://auth-server:20001',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/oauth/, ''), // 使用 rewrite 函数重写路径
-        },
+        }
       }
     },
     plugins: [
