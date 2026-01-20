@@ -1,46 +1,17 @@
 <template>
-    <h1>系统首页</h1>
-    <MyTestMenu :user="myUser" />
+    <h1>系统首页 {{ title }}</h1>
 </template>
 <script setup>
-import MyTestMenu from './Component/MyTestMenu.vue'
 import request from '@/utils/request'
-import { onMounted } from 'vue'
-const myUser = [
-    {
-        deep: 1,
-        text: '菜单1',
-        children: [
-            {
-                deep: 2,
-                text: '菜单1-1',
-                children:
-                    [
-                        {
-                            deep: 3,
-                            text: '菜单1-1-1',
-                            children: []
-                        }
-                    ]
-            },
-            {
-                deep: 2,
-                text: '菜单1-2',
-                children: [
-                    {
-                        deep: 3,
-                        text: '菜单1-2-1111',
-                        children: []
-                    }
-                ]
-            }
-        ]
-    }
-]
+import { onMounted, ref } from 'vue'
+const title = ref('')
 onMounted(() => {
     request({
-      url: '/rolemanage/sysresource/all',
+      url: '/rolemanage/sysresource/test',
       method: 'get'
-    }).then(res => console.log(res))
+    }).then(res => {
+        console.log(res)
+        title.value = res // res.length + " 个 " 
+    })
 })
 </script>
