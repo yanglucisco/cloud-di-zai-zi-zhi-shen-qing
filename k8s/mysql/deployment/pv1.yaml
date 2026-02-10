@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv-5g
+  labels:
+    type: nfs
+    purpose: storage
+    created-by: admin
+  annotations:
+    pv.kubernetes.io/created-by: nfs-manual
+    description: "5Gi NFS Persistent Volume for shared storage"
+spec:
+  # 存储容量
+  capacity:
+    storage: 5Gi
+  
+  mountOptions:  # 指定 NFS 版本
+    - nfsvers=4.1
+    - hard
+    - timeo=300
+    - retrans=3
+  # 访问模式：单节点读写
+  accessModes:
+    - ReadWriteOnce
+  
+  # 可选：多节点只读
+  # - ReadOnlyMany
+  
+  # 可选：多节点读写（NFS 支持）
+  # - ReadWriteMany
+  
+  # 回收策略：保留（删除PVC后保留数据）
+  persistentVolumeReclaimPolicy: Retain
+  
+  # 存储类名称（可选，如不指定则为空类）
+  storageClassName: nfs-storage
+  
+  # 卷模式：文件系统
+  volumeMode: Filesystem
+  
+  # NFS 配置
+  nfs:
+    # NFS 服务器地址（必需）
+    server: 192.168.1.243
+    # 或使用域名
+    # server: nfs-server.example.com
+    
+    # NFS 共享路径（必需）
+    path: /nfs/share
+    # 示例路径：/data/share, /nfs_share, /home/nfs
+    
+    # 只读选项（可选，默认false）
+    readOnly: false
