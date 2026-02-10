@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: logging
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemonset-alpine-test
+  namespace: logging
+  labels:
+    k8s-app: alpine-test
+spec:
+  selector:
+    matchLabels:
+      k8s-app: alpine-test
+  template:
+    metadata:
+      labels:
+        k8s-app: alpine-test
+    spec:
+      containers:
+        - name: alpine-test
+          image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/gcr.io/iguazio/alpine:3.20
+          command:
+            - /bin/sh
+            - -c
+            - while true; do echo "$(date) My preferred sport is 1";
+              sleep 3; echo "$(date) 2"; sleep 3; done;
+      terminationGracePeriodSeconds: 10
