@@ -1,0 +1,20 @@
+# simple-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: simple-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: www.mytestyanglu.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-20260205  
+            # 后端服务，例如curl -H "Host: www.mytestyanglu.com" http://192.168.1.248:31241/mytest/test(这个31241是NodePort暴露的端口，测试时换成实际的NodePort端口)
+            # ingress转发给了demo-20260205这个服务，demo-20260205这个服务又转发给了后端的pod，pod里运行着一个web服务器，提供了一个接口/mytest/test
+            port:
+              number: 10001
