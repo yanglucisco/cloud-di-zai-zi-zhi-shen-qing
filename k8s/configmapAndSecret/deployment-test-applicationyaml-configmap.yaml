@@ -1,0 +1,60 @@
+# spring-boot-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-test-configmap-applicationyaml
+  labels:
+    app: spring-boot-test-configmap-applicationyaml
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spring-boot-test-configmap-applicationyaml
+  template:
+    metadata:
+      labels:
+        app: spring-boot-test-configmap-applicationyaml
+    spec:
+      containers:
+      - name: spring-boot-test-configmap-applicationyaml
+        env:
+        # 设置单个环境变量
+        - name: TEST_SECRET_KEY
+          valueFrom:
+            #configMapKeyRef:
+            secretKeyRef:
+              #name: demo20260205-test-configmap-applicationyaml #configmap
+              name: db-credentials #secret
+              #key: test.secret.key #configmap key
+              key: password #secret key
+        image: docker.io/library/demo20260205-test-config-map:0.0.1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 10001
+        # 挂载 ConfigMap
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/myapp
+          readOnly: true
+      # 挂载的卷定义
+      volumes:
+      - name: config-volume
+        configMap:
+          name: demo20260205-test-configmap-applicationyaml
+          items:
+          - key: application.yaml
+            path: application.yaml
+---
+#service
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-test-configmap-applicationyaml
+spec:
+  type: NodePort
+  selector:
+    app: spring-boot-test-configmap-applicationyaml
+  ports:
+    - port: 10001
+      targetPort: 10001
+      #nodePort: 30001
