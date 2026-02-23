@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- deployment.yaml
+labels:
+  - includeSelectors: true
+    includeTemplates: true
+    pairs:
+      app: cloud-di-zai
+      managed-by: kustomize
+commonAnnotations:
+  description: "Application managed by Kustomize"
+  version: "base"
