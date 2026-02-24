@@ -57,4 +57,4 @@ spec:
   - port: 20001
     targetPort: 20001
   selector:
-    name: cloud-di-zai-auth-center
+    name: auth-center

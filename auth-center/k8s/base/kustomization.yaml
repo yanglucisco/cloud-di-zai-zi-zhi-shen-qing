@@ -6,7 +6,7 @@ labels:
   - includeSelectors: true
     includeTemplates: true
     pairs:
-      app: cloud-di-zai
+      app: auth-center
       managed-by: kustomize
 commonAnnotations:
   description: "Application managed by Kustomize"
