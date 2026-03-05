@@ -19,9 +19,11 @@ import org.springframework.security.web.server.authentication.HttpStatusServerEn
 @EnableWebFluxSecurity
 public class SecurityConfig {
         private final CustomJwtAuthenticationConverter customJwtAuthenticationConverter;
+        private final SecurityProperties securityProperties;
 
-        public SecurityConfig(CustomJwtAuthenticationConverter customJwtAuthenticationConverter) {
+        public SecurityConfig(CustomJwtAuthenticationConverter customJwtAuthenticationConverter, SecurityProperties securityProperties) {
                 this.customJwtAuthenticationConverter = customJwtAuthenticationConverter;
+                this.securityProperties = securityProperties;
         }
 
         @Bean
@@ -39,13 +41,25 @@ public class SecurityConfig {
                                                 )
                                         )
                                 .authorizeExchange(exchange -> exchange
-                                                .pathMatchers("/favicon.ico").permitAll()
-                                                .pathMatchers("/mytest/**").permitAll()
-                                                .pathMatchers("/api/**").permitAll()
-                                                .pathMatchers("/product/baz").permitAll()
-                                                .pathMatchers("/catalog/**").permitAll()
-                                                
-                                                .anyExchange().authenticated())
+                                                // .pathMatchers("/favicon.ico").permitAll()
+                                                // .pathMatchers("/mytest/**").permitAll()
+                                                // .pathMatchers("/sina/**").permitAll()
+                                                // .pathMatchers("/api/**").permitAll()
+                                                // .pathMatchers("/product/baz").permitAll()
+                                                // .pathMatchers("/catalog/**").permitAll()
+                                                // .pathMatchers("/rolemanage/**").permitAll()
+                                                // 从配置文件中读取公开路径
+                                                .pathMatchers(securityProperties.getPermitAll().toArray(new String[0]))
+                                                .permitAll()
+                                                // 从配置文件中读取需要认证的路径
+                                                .pathMatchers(securityProperties.getAuthenticated().toArray(new String[0]))
+                                                .authenticated()
+                                                // 从配置文件中读取需要角色的路径
+                                                .pathMatchers(securityProperties.getAdminPaths().toArray(new String[0]))
+                                                .hasRole("ADMIN")
+                                                .anyExchange().authenticated()
+                                        
+                                        )
                                 // 前后端分离项目，请求后端数据时，不应该返回302，而是应该返回401
                                 .exceptionHandling(exceptionHandling -> exceptionHandling
                                                 .authenticationEntryPoint(new HttpStatusServerEntryPoint(
