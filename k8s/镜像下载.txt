@@ -1,0 +1,46 @@
+registry.k8s.io/kube-apiserver:v1.35.0
+registry.k8s.io/kube-controller-manager:v1.35.0
+registry.k8s.io/kube-scheduler:v1.35.0
+registry.k8s.io/kube-proxy:v1.35.0
+registry.k8s.io/coredns/coredns:v1.13.1
+registry.k8s.io/pause:3.10.1
+registry.k8s.io/etcd:3.6.6-0
+
+ctr images pull swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/kube-controller-manager:v1.35.0
+ctr images tag  swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/kube-controller-manager:v1.35.0  registry.k8s.io/kube-controller-manager:v1.35.0
+
+ctr images pull swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/kube-scheduler:v1.35.0
+ctr images tag  swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/kube-scheduler:v1.35.0  registry.k8s.io/kube-scheduler:v1.35.0
+
+ctr images pull swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/kube-apiserver:v1.35.0
+ctr images tag  swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/kube-apiserver:v1.35.0  registry.k8s.io/kube-apiserver:v1.35.0
+
+ctr images pull swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/kube-proxy:v1.35.0
+ctr images tag  swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/kube-proxy:v1.35.0  registry.k8s.io/kube-proxy:v1.35.0
+
+ctr images pull swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/coredns/coredns:v1.13.1
+ctr images tag  swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/coredns/coredns:v1.13.1  registry.k8s.io/coredns/coredns:v1.13.1
+
+ctr images pull swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/pause:3.10.1
+ctr images tag  swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/pause:3.10.1  registry.k8s.io/pause:3.10.1
+
+ctr images pull swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/etcd:3.6.6-0
+ctr images tag  swr.cn-north-4.myhuaweicloud.com/ddn-k8s/registry.k8s.io/etcd:3.6.6-0  registry.k8s.io/etcd:3.6.6-0
+
+
+ctr images export kube-apiserver.tar registry.k8s.io/kube-apiserver:v1.35.0
+ctr images export kube-scheduler.tar registry.k8s.io/kube-scheduler:v1.35.0
+ctr images export kube-proxy.tar registry.k8s.io/kube-proxy:v1.35.0
+ctr images export coredns.tar registry.k8s.io/coredns/coredns:v1.13.1
+ctr images export pause.tar registry.k8s.io/pause:3.10.1
+ctr images export etcd.tar registry.k8s.io/etcd:3.6.6-0
+ctr images export kube-controller-manager.tar registry.k8s.io/kube-controller-manager:v1.35.0
+
+
+ctr -n k8s.io images import kube-apiserver.tar
+ctr -n k8s.io images import  kube-scheduler.tar
+ctr -n k8s.io images import kube-proxy.tar
+ctr -n k8s.io images import coredns.tar
+ctr -n k8s.io images import pause.tar
+ctr -n k8s.io images import etcd.tar
+ctr -n k8s.io images import kube-controller-manager.tar

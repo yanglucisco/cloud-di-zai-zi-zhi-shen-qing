@@ -31,7 +31,7 @@ public class SecurityConfig {
                                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt
                                                 .jwtAuthenticationConverter(customJwtAuthenticationConverter)))
                                 .authorizeExchange(exchange -> exchange
-                                                .pathMatchers("/org/**").permitAll()
+                                                // .pathMatchers("/org/**").permitAll()
                                                 .anyExchange().authenticated())
                                 // 前后端分离项目，请求后端数据时，不应该返回302，而是应该返回401
                                 .exceptionHandling(exceptionHandling -> exceptionHandling

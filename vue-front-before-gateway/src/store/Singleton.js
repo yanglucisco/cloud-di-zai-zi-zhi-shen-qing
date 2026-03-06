@@ -20,11 +20,13 @@ class Singleton {
   
   // 公共方法
   setData(key, value) {
-    this._data[key] = value;
+    localStorage.setItem(key, JSON.stringify(value))
+    // this._data[key] = value;
   }
   
   getData(key) {
-    return this._data[key];
+    return JSON.parse(localStorage.getItem(key))
+    // return this._data[key];
   }
   
   getAllData() {

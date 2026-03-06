@@ -1,0 +1,19 @@
+# application-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo20260205-test-configmap-applicationyaml
+  #namespace: default
+data:
+  application.yaml: |
+    spring:
+      application:
+        name: demo20260205-test-configmap-applicationyaml
+      config:
+        import: optional:file:.env[.properties]  # 导入 .env 文件
+    server:
+      port: 10001
+    test:
+      secret:
+        key: ${TEST_SECRET_KEY:k8s_configmap_default_value}
+  test.secret.key: test_secret_key_value

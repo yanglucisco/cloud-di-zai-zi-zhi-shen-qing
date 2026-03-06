@@ -23,6 +23,16 @@ public class RegisteredClientServiceImpl extends ServiceImpl<RegisteredClientMap
         RegisteredClientEntity entity = getOne(
             new LambdaQueryWrapper<>(
                 RegisteredClientEntity.class).eq(RegisteredClientEntity::getClientId, clientId));
+        return get(entity);
+    }
+
+    @Override
+    public RegisteredClient findById(String id) {
+        RegisteredClientEntity entity = getById(id);
+        return get(entity);
+    }
+    private RegisteredClient get(RegisteredClientEntity entity)
+    {
         var requireAuthorizationConsent = entity.getRequireAuthorizationConsent() == 1 ? true : false;
         var requireProofKey = entity.getRequireProofKey() == 1 ? true : false;
         var r = RegisteredClient.withId(entity.getId().toString())
@@ -41,8 +51,11 @@ public class RegisteredClientServiceImpl extends ServiceImpl<RegisteredClientMap
                                             gts.add(new AuthorizationGrantType(type));
                                         }
                                 })
-                                .redirectUri(entity.getRedirectUri())
-                                .postLogoutRedirectUri(entity.getPostLogoutRedirectUri())
+                                .redirectUri(entity.getRedirectUri());
+                                if(entity.getPostLogoutRedirectUri() != null){
+                                    r.postLogoutRedirectUri(entity.getPostLogoutRedirectUri());
+                                }
+                                r
                                 .scopes(s -> {
                                     var scopes = entity.getScopes().split(",");
                                     for(String scope : scopes){
@@ -53,8 +66,8 @@ public class RegisteredClientServiceImpl extends ServiceImpl<RegisteredClientMap
                                 .clientSettings(ClientSettings.builder().requireProofKey(requireProofKey).build())
                                 .tokenSettings(TokenSettings.builder().refreshTokenTimeToLive(Duration.ofMinutes(entity.getRefreshTokenTimeToLive())).build())
                                 .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofMinutes(entity.getAccessTokenTimeToLive())).build())          
-                                .build();
-        return r;
+                                ;
+        return r.build();
     }
     
 }
