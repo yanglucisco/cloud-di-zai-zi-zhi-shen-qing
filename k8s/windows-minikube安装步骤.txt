@@ -1,0 +1,16 @@
+1、下载minikube https://github.com/kubernetes/minikube/releases，版本v1.35.0，下载文件minikube-installer.exe
+2、运行minikube-installer.exe，安装minikube
+3、将minikube.exe添加到环境变量
+4、下载镜像gcr.io/k8s-minikube/kicbase:v0.0.46
+5、下载镜像kube-apiserver、kube-controller-manager、kube-scheduler、kube-proxy，都是版本v1.32.0
+6、启动minikube
+如果需要删除，则使用以下命令
+    删除现有的minikube
+    minikube stop
+    minikube delete
+启动minikube
+mkdir C:\k8s-data
+挂载windows目录到docker
+minikube start --driver=docker --mount --mount-string="C:\k8s-data:/mnt/windows-data" 
+验证挂载
+minikube ssh "ls -la /mnt/windows-data"
