@@ -74,7 +74,8 @@ services:
     ports:
       - "13306:3306" # 端口映射：宿主机端口:容器内端口
     environment:
-      MYSQL_ROOT_PASSWORD: ${AUTH_CENTER_DB_PASSWORD}
+      # 在docker-compose.yml文件所在目录中新建.env文件，添加环境变量AUTH_CENTER_DB_PASSWORD=你的数据库密码
+      MYSQL_ROOT_PASSWORD: ${AUTH_CENTER_DB_PASSWORD} 
       MYSQL_DATABASE: auth_center
       MYSQL_USER: auth_center
       MYSQL_PASSWORD: ${AUTH_CENTER_DB_PASSWORD}
