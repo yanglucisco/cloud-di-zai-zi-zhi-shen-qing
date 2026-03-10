@@ -52,8 +52,8 @@ public class SecurityConfig {
                                                 .pathMatchers(securityProperties.getPermitAll().toArray(new String[0]))
                                                 .permitAll()
                                                 // 从配置文件中读取需要认证的路径
-                                                .pathMatchers(securityProperties.getAuthenticated().toArray(new String[0]))
-                                                .authenticated()
+                                                // .pathMatchers(securityProperties.getAuthenticated().toArray(new String[0]))
+                                                // .authenticated()
                                                 // 从配置文件中读取需要角色的路径
                                                 .pathMatchers(securityProperties.getAdminPaths().toArray(new String[0]))
                                                 .hasRole("ADMIN")
