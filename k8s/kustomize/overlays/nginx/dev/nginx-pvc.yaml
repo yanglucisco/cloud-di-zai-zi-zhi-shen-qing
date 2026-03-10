@@ -1,0 +1,16 @@
+# nfs-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-shared-pvc
+  #namespace: cloud-di-zai-dev
+spec:
+  storageClassName: "nginx-shared-storage-class"  # 可以不指定，或者显式设置为空字符串
+  accessModes:
+    - ReadWriteOnce  # 必须与PV一致
+  resources:
+    requests:
+      storage: 2Gi  # 可小于PV容量
+  # selector:
+  #   matchLabels:
+  #     type: cloud-di-zai-dev-nginx-pv  # 可选，通过标签选择PV

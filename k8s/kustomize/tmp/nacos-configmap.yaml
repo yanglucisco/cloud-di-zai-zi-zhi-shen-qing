@@ -1,0 +1,8 @@
+# application-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloud-di-zai-configmap
+  #namespace: default
+data:
+  nacos.host: 192.168.1.249 

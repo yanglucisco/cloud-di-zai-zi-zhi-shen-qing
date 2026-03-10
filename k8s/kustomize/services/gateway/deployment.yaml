@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  labels:
+    name: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: gateway
+  template:
+    metadata:
+      labels:
+        name: gateway
+    spec:
+      containers:
+        - name: gateway
+          image: docker.io/library/cloud-di-zai-gateway:1.0
+          env:
+          - name: NACOS_HOST
+            valueFrom: 
+              configMapKeyRef:
+                name: common-configmap         # ConfigMap 名称
+                key: nacos.host            # ConfigMap 中的键名
+                optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
+          - name: NACOS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: common-secret #secret
+                key: nacos.password #secret key
+          - name: AUTH_CENTER_HOST
+            value: auth-center
+          ports:
+            - containerPort: 20003
+---
+#service
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+spec:
+  type: NodePort #默认是ClusterIP
+  ports:
+  - port: 20003
+    targetPort: 20003
+  selector:
+    name: gateway

@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: cloud-di-zai-dev-nginx-pv
+  # labels:
+  #   type: cloud-di-zai-dev-nginx-pv
+spec:
+  storageClassName: "nginx-shared-storage-class"  # 这里可以设置为空字符串，明确表示不使用StorageClass
+  capacity:
+    storage: 2Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  local:
+    path: "/mnt/windows-data/cloud-di-zai-dev/nginx/html"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - minikube

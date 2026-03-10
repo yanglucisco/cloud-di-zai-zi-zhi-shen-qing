@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-center
+  labels:
+    name: auth-center
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: auth-center
+  template:
+    metadata:
+      labels:
+        name: auth-center
+    spec:
+      containers:
+        - name: auth-center
+          image: docker.io/library/cloud-di-zai-auth-center:1.0
+          env:
+          - name: NACOS_HOST
+            valueFrom: 
+              configMapKeyRef:
+                name: common-configmap         # ConfigMap 名称
+                key: nacos.host            # ConfigMap 中的键名
+                optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
+          - name: NACOS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: common-secret #secret
+                key: nacos.password #secret key
+          - name: DB_HOST
+            value: 192.168.1.249
+          - name: DB_PORT
+            value: "13306"
+          - name: DB_NAME
+            value: auth_center
+          - name: DB_USER
+            value: auth_center
+          - name: DB_PASSWORD
+            value: Htht123.com
+          - name: AUTH_CENTER_REDIS_HOST
+            value: 192.168.1.249
+          - name: AUTH_CENTER_REDIS_PORT
+            value: "16379"
+          ports:
+            - containerPort: 20001
+---
+#service
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-center
+spec:
+  type: NodePort
+  ports:
+  - port: 20001
+    targetPort: 20001
+  selector:
+    name: auth-center

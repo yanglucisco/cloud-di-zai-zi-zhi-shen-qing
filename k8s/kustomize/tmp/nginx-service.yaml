@@ -1,0 +1,12 @@
+# nginx-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-di-zai-nginx-service
+spec:
+  selector:
+    app: cloud-di-zai-nginx
+  ports:
+  - port: 80
+    targetPort: 80
+  type: NodePort  # 或 LoadBalancer/NodePort 根据需求

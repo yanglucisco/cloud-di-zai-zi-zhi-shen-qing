@@ -1,0 +1,34 @@
+# nginx-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-di-zai-nginx-deployment
+spec:
+  replicas: 3  # 3个Pod
+  selector:
+    matchLabels:
+      app: cloud-di-zai-nginx
+  template:
+    metadata:
+      labels:
+        app: cloud-di-zai-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/rancher/mirrored-library-nginx:1.24.0-alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-shared-storage
+          mountPath: /usr/share/nginx/html  # 挂载到默认网页目录
+          readOnly: true  # 如果只需只读，设为true
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+      volumes:
+      - name: nginx-shared-storage
+        persistentVolumeClaim:
+          claimName: nginx-shared-pvc  # 引用PVC
+      - name: nginx-config
+        configMap:
+          name: nginx-config

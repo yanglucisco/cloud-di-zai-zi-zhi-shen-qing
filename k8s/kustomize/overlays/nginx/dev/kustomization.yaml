@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: cloud-di-zai-dev
+
+# 引用基础配置
+resources:
+  - ../../../services/nginx
+  - host-path-pv.yaml
+  - namespace.yaml
+  - nginx-pvc.yaml
+patches:
+  - path: deployment-patch.yaml

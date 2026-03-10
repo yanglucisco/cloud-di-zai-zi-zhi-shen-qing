@@ -1,0 +1,17 @@
+删除现有的minikube
+minikube stop
+minikube delete
+启动minikube
+mkdir C:\k8s-data
+minikube start --driver=docker --mount --mount-string="C:\k8s-data:/mnt/windows-data" 
+验证挂载
+minikube ssh "ls -la /mnt/windows-data"
+
+启动临时容器
+kubectl debug nginx-deployment-5c87756cbb-27sc7 -n cloud-di-zai-dev -it --image=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/gcr.io/iguazio/alpine:3.20 --target=nginx
+
+进入运行中的容器
+kubectl exec -it  nginx-deployment-5c87756cbb-27sc7 -n cloud-di-zai-dev  -- sh
+
+minikube端口转发
+kubectl port-forward -n cloud-di-zai-dev svc/nginx-service 8080:80

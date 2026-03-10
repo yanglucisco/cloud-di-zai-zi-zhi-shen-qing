@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cloud-di-zai-dev
+  labels:
+    name: cloud-di-zai-dev
+    environment: dev

@@ -1,0 +1,19 @@
+# nfs-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nginx-nfs-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany  # 关键！支持多Pod同时挂载
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-static
+  mountOptions:
+    - hard
+    - nfsvers=4.1  # 根据你的NFS版本调整
+  nfs:
+    path: /data/nfs/nginx-share  # NFS共享路径
+    server: 192.168.1.243        # NFS服务器IP

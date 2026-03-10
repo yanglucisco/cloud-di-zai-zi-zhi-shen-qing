@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: role-manage
+  labels:
+    name: role-manage
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: role-manage
+  template:
+    metadata:
+      labels:
+        name: role-manage
+    spec:
+      containers:
+        - name: role-manage
+          image: docker.io/library/cloud-di-zai-role-manage:1.0
+          env:
+          - name: NACOS_HOST
+            valueFrom: 
+              configMapKeyRef:
+                name: common-configmap         # ConfigMap 名称
+                key: nacos.host            # ConfigMap 中的键名
+                optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
+          - name: NACOS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: common-secret #secret
+                key: nacos.password #secret key
+          - name: AUTH_CENTER_HOST
+            value: auth-center
+          - name: ROLE_MANAGE_DB_HOST
+            value: 192.168.1.249
+          - name: ROLE_MANAGE_DB_PORT
+            value: "13307"
+          - name: ROLE_MANAGE_DB_NAME
+            value: role_manage
+          - name: ROLE_MANAGE_DB_USER
+            value: role_manage
+          - name: ROLE_MANAGE_DB_PASSWORD
+            value: Htht123.com
+          ports:
+            - containerPort: 20007
+---
+#service
+apiVersion: v1
+kind: Service
+metadata:
+  name: role-manage
+spec:
+  #type: NodePort #默认是ClusterIP
+  ports:
+  - port: 20007
+    targetPort: 20007
+  selector:
+    name: role-manage

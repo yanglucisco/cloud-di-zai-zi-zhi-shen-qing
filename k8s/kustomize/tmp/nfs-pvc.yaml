@@ -1,0 +1,13 @@
+# nfs-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-shared-pvc
+spec:
+  accessModes:
+    - ReadWriteMany  # 必须与PV一致
+  storageClassName: nfs-static
+  resources:
+    requests:
+      storage: 5Gi  # 可小于PV容量
+  volumeName: nginx-nfs-pv  # 绑定到特定PV
