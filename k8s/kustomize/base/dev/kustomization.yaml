@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - common-configmap.yaml
   - common-secret.yaml
+  - namespace.yaml
 labels:
   - includeSelectors: true
     includeTemplates: true

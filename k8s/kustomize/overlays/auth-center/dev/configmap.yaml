@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-center-configmap
+data:
+  db.host: "192.168.1.9"
+  db.port: "13306"
+  db.name: "auth_center"
+  db.user: "auth_center"
+  redis.host: "192.168.1.9"
+  redis.port: "16379"

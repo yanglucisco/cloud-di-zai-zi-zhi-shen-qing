@@ -4,9 +4,9 @@ namespace: cloud-di-zai-dev
 
 # 引用基础配置
 resources:
+  - ../../../base/dev
   - ../../../services/nginx
   - host-path-pv.yaml
-  - namespace.yaml
   - nginx-pvc.yaml
 patches:
   - path: deployment-patch.yaml

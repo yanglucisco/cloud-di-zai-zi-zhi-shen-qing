@@ -15,3 +15,6 @@ kubectl exec -it  nginx-deployment-5c87756cbb-27sc7 -n cloud-di-zai-dev  -- sh
 
 minikube端口转发
 kubectl port-forward -n cloud-di-zai-dev svc/nginx-service 8080:80
+
+导入镜像
+minikube image load 镜像名称:版本号

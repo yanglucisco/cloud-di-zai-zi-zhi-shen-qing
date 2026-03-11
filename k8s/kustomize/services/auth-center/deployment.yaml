@@ -5,7 +5,7 @@ metadata:
   labels:
     name: auth-center
 spec:
-  replicas: 2
+  #replicas: 2
   selector:
     matchLabels:
       name: auth-center
@@ -17,6 +17,15 @@ spec:
       containers:
         - name: auth-center
           image: docker.io/library/cloud-di-zai-auth-center:1.0
+          #imagePullPolicy: IfNotPresent   # 或者 Never
+           # 添加以下 resources 配置
+          resources:
+            requests:    # 容器启动所需的最低资源量，调度依据
+              cpu: "100m"    # 0.1 个 CPU 核心
+              memory: "128Mi" # 128 Mebibytes
+            limits:      # 容器允许使用的最大资源量，防止爆炸
+              cpu: "200m"    # 最多 0.2 个核心
+              memory: "256Mi" # 最多 256 Mebibytes
           env:
           - name: NACOS_HOST
             valueFrom: 
@@ -30,21 +39,49 @@ spec:
                 name: common-secret #secret
                 key: nacos.password #secret key
           - name: DB_HOST
-            value: 192.168.1.249
+            valueFrom:
+              configMapKeyRef:
+                name: auth-center-configmap    # ConfigMap 名称
+                key: db.host            # ConfigMap 中的键名
+                optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
           - name: DB_PORT
-            value: "13306"
+            valueFrom:
+              configMapKeyRef:
+                name: auth-center-configmap    # ConfigMap 名称
+                key: db.port            # ConfigMap 中的键名
+                optional: false
           - name: DB_NAME
-            value: auth_center
+            valueFrom:
+              configMapKeyRef:
+                name: auth-center-configmap    # ConfigMap 名称
+                key: db.name            # ConfigMap 中的键名
+                optional: false
           - name: DB_USER
-            value: auth_center
+            valueFrom:
+              configMapKeyRef:
+                name: auth-center-configmap    # ConfigMap 名称
+                key: db.user            # ConfigMap 中的键名
+                optional: false
           - name: DB_PASSWORD
-            value: Htht123.com
+            valueFrom:
+              secretKeyRef:
+                name: auth-center-secret #secret
+                key: db.password #secret key
           - name: AUTH_CENTER_REDIS_HOST
-            value: 192.168.1.249
+            valueFrom:
+              configMapKeyRef:
+                name: auth-center-configmap    # ConfigMap 名称
+                key: redis.host            # ConfigMap 中的键名
+                optional: false
           - name: AUTH_CENTER_REDIS_PORT
-            value: "16379"
+            valueFrom:
+              configMapKeyRef:
+                name: auth-center-configmap    # ConfigMap 名称
+                key: redis.port            # ConfigMap 中的键名
+                optional: false
           ports:
-            - containerPort: 20001
+          - name: http-port   # 这里给容器端口命名
+            containerPort: 20001
 ---
 #service
 apiVersion: v1
@@ -55,6 +92,6 @@ spec:
   type: NodePort
   ports:
   - port: 20001
-    targetPort: 20001
+    targetPort:  http-port
   selector:
     name: auth-center
