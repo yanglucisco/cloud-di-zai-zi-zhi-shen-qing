@@ -19,7 +19,7 @@ export default defineConfig(({ command, mode }) => {
       ],
       proxy: {
         '/gateway': {
-          target: 'http://gateway.clouddizai.com:20003',
+          target: env.GATE_WAY_URL,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/gateway/, ''), // 使用 rewrite 函数重写路径
         }

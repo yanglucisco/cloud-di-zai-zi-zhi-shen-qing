@@ -5,6 +5,7 @@ import EnvUtil from './EnvUtil'
 
 // 创建axios实例，配置默认参数
 const service = axios.create({
+  //开发环境使用vue代理、正式环境使用nginx的反向代理
   baseURL: 'http://vue-front-before-gateway.clouddizai.com:' + EnvUtil.apiPort + '/gateway', // import.meta.env.VITE_API_BASE_URL, // 从环境变量读取API基础地址[3](@ref)[4](@ref)
   timeout: 10000, // 请求超时时间
   headers: {
@@ -43,6 +44,7 @@ service.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           // 
+          debugger
           console.error('未授权，请重新登录')
           cleanToken()
           let codeChallenge = await generateCodeChallenge() //'hQqHvGROSi0bvuXVAUXnSj1ZN1p1pDTpnKy5HZvvAso'

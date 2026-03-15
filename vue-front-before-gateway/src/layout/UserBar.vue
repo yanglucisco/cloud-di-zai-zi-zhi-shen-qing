@@ -49,7 +49,7 @@ const fullScreenClick = () => {
 const logout = () => {
     console.log('cleanToken')
     const idToken = getUserIdToken()
-    const href = `http://auth-server:20001/connect/logout?id_token_hint=${idToken}&post_logout_redirect_uri=http://vue-front-before-gateway.clouddizai.com:${EnvUtil.apiPort}`
+    const href = `${EnvUtil.AUTH_SERVER_URL}/connect/logout?id_token_hint=${idToken}&post_logout_redirect_uri=http://vue-front-before-gateway.clouddizai.com:${EnvUtil.apiPort}`
     
     window.location.href = href
     cleanToken()

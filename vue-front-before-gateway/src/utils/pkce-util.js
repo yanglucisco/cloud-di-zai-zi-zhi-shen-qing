@@ -40,7 +40,7 @@ export async function generateCodeChallenge() {
 }
 export function gotoLoginPage(codeChallenge){
   //http://vue-front-before-gateway.clouddizai.com:20005/oauth
-  window.open('http://auth-server:20001/oauth2/authorize?response_type=code&client_id=pkce-client&scope=openid' 
+  window.open(EnvUtil.AUTH_SERVER_URL+'/oauth2/authorize?response_type=code&client_id=pkce-client&scope=openid' 
                     + '&redirect_uri=http://vue-front-before-gateway.clouddizai.com:' + EnvUtil.apiPort + '/home' 
                     + '&code_challenge_method=S256&code_challenge=' + codeChallenge, '_self')
 }
