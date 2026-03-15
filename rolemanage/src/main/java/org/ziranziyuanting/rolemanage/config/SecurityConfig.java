@@ -45,7 +45,7 @@ public class SecurityConfig {
                                                 .authenticated()
                                                 // 从配置文件中读取需要角色的路径
                                                 .pathMatchers(securityProperties.getAdminPaths().toArray(new String[0]))
-                                                .hasRole("ADMIN")
+                                                .hasRole("ADMIN123123123")
                                                 .anyExchange().authenticated())
                                 // 前后端分离项目，请求后端数据时，不应该返回302，而是应该返回401
                                 .exceptionHandling(exceptionHandling -> exceptionHandling

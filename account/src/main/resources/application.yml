@@ -14,8 +14,4 @@ spring:
   config:
     import:
       - optional:file:.env[.properties]
-      - nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.file-extension}?group=${spring.cloud.nacos.group}
-  #      - nacos:Demo1-prod1.yaml?refreshEnabled=true
-  #      - nacos:Demo1-prod.yaml?refreshEnabled=true
-  profiles:
-    active: dev
+      - nacos:${spring.application.name}.${spring.cloud.nacos.file-extension}?group=${spring.cloud.nacos.group}

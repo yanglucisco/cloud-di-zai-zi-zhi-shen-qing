@@ -5,3 +5,12 @@ namespace: cloud-di-zai-dev
 resources:
   - ../../../base/dev
   - ../../../services/role-manage
+  - configmap.yaml
+  - secret.yaml
+# 覆盖镜像名称和标签
+images:
+- name: docker.io/library/cloud-di-zai-role-manage
+  newName: docker.io/library/cloud-di-zai-role-manage
+  newTag: "latest"
+patches:
+  - path: deployment-patch.yaml

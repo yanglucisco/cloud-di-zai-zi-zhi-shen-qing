@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-center
+  name: account
   labels:
-    name: auth-center
+    name: account
 spec:
   #replicas: 2
   selector:
     matchLabels:
-      name: auth-center
+      name: account
   template:
     metadata:
       labels:
-        name: auth-center
+        name: account
     spec:
       containers:
-        - name: auth-center
-          image: docker.io/library/cloud-di-zai-auth-center:1.0
+        - name: account
+          image: docker.io/library/cloud-di-zai-account:1.0
           imagePullPolicy: IfNotPresent   # 或者 Never
            # 添加以下 resources 配置
           resources:
@@ -38,60 +38,54 @@ spec:
               secretKeyRef:
                 name: common-secret #secret
                 key: nacos.password #secret key
+          - name: AUTH_CENTER_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: account-configmap    # ConfigMap 名称
+                key: auth.center.host            # ConfigMap 中的键名
+                optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
           - name: DB_HOST
             valueFrom:
               configMapKeyRef:
-                name: auth-center-configmap    # ConfigMap 名称
+                name: account-configmap    # ConfigMap 名称
                 key: db.host            # ConfigMap 中的键名
                 optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
           - name: DB_PORT
             valueFrom:
               configMapKeyRef:
-                name: auth-center-configmap    # ConfigMap 名称
+                name: account-configmap    # ConfigMap 名称
                 key: db.port            # ConfigMap 中的键名
-                optional: false
+                optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
           - name: DB_NAME
             valueFrom:
               configMapKeyRef:
-                name: auth-center-configmap    # ConfigMap 名称
+                name: account-configmap    # ConfigMap 名称
                 key: db.name            # ConfigMap 中的键名
-                optional: false
+                optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
           - name: DB_USER
             valueFrom:
               configMapKeyRef:
-                name: auth-center-configmap    # ConfigMap 名称
+                name: account-configmap    # ConfigMap 名称
                 key: db.user            # ConfigMap 中的键名
-                optional: false
+                optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
           - name: DB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: auth-center-secret #secret
+                name: account-secret #secret
                 key: db.password #secret key
-          - name: AUTH_CENTER_REDIS_HOST
-            valueFrom:
-              configMapKeyRef:
-                name: auth-center-configmap    # ConfigMap 名称
-                key: redis.host            # ConfigMap 中的键名
-                optional: false
-          - name: AUTH_CENTER_REDIS_PORT
-            valueFrom:
-              configMapKeyRef:
-                name: auth-center-configmap    # ConfigMap 名称
-                key: redis.port            # ConfigMap 中的键名
-                optional: false
           ports:
           - name: http-port   # 这里给容器端口命名
-            containerPort: 20001
+            containerPort: 20006
 ---
 #service
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-center
+  name: account
 spec:
-  type: NodePort
+  # type: NodePort
   ports:
-  - port: 20001
+  - port: 20006
     targetPort:  http-port
   selector:
-    name: auth-center
+    name: account

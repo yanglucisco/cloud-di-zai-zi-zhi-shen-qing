@@ -4,13 +4,13 @@ namespace: cloud-di-zai-dev
 # 引用基础配置
 resources:
   - ../../../base/dev
-  - ../../../services/auth-center
+  - ../../../services/account
   - configmap.yaml
   - secret.yaml
 # 覆盖镜像名称和标签
 images:
-- name: docker.io/library/cloud-di-zai-auth-center
-  newName: docker.io/library/cloud-di-zai-auth-center
+- name: docker.io/library/cloud-di-zai-account
+  newName: docker.io/library/cloud-di-zai-account
   newTag: "latest"
 patches:
   - path: deployment-patch.yaml

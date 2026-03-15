@@ -5,7 +5,7 @@ metadata:
   labels:
     name: role-manage
 spec:
-  replicas: 2
+  # replicas: 2
   selector:
     matchLabels:
       name: role-manage
@@ -17,6 +17,15 @@ spec:
       containers:
         - name: role-manage
           image: docker.io/library/cloud-di-zai-role-manage:1.0
+          imagePullPolicy: IfNotPresent   # 或者 Never
+           # 添加以下 resources 配置
+          resources:
+            requests:    # 容器启动所需的最低资源量，调度依据
+              cpu: "100m"    # 0.1 个 CPU 核心
+              memory: "300Mi" # 128 Mebibytes
+            limits:      # 容器允许使用的最大资源量，防止爆炸
+              cpu: "200m"    # 最多 0.2 个核心
+              memory: "800Mi" # 最多 256 Mebibytes
           env:
           - name: NACOS_HOST
             valueFrom: 
@@ -30,19 +39,43 @@ spec:
                 name: common-secret #secret
                 key: nacos.password #secret key
           - name: AUTH_CENTER_HOST
-            value: auth-center
-          - name: ROLE_MANAGE_DB_HOST
-            value: 192.168.1.249
-          - name: ROLE_MANAGE_DB_PORT
-            value: "13307"
-          - name: ROLE_MANAGE_DB_NAME
-            value: role_manage
-          - name: ROLE_MANAGE_DB_USER
-            value: role_manage
-          - name: ROLE_MANAGE_DB_PASSWORD
-            value: Htht123.com
+            valueFrom:
+              configMapKeyRef:
+                name: role-manage-configmap    # ConfigMap 名称
+                key: auth.center.host            # ConfigMap 中的键名
+                optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: role-manage-configmap    # ConfigMap 名称
+                key: db.host            # ConfigMap 中的键名
+                optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
+          - name: DB_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: role-manage-configmap    # ConfigMap 名称
+                key: db.port            # ConfigMap 中的键名
+                optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: role-manage-configmap    # ConfigMap 名称
+                key: db.name            # ConfigMap 中的键名
+                optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
+          - name: DB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: role-manage-configmap    # ConfigMap 名称
+                key: db.user            # ConfigMap 中的键名
+                optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: role-manage-secret #secret
+                key: db.password #secret key
           ports:
-            - containerPort: 20007
+          - name: http-port   # 这里给容器端口命名
+            containerPort: 20007
 ---
 #service
 apiVersion: v1
@@ -53,6 +86,6 @@ spec:
   #type: NodePort #默认是ClusterIP
   ports:
   - port: 20007
-    targetPort: 20007
+    targetPort: http-port
   selector:
     name: role-manage

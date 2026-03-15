@@ -5,7 +5,7 @@ metadata:
   labels:
     name: gateway
 spec:
-  replicas: 1
+  # replicas: 1
   selector:
     matchLabels:
       name: gateway
@@ -16,7 +16,16 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: docker.io/library/cloud-di-zai-gateway:1.0
+          image: docker.io/library/cloud-di-zai-gateway:latest
+          imagePullPolicy: IfNotPresent   # 或者 Never
+           # 添加以下 resources 配置
+          resources:
+            requests:    # 容器启动所需的最低资源量，调度依据
+              cpu: "100m"    # 0.1 个 CPU 核心
+              memory: "128Mi" # 128 Mebibytes
+            limits:      # 容器允许使用的最大资源量，防止爆炸
+              cpu: "200m"    # 最多 0.2 个核心
+              memory: "256Mi" # 最多 256 Mebibytes
           env:
           - name: NACOS_HOST
             valueFrom: 
@@ -32,7 +41,8 @@ spec:
           - name: AUTH_CENTER_HOST
             value: auth-center
           ports:
-            - containerPort: 20003
+          - name: http-port   # 这里给容器端口命名
+            containerPort: 20003
 ---
 #service
 apiVersion: v1
@@ -43,6 +53,6 @@ spec:
   type: NodePort #默认是ClusterIP
   ports:
   - port: 20003
-    targetPort: 20003
+    targetPort: http-port
   selector:
     name: gateway

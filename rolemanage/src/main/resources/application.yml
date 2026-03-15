@@ -1,6 +1,6 @@
 spring:
   application:
-    name: rolemanage-dev
+    name: rolemanage
   cloud:
     nacos:
       server-addr: ${NACOS_HOST:127.0.0.1}:8848 #nacos配置中心地址，配置信息都从这里获取
