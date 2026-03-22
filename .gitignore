@@ -37,4 +37,4 @@ build/
 nginx/html
 nginx/logs
 
-redis/data
+redis
