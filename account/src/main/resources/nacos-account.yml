@@ -1,0 +1,51 @@
+server:
+ port: 20006
+spring:
+  cloud:
+    # sentinel:
+    #   transport:
+    #     dashboard: 127.0.0.1:8858 # 你的Sentinel Dashboard服务器IP和端口
+    #     # port: 8719 # 应用本地启动的HTTP Server端口，用于与Dashboard通信，默认8719
+    #   eager: true # 强烈建议：设置为true，使应用启动后立即连接Dashboard [1](@ref)
+    # 配置Nacos服务发现
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST:192.168.1.249}:8848 # 你的Nacos服务器地址
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://${AUTH_CENTER_HOST}:20001
+  r2dbc:
+    url: r2dbc:mysql://${DB_HOST:localhost}:${DB_PORT:13306}/${DB_NAME:auth_center}?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: ${DB_USER:auth_center}
+    password: ${DB_PASSWORD:pass}
+    # driver-class-name: com.mysql.cj.jdbc.Driver
+  flyway: 
+    user: ${spring.r2dbc.username}
+    password: ${spring.r2dbc.password}
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:13306}/${DB_NAME:auth_center}?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+# application.yml
+logging:
+  level:
+    # R2DBC 相关日志
+    io.r2dbc: DEBUG
+    org.springframework.r2dbc: DEBUG
+    org.springframework.data.r2dbc: DEBUG
+    
+    # 具体的连接池和驱动日志
+    io.r2dbc.mysql: DEBUG           # MySQL
+    
+    # 连接池日志
+    io.r2dbc.pool: DEBUG
+    
+    # 查询详情（包括参数值）
+    io.r2dbc.spi: TRACE
+    
+    # 网络日志
+    reactor.netty: DEBUG
+# 雪花算法配置
+snowflake:
+  worker-id: 1        # 工作机器ID (0-31)
+  datacenter-id: 1    # 数据中心ID (0-31)
+  start-timestamp: 1609459200000  # 起始时间戳(2021-01-01)
