@@ -17,6 +17,15 @@ spec:
       containers:
       - name: nginx
         image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/rancher/mirrored-library-nginx:1.24.0-alpine
+        imagePullPolicy: IfNotPresent   # 或者 Never
+           # 添加以下 resources 配置
+        resources:
+          requests:    # 容器启动所需的最低资源量，调度依据
+            cpu: "100m"    # 0.1 个 CPU 核心
+            memory: "128Mi" # 128 Mebibytes
+          limits:      # 容器允许使用的最大资源量，防止爆炸
+            cpu: "200m"    # 最多 0.2 个核心
+            memory: "256Mi" # 最多 256 Mebibytes
         ports:
         - containerPort: 80
         volumeMounts:
