@@ -27,7 +27,8 @@ spec:
             cpu: "200m"    # 最多 0.2 个核心
             memory: "256Mi" # 最多 256 Mebibytes
         ports:
-        - containerPort: 80
+        - name: http-port
+          containerPort: 8089
         volumeMounts:
         - name: nginx-shared-storage
           mountPath: /usr/share/nginx/html  # 挂载到默认网页目录
@@ -53,6 +54,6 @@ spec:
   selector:
     app: nginx
   ports:
-  - port: 80
-    targetPort: 80
+  - port: 8089
+    targetPort: http-port
   # type: NodePort  # 或 LoadBalancer/NodePort 根据需求
