@@ -44,31 +44,31 @@ spec:
                 name: role-manage-configmap    # ConfigMap 名称
                 key: auth.center.host            # ConfigMap 中的键名
                 optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
-          - name: DB_HOST
+          - name: ROLE_MANAGE_DB_HOST
             valueFrom:
               configMapKeyRef:
                 name: role-manage-configmap    # ConfigMap 名称
                 key: db.host            # ConfigMap 中的键名
                 optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
-          - name: DB_PORT
+          - name: ROLE_MANAGE_DB_PORT
             valueFrom:
               configMapKeyRef:
                 name: role-manage-configmap    # ConfigMap 名称
                 key: db.port            # ConfigMap 中的键名
                 optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
-          - name: DB_NAME
+          - name: ROLE_MANAGE_DB_NAME
             valueFrom:
               configMapKeyRef:
                 name: role-manage-configmap    # ConfigMap 名称
                 key: db.name            # ConfigMap 中的键名
                 optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
-          - name: DB_USER
+          - name: ROLE_MANAGE_DB_USER
             valueFrom:
               configMapKeyRef:
                 name: role-manage-configmap    # ConfigMap 名称
                 key: db.user            # ConfigMap 中的键名
                 optional: false          # 如果 ConfigMap 不存在则 Pod 启动失败
-          - name: DB_PASSWORD
+          - name: ROLE_MANAGE_DB_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: role-manage-secret #secret
