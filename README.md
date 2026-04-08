@@ -31,3 +31,9 @@ ROLE_MANAGE_DB_PASSWORD=Htht123.com
 127.0.0.1 gateway.clouddizai.com
 
 6、前端项目vue-front-before-gateway，启动命令npm run dev -- --port 8089
+
+使用k8s kustomize启动时
+1、修改common-configmap.yaml中的nacos用户名和密码；
+2、修改各个服务overlays下的相关信息，例如数据库连接信息；
+3、如果使用minikube，记得启动端口转发功能；
+
