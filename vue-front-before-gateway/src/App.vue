@@ -7,7 +7,7 @@ const locale = i18n.global.messages.value[i18n.global.locale.value].lang
 
 <template>
   <a-config-provider :locale="locale">
-    <div>
+    <div style="height: calc(100vh - 3px); margin: 0; padding: 0;">
       <RouterView />
     </div>
   </a-config-provider>

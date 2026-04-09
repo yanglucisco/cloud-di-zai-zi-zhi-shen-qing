@@ -27,7 +27,7 @@ export default defineConfig(({ command, mode }) => {
     },
     plugins: [
       vue(),
-      vueDevTools(),
+      // vueDevTools(),
       tailwindcss(), // 添加 Tailwind Vite 插件
     ],
     css: {
