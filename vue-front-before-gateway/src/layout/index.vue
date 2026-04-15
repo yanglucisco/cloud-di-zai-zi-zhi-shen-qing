@@ -94,20 +94,30 @@ const clickMenu = (item) => {
     success(item.name)
     router.push(item.path)
 }
-const dynamicCreateRouter = (parentName, routerItems) => {
+const dynamicCreateRouter = (parentName, routerItems, allRoutes) => {
   routerItems.forEach(item => {
-    router.addRoute(parentName, {
+    let itemRoute = {
+        //此处不能直接用item.path，因为有parentName，所以需要拼接完整路径
         path: item.component,//'sys',
         name: item.name,//'sys',
         component: routerMap.routerMap.get(item.name)
-    })
-    dynamicCreateRouter(item.name, item.children)
+    }
+    router.addRoute(parentName, itemRoute)
+    allRoutes.push({
+        path: item.path,
+        name: item.name,
+        component: routerMap.routerMap.get(item.name)
+    });
+    dynamicCreateRouter(item.name, item.children, allRoutes)
   })
 }
 // mounted 生命周期
 onMounted(() => {
     const menus = appConfig.getData('menus')
-    dynamicCreateRouter('root', menus)
+    let allRoutes = []
+    dynamicCreateRouter('root', menus, allRoutes)
+    debugger
+    localStorage.setItem('allRoutes', JSON.stringify(allRoutes))
     menuList.value = menus
 })
 </script>
