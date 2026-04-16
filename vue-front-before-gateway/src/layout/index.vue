@@ -32,7 +32,7 @@
                         </a-menu-item>
                     </div>
                 </a-menu> -->
-                <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
+                <a-menu v-model:selectedKeys="leftMenu.selectedKeys" v-model:openKeys="leftMenu.openKeys" theme="dark" mode="inline">
                     <LayoutMenu :menuList="menuList"></LayoutMenu>
                 </a-menu>
             </div>
@@ -66,7 +66,7 @@
     </a-layout>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import {
     MenuUnfoldOutlined, MenuFoldOutlined, VideoCameraOutlined, UserOutlined, UploadOutlined, AppstoreAddOutlined,
     AppstoreOutlined, HomeOutlined, SettingOutlined
@@ -88,13 +88,17 @@ const { success, error, warning, loading } = useMessage();
 
 const menuList = ref([]);
 const router = useRouter()
-const selectedKeys = ref([])
+const leftMenu = reactive({
+    selectedKeys: ['index'],
+    openKeys: ['index']
+})
+// const selectedKeys = ref([])
 const collapsed = ref(false)
 const clickMenu = (item) => {
     success(item.name)
     router.push(item.path)
 }
-const dynamicCreateRouter = (parentName, routerItems, allRoutes) => {
+const dynamicCreateRouter = (parentName, routerItems) => {
   routerItems.forEach(item => {
     let itemRoute = {
         //此处不能直接用item.path，因为有parentName，所以需要拼接完整路径
@@ -103,22 +107,19 @@ const dynamicCreateRouter = (parentName, routerItems, allRoutes) => {
         component: routerMap.routerMap.get(item.name)
     }
     router.addRoute(parentName, itemRoute)
-    allRoutes.push({
-        path: item.path,
-        name: item.name,
-        component: routerMap.routerMap.get(item.name)
-    });
-    dynamicCreateRouter(item.name, item.children, allRoutes)
+    dynamicCreateRouter(item.name, item.children)
   })
 }
 // mounted 生命周期
 onMounted(() => {
     const menus = appConfig.getData('menus')
-    let allRoutes = []
-    dynamicCreateRouter('root', menus, allRoutes)
-    debugger
-    localStorage.setItem('allRoutes', JSON.stringify(allRoutes))
+    dynamicCreateRouter('root', menus)
     menuList.value = menus
+    debugger
+    const currentPath = router.currentRoute.value.fullPath;
+    //orgstru/sanji/caidan1 sanJiMuLu caidan1 orgStru
+    leftMenu.selectedKeys = ['caidan1']
+    leftMenu.openKeys = ['orgStru', 'sanJiMuLu']
 })
 </script>
 <style scoped>

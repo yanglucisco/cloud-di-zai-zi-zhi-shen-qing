@@ -64,31 +64,12 @@ router.beforeEach((to, from, next) => {
   console.log("router to: " + to.fullPath);
   const accessToken = getUserInfo().accessToken;
   if (accessToken) {
-    debugger
     if (!router.hasRoute(to.name)) {
-      // router.addRoute(route);
-      let allRoutes = JSON.parse(localStorage.getItem("allRoutes")) || [];
-      allRoutes.forEach((route) => {
-        if (!router.hasRoute(route.name)) {
-          router.addRoute(route);
-        }
-      });
-        // 添加后重新导航
+      const menus = appConfig.getData('menus')
+      dynamicCreateRouter('root', menus)
+      // 添加后重新导航
       return next(to.fullPath);
     }
-    debugger;
-    // if (!isRouteAdded()) {
-    //   // 动态添加所有需要权限的路由
-    //   let dynamicRoutes = appConfig.getData("menus") || [];
-    //   debugger
-    //   dynamicRoutes.forEach((route) => {
-    //     if (!router.hasRoute(route.name)) {
-    //       router.addRoute(route);
-    //     }
-    //   });
-    //   // 添加后重新导航
-    //   return next(to.fullPath);
-    // }
     next();
   } else {
     isFromAuthorServer()
@@ -116,15 +97,17 @@ async function isFromAuthorServer() {
   }
 }
 const dynamicCreateRouter = (parentName, routerItems) => {
-  routerItems.forEach((item) => {
-    router.addRoute(parentName, {
-      path: item.component, //'sys',
-      name: item.name, //'sys',
-      component: routerMap.routerMap.get(item.name),
-    });
-    dynamicCreateRouter(item.name, item.children);
-  });
-};
+  routerItems.forEach(item => {
+    let itemRoute = {
+        //此处不能直接用item.path，因为有parentName，所以需要拼接完整路径
+        path: item.component,//'sys',
+        name: item.name,//'sys',
+        component: routerMap.routerMap.get(item.name)
+    }
+    router.addRoute(parentName, itemRoute)
+    dynamicCreateRouter(item.name, item.children)
+  })
+}
 const exchangeCode = async (code) => {
   const verifier = getCurrentVerifier(); // '8SkwXEJUZJVQLScWYs8nV9bhv4GfvnHmc9iuApguEwY';// sessionStorage.getItem('pkce_verifier');
   console.log("verifier: " + verifier);
