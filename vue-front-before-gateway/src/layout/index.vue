@@ -75,7 +75,7 @@ import {
 import UserBar from './UserBar.vue'
 import { useRouter } from 'vue-router'
 import { useMessage } from '@/utils/useMessage'
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import request from '@/utils/request'
 import { sysinfoStore } from '@/store/sysinfo'
 import appConfig from '@/store/Singleton'
@@ -110,16 +110,39 @@ const dynamicCreateRouter = (parentName, routerItems) => {
     dynamicCreateRouter(item.name, item.children)
   })
 }
+// 根据当前路由计算菜单状态
+const getMenuState = (path) => {
+  debugger
+  const parts = path.split('/').filter(Boolean)
+  const selected = [parts[parts.length - 1]]
+  const open = []
+  
+  // 生成父级路径
+  for (let i = 0; i < parts.length - 1; i++) {
+    open.push(parts[i])
+  }
+  
+  return { selected, open }
+}
+// 监听路由变化
+// watch(
+//   () => router.currentRoute.value.path,
+//   (path) => {
+//     const { selected, open } = getMenuState(path)
+//     debugger
+//     leftMenu.selectedKeys = selected //['caidan1']
+//     leftMenu.openKeys = open //['/', 'orgstru', 'sanjimulu']
+//   },
+//   { immediate: true }
+// )
 // mounted 生命周期
 onMounted(() => {
     const menus = appConfig.getData('menus')
     dynamicCreateRouter('root', menus)
     menuList.value = menus
-    debugger
-    const currentPath = router.currentRoute.value.fullPath;
-    //orgstru/sanji/caidan1 sanJiMuLu caidan1 orgStru
-    leftMenu.selectedKeys = ['caidan1']
-    leftMenu.openKeys = ['orgStru', 'sanJiMuLu']
+    const { selected, open } = getMenuState(router.currentRoute.value.path)
+    leftMenu.selectedKeys =  selected // ['caidan1']
+    leftMenu.openKeys = open //['/', 'orgstru', 'sanjimulu']
 })
 </script>
 <style scoped>
