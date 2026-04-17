@@ -9,13 +9,21 @@
             </a-tree>
         </div>
         <div class="right">
-            <div class="right-top">右上</div>
+            <div class="right-top">
+                <a-space>
+                    <span>名称关键词：</span>
+                    <a-input v-model:value="value" placeholder="请输入组织名称关键词" />
+                    <a-button :icon="h(SearchOutlined)" type="primary">查 询</a-button>
+                    <a-button :icon="h(ReloadOutlined)" >重 置</a-button>
+                </a-space>
+            </div>
             <div class="right-bottom">右下</div>
         </div>
     </div>
 </template>
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, h } from 'vue';
+import { SearchOutlined, ReloadOutlined } from '@ant-design/icons-vue';
 const treeData = [
     {
         title: 'parent 1',
@@ -24,7 +32,7 @@ const treeData = [
             {
                 title: 'parent 1-0',
                 key: '0-0-0',
-                disabled: true,
+                // disabled: true,
                 children: [
                     {
                         title: 'leaf',
@@ -72,12 +80,14 @@ watch(checkedKeys, () => {
 
 .container {
     display: flex;
-    min-height: 60vh;
+    min-height: 300px;
+    background-color: rgb(245, 245, 245);
 }
 
 .left {
     width: 250px;
-    background-color: antiquewhite;
+    margin-right: 10px;
+    background-color: white;
     /* 左侧固定宽度 */
 }
 
@@ -88,14 +98,15 @@ watch(checkedKeys, () => {
 }
 
 .right-top {
-    height: 200px;
-    background-color: lightcyan;
+    /* height: 50px; */
+    background-color: white;
     /* 右上固定高度 */
+    margin-bottom: 10px;
 }
 
 .right-bottom {
     flex: 1;
-    background-color: linen;
+    background-color: white;
     /* 右下自适应 */
 }
 </style>
