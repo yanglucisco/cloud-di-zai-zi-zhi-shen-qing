@@ -22,7 +22,8 @@ export default {
 		searchKey: '关键词',
 		imports: '导入',
 		more: '更多',
-		export: '导出'
+		export: '导出',
+		action: '动作'
 	},
 	model: {
 		user: '用户',
@@ -71,5 +72,10 @@ export default {
 		placeholderUserStatus: '请选择状态',
 		popconfirmDeleteUser: '确定要删除吗？',
 		popconfirmResatUserPwd: '确定要重置吗？'
+	},
+	org: {
+		orgName: '组织名称',
+		classify: '分类',
+		sort: '排序',
 	}
 }

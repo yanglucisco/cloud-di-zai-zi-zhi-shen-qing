@@ -10,20 +10,83 @@
         </div>
         <div class="right">
             <div class="right-top">
-                <a-space>
-                    <span>名称关键词：</span>
-                    <a-input v-model:value="value" placeholder="请输入组织名称关键词" />
-                    <a-button :icon="h(SearchOutlined)" type="primary">查 询</a-button>
-                    <a-button :icon="h(ReloadOutlined)" >重 置</a-button>
+                <a-space style="margin: 5px;">
+                    <span>{{ orgNameText }}:</span>
+                    <a-input v-model:value="orgNameSerachKeyWord" :placeholder="orgNameText" />
+                    <a-button :icon="h(SearchOutlined)" type="primary" @click="find">{{ serachButtonText }}</a-button>
+                    <a-button :icon="h(ReloadOutlined)">重 置</a-button>
                 </a-space>
             </div>
-            <div class="right-bottom">右下</div>
+            <div class="right-bottom">
+                <a-space style="margin: 5px">
+                    <a-button :icon="h(PlusOutlined)" type="primary">新 增</a-button>
+                    <a-button :icon="h(DeleteOutlined)" danger ghost>批量删除</a-button>
+                </a-space>
+                <a-table :columns="columns" :data-source="data" :row-selection="rowSelection" :pagination="paginationConfig">
+                    <template #headerCell="{ column }">
+                        <template v-if="column.key === 'orgName'">
+                            <span>
+                                {{ orgNameText }}
+                            </span>
+                        </template>
+                        <template v-if="column.key === 'classify'">
+                            <span>
+                                {{ classifyText }}
+                            </span>
+                        </template>
+                        <template v-if="column.key === 'sort'">
+                            <span>
+                                {{ sortText }}
+                            </span>
+                        </template>
+                        <template v-if="column.key === 'action'">
+                            <span>
+                                {{ actionText }}
+                            </span>
+                        </template>
+                    </template>
+
+                    <template #bodyCell="{ column, record }">
+                        <template v-if="column.key === 'OrgName'">
+                            <a>
+                                {{ record.OrgName }}
+                            </a>
+                        </template>
+                        <template v-else-if="column.key === 'tags'">
+                            <span>
+                                <a-tag v-for="tag in record.tags" :key="tag"
+                                    :color="tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'">
+                                    {{ tag.toUpperCase() }}
+                                </a-tag>
+                            </span>
+                        </template>
+                        <template v-else-if="column.key === 'action'">
+                            <span>
+                                <a>编辑</a>
+                                <a-divider type="vertical" />
+                                <a style="color: red;">删除</a>
+                            </span>
+                        </template>
+                    </template>
+                </a-table>
+
+            </div>
         </div>
     </div>
 </template>
 <script setup>
-import { ref, watch, h } from 'vue';
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons-vue';
+import { ref, watch, h, reactive, onMounted } from 'vue';
+import { SearchOutlined, ReloadOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import { useI18n } from 'vue-i18n'
+import { getOrgData } from '@/api/org'
+const { t } = useI18n()
+const orgNameText = ref(t('org.orgName'))
+const classifyText = ref(t('org.classify'))
+const sortText = ref(t('org.sort'))
+const actionText = ref(t('common.action'))
+const serachButtonText = ref(t('common.searchButton'))
+
+const orgNameSerachKeyWord = ref('')
 const treeData = [
     {
         title: 'parent 1',
@@ -61,6 +124,13 @@ const treeData = [
 const expandedKeys = ref(['0-0-0', '0-0-1']);
 const selectedKeys = ref(['0-0-0', '0-0-1']);
 const checkedKeys = ref(['0-0-0', '0-0-1']);
+const find = () => {
+    console.log('find find find teststestest')
+    
+    const data1 = getOrgData()
+    paginationConfig.total = data1.length
+    data.value = data1
+}
 watch(expandedKeys, () => {
     console.log('expandedKeys', expandedKeys);
 });
@@ -70,6 +140,50 @@ watch(selectedKeys, () => {
 watch(checkedKeys, () => {
     console.log('checkedKeys', checkedKeys);
 });
+const paginationConfig = reactive({
+  current: 1,           // 当前页码
+  pageSize: 10,         // 每页条数
+  total: 100,           // 总数据量
+  showSizeChanger: true, // 显示页数切换器
+  showQuickJumper: true, // 显示快速跳转
+  showTotal: (total) => `共 ${total} 条`, // 显示总数
+  pageSizeOptions: ['10', '20', '50', '100'], // 页数选项
+})
+const columns = [
+    {
+        name: 'orgName',
+        dataIndex: 'orgName',
+        key: 'orgName',
+    },
+    {
+        title: 'classify',
+        dataIndex: 'classify',
+        key: 'classify',
+    },
+    {
+        title: 'sort',
+        dataIndex: 'sort',
+        key: 'sort',
+    },
+    {
+        title: 'action',
+        key: 'action',
+        dataIndex: 'action',
+    }
+];
+const data = ref([]);
+const rowSelection = {
+  // 选择框列配置
+  columnWidth: 60,          // 选择列宽度
+  fixed: true,              // 固定在最左侧
+  // 选中行变化时的回调
+  onChange: (selectedRowKeys, selectedRows) => {
+    console.log('选中行:', selectedRowKeys, selectedRows);
+  },
+};
+onMounted(() => {
+    
+})
 </script>
 <style>
 * {
