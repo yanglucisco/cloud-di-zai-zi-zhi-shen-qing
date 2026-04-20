@@ -22,7 +22,8 @@
                     <a-button :icon="h(PlusOutlined)" type="primary">新 增</a-button>
                     <a-button :icon="h(DeleteOutlined)" danger ghost>批量删除</a-button>
                 </a-space>
-                <a-table :columns="columns" :data-source="data" :row-selection="rowSelection" :pagination="paginationConfig">
+                <a-table :columns="columns" :data-source="data" :row-selection="rowSelection" :pagination="paginationConfig"
+                @change="handleTableChange">
                     <template #headerCell="{ column }">
                         <template v-if="column.key === 'orgName'">
                             <span>
@@ -78,7 +79,7 @@
 import { ref, watch, h, reactive, onMounted } from 'vue';
 import { SearchOutlined, ReloadOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
-import { getOrgData } from '@/api/org'
+import { getOrgData, getOrgData1 } from '@/api/org'
 const { t } = useI18n()
 const orgNameText = ref(t('org.orgName'))
 const classifyText = ref(t('org.classify'))
@@ -124,9 +125,18 @@ const treeData = [
 const expandedKeys = ref(['0-0-0', '0-0-1']);
 const selectedKeys = ref(['0-0-0', '0-0-1']);
 const checkedKeys = ref(['0-0-0', '0-0-1']);
+const handleTableChange = (pag, filters, sorter) => {
+  console.log('分页变化:', pag);
+  
+  // 更新分页参数
+  paginationConfig.current = pag.current;
+  paginationConfig.pageSize = pag.pageSize;
+  
+  // 重新加载数据
+  loadData(pag.current, pag.pageSize);
+};
 const find = () => {
     console.log('find find find teststestest')
-    
     const data1 = getOrgData()
     paginationConfig.total = data1.length
     data.value = data1
@@ -148,7 +158,16 @@ const paginationConfig = reactive({
   showQuickJumper: true, // 显示快速跳转
   showTotal: (total) => `共 ${total} 条`, // 显示总数
   pageSizeOptions: ['10', '20', '50', '100'], // 页数选项
+  onChange: (page, pageSize) => {
+    paginationConfig.current = page;
+    loadData(page, pageSize);
+  }
 })
+const loadData = (page, pageSize) => {
+    const data1 = getOrgData1(page, pageSize)
+    // paginationConfig.total = data1.length
+    data.value = data1
+}
 const columns = [
     {
         name: 'orgName',
