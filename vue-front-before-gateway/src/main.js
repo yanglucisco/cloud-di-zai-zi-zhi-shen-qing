@@ -8,11 +8,13 @@ import i18n from './locales'
 // import 'vue3-ui/dist/index.es.css'
 // import './tailwind.css'
 import './style/index.less'
+import { useLogger } from '@/utils/logger';
+const logger = useLogger('main.js');
 const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
 app.use(router)
-console.log('after use pinia')
+logger.info('pina 加载成功')
 app.use(Antd)
 app.use(i18n)
 app.mount('#app')

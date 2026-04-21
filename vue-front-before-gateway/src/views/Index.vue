@@ -10,7 +10,6 @@ onMounted(() => {
       url: '/rolemanage/sysresource/test',
       method: 'get'
     }).then(res => {
-        console.log(res)
         title.value = res // res.length + " 个 " 
     })
 })

@@ -32,22 +32,6 @@ const changeLanguage = (lang) => {
 }
 
 onMounted(async () => {
-    console.log('pkce 的值: ' + pkceStore.currentVerifier)
-    // console.log('home onMounted:')
-    // const token = sessionStorage.getItem('token')
-    // console.log('home onMounted 123:')
-    // if(token){
-    //     console.log('home token:' + token)
-    //     return
-    // }
-    // const queryString = window.location.search
-    // const params = new URLSearchParams(queryString)
-
-    // const code = params.get('code') // "alice"
-    // if(code){ //从授权服务器返回来的
-    //     exchangeCode(code)
-    //     return
-    // }
     try {
         const data = await getInfo() // 调用接口
         userInfo.value = testState.value.name + data + " " + getUserInfo().accessToken

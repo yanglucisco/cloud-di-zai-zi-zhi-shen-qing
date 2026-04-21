@@ -24,7 +24,4 @@ const props = defineProps({
         ])
     }
 })
-// 访问嵌套属性
-// console.log(props.user.name)
-// console.log(props.user.address.city)
 </script>

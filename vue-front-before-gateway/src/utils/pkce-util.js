@@ -32,10 +32,8 @@ export function generateCodeVerifier() {
 export async function generateCodeChallenge() {
   // return '5ZbQopS699K0xepPT6hNqAwEnhAUWyI2zJOSoGA1eXs'
   const f = getCurrentVerifier()
-  console.log('f: ' + f)
   var r1 = CryptoJS.SHA256(f)
   const r = base64URL(r1)
-  console.log('r: ' + r)
   return 'CKDiHkSrxgZNj8KxTQNJ-8lkF78EBy_R3u_DAsOrXoA'
 }
 export function gotoLoginPage(codeChallenge){

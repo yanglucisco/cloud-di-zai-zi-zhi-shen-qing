@@ -41,7 +41,6 @@ export default {
     async mounted() {
         const token = getUserInfo().accessToken// sessionStorage.getItem('idToken')
         if (token) {
-            console.log('home1 idToken:' + token)
         }
         try {
             const data = await getCatalog() // 调用接口

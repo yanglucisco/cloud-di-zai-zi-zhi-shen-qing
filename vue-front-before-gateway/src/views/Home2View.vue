@@ -12,12 +12,8 @@ import { getUserInfo } from '@/userInfo'
 const userInfo = ref(null)
 const testrole = ref(null)
 onMounted(async () => {
-    // 
-    console.log('home1 onMounted:')
-    const token = getUserInfo().accessToken// sessionStorage.getItem('idToken')
-    console.log('home1 onMounted 123:')
+    const token = getUserInfo().accessToken
     if(token){
-        console.log('home1 idToken:' + token)
     }
     try {
         const data = await getCatalog() // 调用接口

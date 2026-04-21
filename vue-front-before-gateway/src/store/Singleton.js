@@ -15,7 +15,6 @@ class Singleton {
   }
   
   _initialize() {
-    console.log('Singleton initialized');
   }
   
   // 公共方法
@@ -53,10 +52,3 @@ export { Singleton, appConfig }
 
 // 默认导出实例
 export default appConfig;
-// 使用示例
-// const instance1 = Singleton.getInstance();
-// const instance2 = Singleton.getInstance();
-// console.log(instance1 === instance2); // true
-
-// instance1.setData('name', 'Singleton');
-// console.log(instance2.getData('name')); // 'Singleton'

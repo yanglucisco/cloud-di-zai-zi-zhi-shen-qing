@@ -126,8 +126,6 @@ const expandedKeys = ref(['0-0-0', '0-0-1']);
 const selectedKeys = ref(['0-0-0', '0-0-1']);
 const checkedKeys = ref(['0-0-0', '0-0-1']);
 const handleTableChange = (pag, filters, sorter) => {
-  console.log('分页变化:', pag);
-  
   // 更新分页参数
   paginationConfig.current = pag.current;
   paginationConfig.pageSize = pag.pageSize;
@@ -136,19 +134,15 @@ const handleTableChange = (pag, filters, sorter) => {
   loadData(pag.current, pag.pageSize);
 };
 const find = () => {
-    console.log('find find find teststestest')
     const data1 = getOrgData()
     paginationConfig.total = data1.length
     data.value = data1
 }
 watch(expandedKeys, () => {
-    console.log('expandedKeys', expandedKeys);
 });
 watch(selectedKeys, () => {
-    console.log('selectedKeys', selectedKeys);
 });
 watch(checkedKeys, () => {
-    console.log('checkedKeys', checkedKeys);
 });
 const paginationConfig = reactive({
   current: 1,           // 当前页码
@@ -197,7 +191,6 @@ const rowSelection = {
   fixed: true,              // 固定在最左侧
   // 选中行变化时的回调
   onChange: (selectedRowKeys, selectedRows) => {
-    console.log('选中行:', selectedRowKeys, selectedRows);
   },
 };
 onMounted(() => {

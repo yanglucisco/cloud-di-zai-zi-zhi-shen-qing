@@ -30,9 +30,10 @@ import { computed } from "vue";
 import routerMap from "./RouterPath.js";
 import EnvUtil from "../utils/EnvUtil";
 import { getUserIdToken } from "../userInfo/index";
-
+import { useLogger } from '@/utils/logger';
+const logger = useLogger('router/index.js');
+const { info, error, debug } = logger;
 appConfig.setData("name", "yanglu");
-console.log("route index");
 const router = createRouter({
   history: createWebHistory(), //createWebHistory(),
   routes: [
@@ -50,18 +51,9 @@ const router = createRouter({
     },
   ],
 });
-// const dynamicRoutes = [
-//   {
-//     path: '/admin',
-//     name: 'Admin',
-//     component: () => import('@/views/Admin.vue')
-//   }
-// ]
 router.beforeEach((to, from, next) => {
-   
-  console.log("route before each");
-  console.log("router from: " + from.fullPath);
-  console.log("router to: " + to.fullPath);
+  info('路由 from.fullPath: ', from.fullPath);
+  info('路由 to.fullPath: ', to.fullPath);
   const accessToken = getUserInfo().accessToken;
   if (accessToken) {
     if (!router.hasRoute(to.name)) {
@@ -77,7 +69,6 @@ router.beforeEach((to, from, next) => {
         next();
       })
       .catch((error) => {
-        console.log("与授权服务器交换exchagecode时出错：" + error.message);
         generateCodeChallenge().then((codeChallenge) => {
           gotoLoginPage(codeChallenge);
         });
@@ -110,7 +101,6 @@ const dynamicCreateRouter = (parentName, routerItems) => {
 }
 const exchangeCode = async (code) => {
   const verifier = getCurrentVerifier(); // '8SkwXEJUZJVQLScWYs8nV9bhv4GfvnHmc9iuApguEwY';// sessionStorage.getItem('pkce_verifier');
-  console.log("verifier: " + verifier);
   const tokenUrl = EnvUtil.AUTH_SERVER_URL + "/oauth2/token";
 
   const body = new URLSearchParams({
@@ -135,13 +125,10 @@ const exchangeCode = async (code) => {
     sessionStorage.setItem("idToken", tokens.id_token);
     setUserAccessToken(tokens.access_token);
     setUserIdToken(tokens.id_token);
-    console.log("exchange");
     const res = await request({
       url: "/rolemanage/sysrole/get",
       method: "get",
     });
-    // dynamicCreateRouter('root', res)
-    console.log("res:" + res);
     appConfig.setData("menus", res);
     router.push("index")
   } catch (error) {

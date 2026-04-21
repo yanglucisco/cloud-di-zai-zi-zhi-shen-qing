@@ -75,8 +75,7 @@ const onFinish = async (values) => {
   try {
     // 模拟登录请求，实际项目中替换为真实的API调用
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    console.log('登录数据:', values);
+  
     message.success('登录成功！');
     
     // 这里可以添加跳转逻辑，例如：
@@ -91,7 +90,6 @@ const onFinish = async (values) => {
 
 // 表单提交失败（验证不通过）
 const onFinishFailed = (errorInfo) => {
-  console.log('验证失败:', errorInfo);
   message.warning('请填写完整的登录信息');
 };
 </script>
