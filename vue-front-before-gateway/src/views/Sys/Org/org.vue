@@ -19,11 +19,11 @@
             </div>
             <div class="right-bottom">
                 <a-space style="margin: 5px">
-                    <a-button :icon="h(PlusOutlined)" type="primary">新 增</a-button>
+                    <a-button :icon="h(PlusOutlined)" type="primary" @click="addOrgFunc">新 增</a-button>
                     <a-button :icon="h(DeleteOutlined)" danger ghost>批量删除</a-button>
                 </a-space>
-                <a-table :columns="columns" :data-source="data" :row-selection="rowSelection" :pagination="paginationConfig"
-                @change="handleTableChange">
+                <a-table :columns="columns" :data-source="data" :row-selection="rowSelection"
+                    :pagination="paginationConfig" @change="handleTableChange">
                     <template #headerCell="{ column }">
                         <template v-if="column.key === 'orgName'">
                             <span>
@@ -70,7 +70,7 @@
                         </template>
                     </template>
                 </a-table>
-
+                <add-org ref="addOrgRef"></add-org>
             </div>
         </div>
     </div>
@@ -80,14 +80,20 @@ import { ref, watch, h, reactive, onMounted } from 'vue';
 import { SearchOutlined, ReloadOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { getOrgData, getOrgData1 } from '@/api/org'
+import addOrg from './add.vue'
 const { t } = useI18n()
 const orgNameText = ref(t('org.orgName'))
 const classifyText = ref(t('org.classify'))
 const sortText = ref(t('org.sort'))
 const actionText = ref(t('common.action'))
 const serachButtonText = ref(t('common.searchButton'))
-
+const addOrgRef = ref(null);
 const orgNameSerachKeyWord = ref('')
+const addOrgFunc = () => {
+    if (addOrgRef.value) {
+        addOrgRef.value.showDrawer();
+    }
+}
 const treeData = [
     {
         title: 'parent 1',
@@ -126,12 +132,12 @@ const expandedKeys = ref(['0-0-0', '0-0-1']);
 const selectedKeys = ref(['0-0-0', '0-0-1']);
 const checkedKeys = ref(['0-0-0', '0-0-1']);
 const handleTableChange = (pag, filters, sorter) => {
-  // 更新分页参数
-  paginationConfig.current = pag.current;
-  paginationConfig.pageSize = pag.pageSize;
-  
-  // 重新加载数据
-  loadData(pag.current, pag.pageSize);
+    // 更新分页参数
+    paginationConfig.current = pag.current;
+    paginationConfig.pageSize = pag.pageSize;
+
+    // 重新加载数据
+    loadData(pag.current, pag.pageSize);
 };
 const find = () => {
     const data1 = getOrgData()
@@ -145,17 +151,17 @@ watch(selectedKeys, () => {
 watch(checkedKeys, () => {
 });
 const paginationConfig = reactive({
-  current: 1,           // 当前页码
-  pageSize: 10,         // 每页条数
-  total: 100,           // 总数据量
-  showSizeChanger: true, // 显示页数切换器
-  showQuickJumper: true, // 显示快速跳转
-  showTotal: (total) => `共 ${total} 条`, // 显示总数
-  pageSizeOptions: ['10', '20', '50', '100'], // 页数选项
-  onChange: (page, pageSize) => {
-    paginationConfig.current = page;
-    loadData(page, pageSize);
-  }
+    current: 1,           // 当前页码
+    pageSize: 10,         // 每页条数
+    total: 100,           // 总数据量
+    showSizeChanger: true, // 显示页数切换器
+    showQuickJumper: true, // 显示快速跳转
+    showTotal: (total) => `共 ${total} 条`, // 显示总数
+    pageSizeOptions: ['10', '20', '50', '100'], // 页数选项
+    onChange: (page, pageSize) => {
+        paginationConfig.current = page;
+        loadData(page, pageSize);
+    }
 })
 const loadData = (page, pageSize) => {
     const data1 = getOrgData1(page, pageSize)
@@ -186,15 +192,15 @@ const columns = [
 ];
 const data = ref([]);
 const rowSelection = {
-  // 选择框列配置
-  columnWidth: 60,          // 选择列宽度
-  fixed: true,              // 固定在最左侧
-  // 选中行变化时的回调
-  onChange: (selectedRowKeys, selectedRows) => {
-  },
+    // 选择框列配置
+    columnWidth: 60,          // 选择列宽度
+    fixed: true,              // 固定在最左侧
+    // 选中行变化时的回调
+    onChange: (selectedRowKeys, selectedRows) => {
+    },
 };
 onMounted(() => {
-    
+
 })
 </script>
 <style>

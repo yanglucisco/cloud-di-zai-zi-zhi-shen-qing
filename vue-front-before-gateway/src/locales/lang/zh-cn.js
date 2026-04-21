@@ -77,5 +77,6 @@ export default {
 		orgName: '组织名称',
 		classify: '分类',
 		sort: '排序',
+		addOrg: '新增组织机构'
 	}
 }

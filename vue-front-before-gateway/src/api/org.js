@@ -1,3 +1,5 @@
+import { allOrg } from "@/testData/org"
+
 export function getOrgData() {
   const r = []
   for(let i = 1;i < 20 + Math.floor(Math.random() * 100);i++){
@@ -7,6 +9,10 @@ export function getOrgData() {
         classify: "公司",
         sort: 1,
     })
+  }
+  debugger
+  for(const item of allOrg){
+    r.push(item);
   }
   return r
 }
@@ -21,6 +27,9 @@ export function getOrgData1(page, pageSize) {
         classify: "公司",
         sort: index,
     })
+  }
+  for(const item of allOrg){
+    r.push(item);
   }
   return r
 }
