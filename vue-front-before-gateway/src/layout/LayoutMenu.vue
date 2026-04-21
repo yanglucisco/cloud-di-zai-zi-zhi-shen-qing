@@ -56,7 +56,7 @@ icons.set('UserOutlined', UserOutlined)
 const selectedKeys = ref([])
 const clickMenu = (item) => {
     success(item.name)
-    debugger
+     
     router.push(item.path)
 }
 </script>

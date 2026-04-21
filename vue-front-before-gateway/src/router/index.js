@@ -58,7 +58,7 @@ const router = createRouter({
 //   }
 // ]
 router.beforeEach((to, from, next) => {
-  debugger;
+   
   console.log("route before each");
   console.log("router from: " + from.fullPath);
   console.log("router to: " + to.fullPath);
@@ -85,7 +85,7 @@ router.beforeEach((to, from, next) => {
   }
 });
 async function isFromAuthorServer() {
-  debugger;
+   
   const queryString = window.location.search;
   const params = new URLSearchParams(queryString);
   const code = params.get("code"); // "alice"
@@ -123,7 +123,7 @@ const exchangeCode = async (code) => {
     client_id: "pkce-client",
     code_verifier: verifier, // 关键：验证身份
   });
-  debugger;
+   
   try {
     const response = await fetch(tokenUrl, {
       method: "POST",

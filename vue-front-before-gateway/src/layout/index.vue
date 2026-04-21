@@ -112,7 +112,7 @@ const dynamicCreateRouter = (parentName, routerItems) => {
 }
 // 根据当前路由计算菜单状态
 const getMenuState = (path) => {
-  debugger
+   
   const parts = path.split('/').filter(Boolean)
   const selected = [parts[parts.length - 1]]
   const open = []
@@ -129,7 +129,7 @@ const getMenuState = (path) => {
 //   () => router.currentRoute.value.path,
 //   (path) => {
 //     const { selected, open } = getMenuState(path)
-//     debugger
+//      
 //     leftMenu.selectedKeys = selected //['caidan1']
 //     leftMenu.openKeys = open //['/', 'orgstru', 'sanjimulu']
 //   },

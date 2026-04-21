@@ -44,7 +44,7 @@ service.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           // 
-          debugger
+           
           console.error('未授权，请重新登录')
           cleanToken()
           let codeChallenge = await generateCodeChallenge() //'hQqHvGROSi0bvuXVAUXnSj1ZN1p1pDTpnKy5HZvvAso'
