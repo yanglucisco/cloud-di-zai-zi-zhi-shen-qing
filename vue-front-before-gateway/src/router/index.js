@@ -143,6 +143,7 @@ const exchangeCode = async (code) => {
     // dynamicCreateRouter('root', res)
     console.log("res:" + res);
     appConfig.setData("menus", res);
+    router.push("index")
   } catch (error) {
     console.error("Token exchange failed:", error);
   }
