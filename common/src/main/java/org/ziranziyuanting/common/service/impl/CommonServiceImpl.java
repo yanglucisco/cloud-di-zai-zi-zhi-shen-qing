@@ -15,7 +15,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public abstract class CommonServiceImpl<T extends CommonEntity> implements CommonService<T> {
-    private final CommonReactiveCrudRepository<T> repository;
+    protected final CommonReactiveCrudRepository<T> repository;
     @Autowired
     private CommonSnowflake snowflake;
 

@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.ziranziyuanting.account.entity.SysDict;
 import org.ziranziyuanting.account.param.AddDictParam;
 import org.ziranziyuanting.account.service.SysDictService;
+import org.ziranziyuanting.account.vo.SysDictVO;
 
 import jakarta.validation.Valid;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import org.springframework.http.ResponseEntity;
@@ -26,8 +26,8 @@ public class SysDictController {
         this.service = sysDictService;
     }
     @GetMapping("findAll")
-    public ResponseEntity<Flux<SysDict>> findAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<Mono<SysDictVO>> findAll() {
+        return ResponseEntity.ok(service.findAllVO());
     }
     @PostMapping("add")
     public ResponseEntity<Mono<String>> add(@Valid @RequestBody AddDictParam dict) {
