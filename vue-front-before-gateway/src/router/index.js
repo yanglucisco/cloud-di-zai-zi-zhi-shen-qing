@@ -14,6 +14,7 @@ import Sys from "../views/Sys/Index.vue";
 import SysOrg from "../views/Sys/Org/Index.vue";
 import SysUser from "../views/Sys/User/Index.vue";
 import { sysinfoStore } from "@/store/sysinfo";
+import { saveAlldics, getDicByValue } from "@/api/dict";
 import {
   getCurrentVerifier,
   generateCodeChallenge,
@@ -130,6 +131,8 @@ const exchangeCode = async (code) => {
       method: "get",
     });
     appConfig.setData("menus", res);
+    saveAlldics();
+    // const orgTypes = getDicByValue('ORG_TYPE');
     router.push("index")
   } catch (error) {
     console.error("Token exchange failed:", error);
