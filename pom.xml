@@ -126,6 +126,15 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.14.0</version>
                 <configuration>
+                    <parameters>true</parameters>  <!-- 关键配置 -->
+                    <annotationProcessorPaths>
+                    <!-- 如果使用 Lombok -->
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>1.18.30</version>
+                    </path>
+                </annotationProcessorPaths>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
                 </configuration>
