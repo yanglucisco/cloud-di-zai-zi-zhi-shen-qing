@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.ziranziyuanting.account.entity.SysOrg;
 import org.ziranziyuanting.account.param.AddOrgParam;
 import org.ziranziyuanting.account.service.SysOrgService;
+import org.ziranziyuanting.account.vo.SysOrgVO;
 
 import jakarta.validation.Valid;
 import reactor.core.publisher.Flux;
@@ -18,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -43,9 +43,9 @@ public class SysOrgController {
         service.test();
         return LocalDateTime.now().toString();
     }
-    @GetMapping("page")
-    public ResponseEntity<Mono<SysOrg>> page() {
-        return ResponseEntity.ok(service.findAllOrgs(1, 0));
+    @GetMapping("orgTree")
+    public ResponseEntity<Flux<SysOrgVO>> orgTree() {
+        return ResponseEntity.ok(service.orgTree());
     }
     
 }

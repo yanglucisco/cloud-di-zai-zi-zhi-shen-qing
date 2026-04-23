@@ -2,9 +2,7 @@ import { allOrg } from "@/testData/org"
 import request from '@/utils/request' 
 
 export function getAllOrgs() {
-  request('/account/org/page').then(res => {
-    var d = res;
-  })
+  return request('/account/org/orgTree');
 }
 
 export function getOrgData() {
