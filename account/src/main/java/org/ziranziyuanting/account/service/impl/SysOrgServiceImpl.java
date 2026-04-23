@@ -57,11 +57,15 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
         flatMapMany(orgs -> {
             List<SysOrgVO> vos = orgs.stream().map(doItem -> SysOrgVO.builder().title(doItem.getName())
             .key(doItem.getCode())
+            .label(doItem.getName())
+            .value(doItem.getCode())
             .id(doItem.getId()+"")
             .parentId(doItem.getParentId().toString())
             .build()).toList();
             SysOrgVO root = SysOrgVO.builder().id("0").parentId("-1")
-            .title("root").key("root").build();
+            .title("root").key("root")
+            .label("root").value("root").
+            build();
             buildTreeDataDO(root, vos);
             return Flux.fromIterable(root.getChildren());
         });

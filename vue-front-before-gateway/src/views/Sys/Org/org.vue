@@ -77,11 +77,14 @@
     </div>
 </template>
 <script setup>
-import { ref, watch, h, reactive, onMounted } from 'vue';
+import { ref, watch, h, reactive, onMounted, getCurrentInstance } from 'vue';
 import { SearchOutlined, ReloadOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { getOrgData, getOrgData1, getAllOrgs } from '@/api/org'
 import addOrg from './add.vue'
+import { orgDataStore } from '@/store/orgData';
+
+const orgData = orgDataStore();
 const { t } = useI18n()
 const orgNameText = ref(t('org.orgName'))
 const classifyText = ref(t('org.classify'))
@@ -97,7 +100,6 @@ const addOrgFunc = () => {
 };
 const test = () => {
     getAllOrgs().then(res => {
-        debugger
         treeData.value = res;
     });
 };
@@ -175,8 +177,8 @@ const rowSelection = {
 };
 onMounted(() => {
     getAllOrgs().then(res => {
-        debugger
         treeData.value = res;
+        orgData.setTreeData(res);
     });
 })
 </script>

@@ -5,10 +5,7 @@
             <a-row :gutter="16">
                 <a-col :span="24">
                     <a-form-item label="上级组织：" name="parent">
-                        <a-select v-model:value="form.parent" placeholder="请选择上级组织">
-                            <a-select-option value="private">Private</a-select-option>
-                            <a-select-option value="public">Public</a-select-option>
-                        </a-select>
+                        <org-select-tree></org-select-tree>
                     </a-form-item>
                 </a-col>
             </a-row>
@@ -47,6 +44,7 @@ import { reactive, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { allOrg } from '@/testData/org';
 import { getOrgTypesDic } from '@/api/dict';
+import orgSelectTree from './orgSelectTree.vue';
 // 表单引用
 const formRef = ref();
 const { t } = useI18n();

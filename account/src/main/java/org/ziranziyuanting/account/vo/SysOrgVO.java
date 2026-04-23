@@ -20,5 +20,7 @@ public class SysOrgVO {
     private String parentId;
     private String title;
     private String key;
+    private String label;
+    private String value;
     private List<SysOrgVO> children;
 }
