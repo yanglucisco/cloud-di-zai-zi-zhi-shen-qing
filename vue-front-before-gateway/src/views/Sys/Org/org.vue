@@ -80,7 +80,7 @@
 import { ref, watch, h, reactive, onMounted } from 'vue';
 import { SearchOutlined, ReloadOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
-import { getOrgData, getOrgData1 } from '@/api/org'
+import { getOrgData, getOrgData1, getAllOrgs } from '@/api/org'
 import addOrg from './add.vue'
 const { t } = useI18n()
 const orgNameText = ref(t('org.orgName'))
@@ -94,7 +94,10 @@ const addOrgFunc = () => {
     if (addOrgRef.value) {
         addOrgRef.value.showDrawer();
     }
-}
+};
+const test = () => {
+    getAllOrgs();
+};
 const treeData = [
     {
         title: 'parent 1',
