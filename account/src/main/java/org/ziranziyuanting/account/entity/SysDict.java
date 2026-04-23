@@ -1,5 +1,6 @@
 package org.ziranziyuanting.account.entity;
 
+import org.springframework.data.relational.core.mapping.Table;
 import org.ziranziyuanting.common.entity.CommonEntity;
 
 import jakarta.validation.constraints.NotBlank;
@@ -11,6 +12,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Builder
+@Table("sys_dict")
 public class SysDict extends CommonEntity {
 
     @NotNull(message = "父id不能为空")

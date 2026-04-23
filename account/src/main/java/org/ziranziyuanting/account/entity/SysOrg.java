@@ -1,5 +1,6 @@
 package org.ziranziyuanting.account.entity;
 
+import org.springframework.data.relational.core.mapping.Table;
 import org.ziranziyuanting.common.entity.CommonEntity;
 
 import lombok.Builder;
@@ -14,6 +15,7 @@ import lombok.EqualsAndHashCode;
  **/
 @Data
 @EqualsAndHashCode(callSuper=false)
+@Table("sys_org")
 public class SysOrg extends CommonEntity {
 
     /** 父id */

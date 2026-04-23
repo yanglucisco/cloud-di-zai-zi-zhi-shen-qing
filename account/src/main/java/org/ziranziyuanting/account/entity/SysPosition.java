@@ -1,5 +1,6 @@
 package org.ziranziyuanting.account.entity;
 
+import org.springframework.data.relational.core.mapping.Table;
 import org.ziranziyuanting.common.entity.CommonEntity;
 
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Builder
+@Table("sys_position")
 public class SysPosition extends CommonEntity {
 
     /** 组织id */
