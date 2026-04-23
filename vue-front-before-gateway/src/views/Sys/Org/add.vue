@@ -21,10 +21,9 @@
             </a-row>
             <a-row :gutter="16">
                 <a-col :span="24">
-                    <a-form-item label="组织分类：" name="type">
-                        <a-select v-model:value="form.type" placeholder="请选择组织分类">
-                            <a-select-option value="private">Private</a-select-option>
-                            <a-select-option value="public">Public</a-select-option>
+                    <a-form-item label="组织分类：" name="type" >
+                        <a-select v-model:value="form.type" :options="orgTypeOptions" placeholder="请选择组织分类">
+                            
                         </a-select>
                     </a-form-item>
                 </a-col>
@@ -44,9 +43,10 @@
     </a-drawer>
 </template>
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { allOrg } from '@/testData/org';
+import { getOrgTypesDic } from '@/api/dict';
 // 表单引用
 const formRef = ref();
 const { t } = useI18n();
@@ -57,6 +57,11 @@ const form = reactive({
     type: '',
     sort: 0,
 });
+const orgTypeOptions = ref([
+    { value: '1', label: '选项1' },
+  { value: '2', label: '选项2' },
+  { value: '3', label: '选项3' },
+]);
 const rules = {
     name: [
         {
@@ -105,6 +110,9 @@ const onSubmit = () => {
         console.log('校验失败:', error);
     }
 };
+onMounted(() => {
+    orgTypeOptions.value = getOrgTypesDic()
+});
 // 只暴露指定的方法/数据
 defineExpose({
     showDrawer

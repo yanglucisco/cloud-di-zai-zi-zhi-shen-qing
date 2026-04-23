@@ -15,6 +15,7 @@
                     <a-input v-model:value="orgNameSerachKeyWord" :placeholder="orgNameText" />
                     <a-button :icon="h(SearchOutlined)" type="primary" @click="find">{{ serachButtonText }}</a-button>
                     <a-button :icon="h(ReloadOutlined)">重 置</a-button>
+                    <a-button :icon="h(ReloadOutlined)" @click="test">测 试</a-button>
                 </a-space>
             </div>
             <div class="right-bottom">
