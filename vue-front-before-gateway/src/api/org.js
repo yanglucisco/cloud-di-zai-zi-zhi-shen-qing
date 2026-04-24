@@ -4,6 +4,9 @@ import request from '@/utils/request'
 export function getAllOrgs() {
   return request('/account/org/orgTree');
 }
+export function addOrg(data){
+  return request.post('/account/org/add', data);
+}
 
 export function getOrgData() {
   const r = []

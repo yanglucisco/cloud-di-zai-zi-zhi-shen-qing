@@ -4,7 +4,7 @@
         <a-form ref="formRef" :model="form" :rules="rules" layout="vertical">
             <a-row :gutter="16">
                 <a-col :span="24">
-                    <a-form-item label="上级组织：" name="parent">
+                    <a-form-item label="上级组织：" name="parentId">
                         <org-select-tree></org-select-tree>
                     </a-form-item>
                 </a-col>
@@ -18,8 +18,8 @@
             </a-row>
             <a-row :gutter="16">
                 <a-col :span="24">
-                    <a-form-item label="组织分类：" name="type" >
-                        <a-select v-model:value="form.type" :options="orgTypeOptions" placeholder="请选择组织分类">
+                    <a-form-item label="组织分类：" name="category" >
+                        <a-select v-model:value="form.category" :options="orgTypeOptions" placeholder="请选择组织分类">
                             
                         </a-select>
                     </a-form-item>
@@ -27,8 +27,8 @@
             </a-row>
             <a-row :gutter="16">
                 <a-col :span="24">
-                    <a-form-item label="排序" name="sort">
-                        <a-input v-model:value="form.sort" placeholder="请输入排序号" />
+                    <a-form-item label="排序" name="sortCode">
+                        <a-input-number :style="{ width: '100%' }" id="inputNumber" v-model:value="form.sortCode" :min="1" :max="100000000" />
                     </a-form-item>
                 </a-col>
             </a-row>
@@ -42,24 +42,20 @@
 <script setup>
 import { reactive, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { allOrg } from '@/testData/org';
+import { addOrg } from '@/api/org';
 import { getOrgTypesDic } from '@/api/dict';
 import orgSelectTree from './orgSelectTree.vue';
+import { orgDataStore } from '@/store/orgData';
+import { useMessage } from '@/utils/useMessage';
+
+const { success, error, warning, loading } = useMessage()
+const orgData = orgDataStore();
 // 表单引用
 const formRef = ref();
 const { t } = useI18n();
 const title = ref(t('org.addOrg'))
-const form = reactive({
-    name: '',
-    parent: '',
-    type: '',
-    sort: 0,
-});
-const orgTypeOptions = ref([
-    { value: '1', label: '选项1' },
-  { value: '2', label: '选项2' },
-  { value: '3', label: '选项3' },
-]);
+const form = ref({});
+const orgTypeOptions = ref([]);
 const rules = {
     name: [
         {
@@ -67,19 +63,19 @@ const rules = {
             message: '请输入组织名称',
         },
     ],
-    parent: [
+    parentId: [
         {
             required: false,
             message: 'please enter url',
         },
     ],
-    type: [
+    category: [
         {
             required: true,
             message: '请选择组织分类',
         },
     ],
-    sort: [
+    sortCode: [
         {
             required: true,
             message: '请输入排序号',
@@ -87,8 +83,22 @@ const rules = {
     ]
 };
 const open = ref(false);
+const init = () => {
+    form.value.category = undefined;
+    form.value.sortCode = 0;
+    form.value.parentId = '';
+    form.value.name = '';
+};
 const showDrawer = () => {
     open.value = true;
+    // form = {
+    //     name: '',
+    // parent: '',
+    // type: undefined,
+    // sort: 0,
+    // }
+    init();
+    
 };
 const onClose = () => {
     open.value = false;
@@ -98,18 +108,20 @@ const onSubmit = () => {
     try {
         // 触发表单校验
         formRef.value.validate();
-
-        // 校验通过，执行保存逻辑
-        console.log('表单数据:' + form);
-        allOrg.push(form);
-        open.value = false;
-
+        // allOrg.push(form);
+        form.value.parentId = orgData.currentNodeValue;
+        addOrg(form.value).then(res => {
+            success('新增机构成功!');
+            open.value = false;}).catch(error => {
+                error(error);
+            });
     } catch (error) {
         console.log('校验失败:', error);
     }
 };
 onMounted(() => {
-    orgTypeOptions.value = getOrgTypesDic()
+    orgTypeOptions.value = getOrgTypesDic();
+    init();
 });
 // 只暴露指定的方法/数据
 defineExpose({

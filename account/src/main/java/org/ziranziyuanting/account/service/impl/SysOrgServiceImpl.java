@@ -51,6 +51,7 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
             log.info("测试完成: {}", item);
         });
     }
+    @SuppressWarnings("null")
     @Override
     public Flux<SysOrgVO> orgTree() {
         return repository.findAll().collectList().
@@ -58,7 +59,7 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
             List<SysOrgVO> vos = orgs.stream().map(doItem -> SysOrgVO.builder().title(doItem.getName())
             .key(doItem.getCode())
             .label(doItem.getName())
-            .value(doItem.getCode())
+            .value(doItem.getId().toString())
             .id(doItem.getId()+"")
             .parentId(doItem.getParentId().toString())
             .build()).toList();
