@@ -102,7 +102,7 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
     public Flux<SysOrgVO> findOrgsByPage(PageParam pageParam) {
         PageRequest pageRequest = PageRequest.of(pageParam.getPage(), pageParam.getPageSize());
         // Fetch entities and map them to VO
-        return sysOrgRepository.findByNameContainingAndPage(pageParam.getName(), pageRequest)
+        return sysOrgRepository.findByNameContainingAndPage(pageParam.getName(), pageParam.getParentId() ,pageRequest)
                 .map(org -> SysOrgVO.builder()
                         .id(org.getId().toString())       // Convert Long to String
                         .parentId(org.getParentId().toString()) // Convert Long to String
@@ -118,11 +118,11 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
     @Override
     public Mono<Long> countOrgs() {
         // For general count, pass null or empty string to get all
-        return sysOrgRepository.countByName(null);
+        return sysOrgRepository.countByName(null, -1L);
     }
-
+    @Override
     // Helper method if you want specific count by name in controller
-    public Mono<Long> countOrgsByName(String name) {
-        return sysOrgRepository.countByName(name);
+    public Mono<Long> countOrgsByName(String name, Long parentId) {
+        return sysOrgRepository.countByName(name, parentId);
     }
 }

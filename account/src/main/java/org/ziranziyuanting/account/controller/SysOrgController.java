@@ -65,7 +65,7 @@ public class SysOrgController {
         String name = pageParam.getName();
         Mono<Map<String, Object>> result = Mono.zip(
             service.findOrgsByPage(pageParam).collectList(),
-            service.countOrgsByName(name) // Use filtered count
+            service.countOrgsByName(name, pageParam.getParentId()) // Use filtered count
         ).map(tuple -> {
             Map<String, Object> map = new HashMap<>();
             map.put("list", tuple.getT1());

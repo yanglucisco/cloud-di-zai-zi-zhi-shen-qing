@@ -25,5 +25,5 @@ public interface SysOrgService extends CommonService<SysOrg>
      * Get total count of organizations
      */
     Mono<Long> countOrgs();
-    Mono<Long> countOrgsByName(String name);
+    Mono<Long> countOrgsByName(String name, Long parentId);
 }

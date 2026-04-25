@@ -19,8 +19,8 @@ public interface SysOrgRepository extends CommonReactiveCrudRepository<SysOrg>
     @Query("SELECT * FROM sys_org ORDER BY id LIMIT :#{#pageable.pageSize} OFFSET :#{#pageable.offset}")
     Flux<SysOrg> findAllBy(Pageable pageable);
 
-    @Query("SELECT COUNT(*) FROM sys_org WHERE (:name IS NULL OR :name = '' OR name LIKE CONCAT('%', :name, '%'))")
-    Mono<Long> countByName(String name);
+    @Query("SELECT COUNT(*) FROM sys_org WHERE (:name IS NULL OR :name = '' OR name LIKE CONCAT('%', :name, '%')) AND (:parentId IS NULL OR parent_id = :parentId)")
+    Mono<Long> countByName(String name, Long parentId);
 
     /**
      * Find organizations by name with pagination.
@@ -28,6 +28,6 @@ public interface SysOrgRepository extends CommonReactiveCrudRepository<SysOrg>
      * @param pageable Pagination information.
      * @return Flux of SysOrg entities.
      */
-    @Query("SELECT * FROM sys_org WHERE (:name IS NULL OR :name = '' OR name LIKE CONCAT('%', :name, '%')) ORDER BY id LIMIT :#{#pageable.pageSize} OFFSET :#{#pageable.offset}")
-    Flux<SysOrg> findByNameContainingAndPage(String name, Pageable pageable);
+    @Query("SELECT * FROM sys_org WHERE (:name IS NULL OR :name = '' OR name LIKE CONCAT('%', :name, '%')) AND (:parentId IS NULL OR parent_id = :parentId) ORDER BY id LIMIT :#{#pageable.pageSize} OFFSET :#{#pageable.offset}")
+    Flux<SysOrg> findByNameContainingAndPage(String name, Long parentId, Pageable pageable);
 }

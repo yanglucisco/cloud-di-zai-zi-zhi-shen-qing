@@ -2,7 +2,7 @@
     <div class="container">
         <div class="left">
             <a-tree v-model:expandedKeys="expandedKeys" v-model:selectedKeys="selectedKeys"
-                v-model:checkedKeys="checkedKeys" :tree-data="treeData">
+                v-model:checkedKeys="checkedKeys" :tree-data="treeData" @select="handleTreeSelect">
                 <template #title="{ title, key }">
                     <span>{{ title }}</span>
                 </template>
@@ -83,7 +83,9 @@ import { useI18n } from 'vue-i18n'
 import { getAllOrgs, findAllListOrgs } from '@/api/org'
 import addOrg from './add.vue'
 import { orgDataStore } from '@/store/orgData';
+import { useMessage } from '@/utils/useMessage';
 
+const { success, error, warning, loading } = useMessage()
 const orgData = orgDataStore();
 const { t } = useI18n()
 const orgNameText = ref(t('org.orgName'))
@@ -100,6 +102,14 @@ const addOrgFunc = () => {
 };
 const test = () => {
 };
+// Handle tree selection
+const handleTreeSelect = (keys, info) => {
+    if (keys.length > 0) {
+        // Reset to page 1 when filtering by tree node
+        paginationConfig.current = 1;
+        find(1, paginationConfig.pageSize, orgNameSerachKeyWord.value, info.node.id);
+    }
+};
 const treeData = ref([]);
 const expandedKeys = ref(['0-0-0', '0-0-1']);
 const selectedKeys = ref(['0-0-0', '0-0-1']);
@@ -114,6 +124,7 @@ const handleTableChange = (pag, filters, sorter) => {
 };
 const findByName = () => {
     find(paginationConfig.current, paginationConfig.pageSize, orgNameSerachKeyWord.value);
+    success('查询机构成功!');
 };
 const reset = () => { 
     orgNameSerachKeyWord.value = '';
@@ -127,17 +138,19 @@ const editOrg = (record) => {
         addOrgRef.value.showDrawer(record);
     }
 };
-const find = async (page, pageSize, orgName = '') => {
+const find = async (page, pageSize, orgName = '', selectId = '') => {
     try {
         const res = await findAllListOrgs({
             name: orgName,
             page: page,
-            pageSize: pageSize
+            pageSize: pageSize,
+            parentId: selectId
         });
         // Assuming res contains the list and possibly total count
         // Adjust based on your actual API response structure
         data.value = res.list || res;
         paginationConfig.total = res.total || res.length;
+        
     } catch (error) {
         console.error("Failed to load org data:", error);
     }

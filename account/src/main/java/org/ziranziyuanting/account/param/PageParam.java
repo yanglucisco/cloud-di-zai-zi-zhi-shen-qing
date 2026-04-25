@@ -11,4 +11,5 @@ public class PageParam {
     @Min(1)
     private int pageSize = 10; // Page size
     private String name;
+    private Long parentId;
 }

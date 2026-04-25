@@ -2,8 +2,6 @@ package org.ziranziyuanting.account.vo;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,9 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class SysOrgTreeNodeVO {
-    @JsonIgnore
     private String id;
-    @JsonIgnore
     private String parentId;
     private String title;
     private String key;
