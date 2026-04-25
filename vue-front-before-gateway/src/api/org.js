@@ -7,7 +7,9 @@ export function getAllOrgs() {
 export function addOrg(data){
   return request.post('/account/org/add', data);
 }
-
+export function findAllListOrgs(params) {
+  return request.get('/account/org/page', { params });
+}
 export function getOrgData() {
   const r = []
   for(let i = 1;i < 20 + Math.floor(Math.random() * 100);i++){

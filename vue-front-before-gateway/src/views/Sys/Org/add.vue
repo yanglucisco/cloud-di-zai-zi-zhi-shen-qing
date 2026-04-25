@@ -103,20 +103,31 @@ const showDrawer = () => {
 const onClose = () => {
     open.value = false;
 };
-const onSubmit = () => {
+const onSubmit = async () => {
     if (!formRef.value) return;
+    
     try {
-        // 触发表单校验
-        formRef.value.validate();
-        // allOrg.push(form);
+        // 1. Await validation to ensure it completes before submitting
+        await formRef.value.validate();
+        
+        // 2. Set parentId only after validation passes
         form.value.parentId = orgData.currentNodeValue;
-        addOrg(form.value).then(res => {
-            success('新增机构成功!');
-            open.value = false;}).catch(error => {
-                error(error);
+        
+        // 3. Submit the form
+        addOrg(form.value)
+            .then(res => {
+                success('新增机构成功!');
+                open.value = false;
+            })
+            .catch(err => {
+                // 4. Properly handle submission error
+                // Original code had a bug: error(error) which calls the object as a function.
+                // Assuming 'error' is a UI notification function similar to 'success'
+                error('新增机构失败!');
             });
-    } catch (error) {
-        console.log('校验失败:', error);
+    } catch (validationError) {
+        // 5. Handle validation failure
+        console.log('校验失败:', validationError);
     }
 };
 onMounted(() => {

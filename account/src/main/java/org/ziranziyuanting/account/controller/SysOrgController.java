@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.ziranziyuanting.account.entity.SysOrg;
 import org.ziranziyuanting.account.param.AddOrgParam;
+import org.ziranziyuanting.account.param.PageParam;
 import org.ziranziyuanting.account.service.SysOrgService;
 import org.ziranziyuanting.account.vo.SysOrgVO;
 
@@ -12,7 +13,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -47,5 +51,24 @@ public class SysOrgController {
     public ResponseEntity<Flux<SysOrgVO>> orgTree() {
         return ResponseEntity.ok(service.orgTree());
     }
-    
+    @GetMapping("page")
+    public ResponseEntity<Mono<Map<String, Object>>> getOrgsByPage(@Valid PageParam pageParam) {
+        PageRequest pageRequest = PageRequest.of(pageParam.getPage(), pageParam.getSize());
+        var size =  pageRequest.getPageSize();
+        var number = pageRequest.getPageNumber();
+        Long offSet = pageRequest.getOffset();
+        Mono<Map<String, Object>> result = Mono.zip(
+            service.findOrgsByPage(pageParam).collectList(),
+            service.countOrgs()
+        ).map(tuple -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("list", tuple.getT1());
+            map.put("total", tuple.getT2());
+            map.put("page", pageParam.getPage());
+            map.put("size", pageParam.getSize());
+            return map;
+        });
+
+        return ResponseEntity.ok(result);
+    }
 }

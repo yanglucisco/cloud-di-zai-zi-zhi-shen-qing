@@ -26,17 +26,17 @@
                 <a-table :columns="columns" :data-source="data" :row-selection="rowSelection"
                     :pagination="paginationConfig" @change="handleTableChange">
                     <template #headerCell="{ column }">
-                        <template v-if="column.key === 'orgName'">
+                        <template v-if="column.key === 'name'">
                             <span>
                                 {{ orgNameText }}
                             </span>
                         </template>
-                        <template v-if="column.key === 'classify'">
+                        <template v-if="column.key === 'category'">
                             <span>
                                 {{ classifyText }}
                             </span>
                         </template>
-                        <template v-if="column.key === 'sort'">
+                        <template v-if="column.key === 'sortCode'">
                             <span>
                                 {{ sortText }}
                             </span>
@@ -80,7 +80,7 @@
 import { ref, watch, h, reactive, onMounted, getCurrentInstance } from 'vue';
 import { SearchOutlined, ReloadOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
-import { getOrgData, getOrgData1, getAllOrgs } from '@/api/org'
+import { getAllOrgs, findAllListOrgs } from '@/api/org'
 import addOrg from './add.vue'
 import { orgDataStore } from '@/store/orgData';
 
@@ -99,9 +99,25 @@ const addOrgFunc = () => {
     }
 };
 const test = () => {
-    getAllOrgs().then(res => {
-        treeData.value = res;
-    });
+    treeData.value = [{
+        title: 'parent 1-0',
+        key: '0-0-0',
+        disabled: true,
+        children: [
+            {
+                title: 'leaf',
+                key: '0-0-0-0',
+                disableCheckbox: true,
+            },
+            {
+                title: 'leaf',
+                key: '0-0-0-1',
+            },
+        ],
+    }];
+    // getAllOrgs().then(res => {
+    //     treeData.value = res;
+    // });
 };
 const treeData = ref([]);
 const expandedKeys = ref(['0-0-0', '0-0-1']);
@@ -115,10 +131,16 @@ const handleTableChange = (pag, filters, sorter) => {
     // 重新加载数据
     loadData(pag.current, pag.pageSize);
 };
-const find = () => {
-    const data1 = getOrgData()
-    paginationConfig.total = data1.length
-    data.value = data1
+const find = async () => {
+    try {
+        const res = await findAllListOrgs();
+        // Assuming res contains the list and possibly total count
+        // Adjust based on your actual API response structure
+        data.value = res.list || res;
+        paginationConfig.total = res.total || res.length;
+    } catch (error) {
+        console.error("Failed to load org data:", error);
+    }
 }
 watch(expandedKeys, () => {
 });
@@ -140,25 +162,26 @@ const paginationConfig = reactive({
     }
 })
 const loadData = (page, pageSize) => {
-    const data1 = getOrgData1(page, pageSize)
-    // paginationConfig.total = data1.length
-    data.value = data1
+    findAllListOrgs({ page: page, pageSize: pageSize }).then(res => {
+        data.value = res.list;
+    })
+
 }
 const columns = [
     {
-        name: 'orgName',
-        dataIndex: 'orgName',
-        key: 'orgName',
+        name: 'name',
+        dataIndex: 'name',
+        key: 'name',
     },
     {
-        title: 'classify',
-        dataIndex: 'classify',
-        key: 'classify',
+        title: 'category',
+        dataIndex: 'category',
+        key: 'category',
     },
     {
-        title: 'sort',
-        dataIndex: 'sort',
-        key: 'sort',
+        title: 'sortCode',
+        dataIndex: 'sortCode',
+        key: 'sortCode',
     },
     {
         title: 'action',
@@ -175,12 +198,30 @@ const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
     },
 };
-onMounted(() => {
-    getAllOrgs().then(res => {
-        treeData.value = res;
-        orgData.setTreeData(res);
+// Helper function to transform label/value to title/key for a-tree
+const transformTreeData = (nodes) => {
+    if (!Array.isArray(nodes)) return [];
+    return nodes.map(node => {
+        return {
+            title: node.label, // Map label to title
+            key: node.value,   // Map value to key
+            children: node.children ? transformTreeData(node.children) : []
+        };
     });
-})
+};
+onMounted(async () => {
+    try {
+        const res = await getAllOrgs();
+        const treeData1 = transformTreeData(res);
+        treeData.value = treeData1;
+        orgData.setTreeData(res);
+        loadData(1, 10);
+    } catch (error) {
+        console.error("Failed to load tree data:", error);
+    }
+
+    await find();
+});
 </script>
 <style>
 * {
