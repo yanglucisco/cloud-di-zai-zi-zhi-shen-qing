@@ -63,7 +63,7 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
     public Flux<SysOrgVO> orgTree() {
         return repository.findAll().collectList().flatMapMany(orgs -> {
             List<SysOrgVO> vos = orgs.stream().map(doItem -> SysOrgVO.builder().title(doItem.getName())
-                    .key(doItem.getCode())
+                    .key(doItem.getId().toString())
                     .label(doItem.getName())
                     .value(doItem.getId().toString())
                     .id(doItem.getId() + "")
@@ -98,7 +98,7 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
 
     @Override
     public Flux<SysOrg> findOrgsByPage(PageParam pageParam) {
-        PageRequest pageRequest = PageRequest.of(pageParam.getPage(), pageParam.getSize());
+        PageRequest pageRequest = PageRequest.of(pageParam.getPage(), pageParam.getPageSize());
         
         // Use the custom method defined in the repository
         return sysOrgRepository.findAllBy(pageRequest);

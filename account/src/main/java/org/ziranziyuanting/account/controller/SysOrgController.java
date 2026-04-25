@@ -53,10 +53,7 @@ public class SysOrgController {
     }
     @GetMapping("page")
     public ResponseEntity<Mono<Map<String, Object>>> getOrgsByPage(@Valid PageParam pageParam) {
-        PageRequest pageRequest = PageRequest.of(pageParam.getPage(), pageParam.getSize());
-        var size =  pageRequest.getPageSize();
-        var number = pageRequest.getPageNumber();
-        Long offSet = pageRequest.getOffset();
+        pageParam.setPage(pageParam.getPage() - 1);
         Mono<Map<String, Object>> result = Mono.zip(
             service.findOrgsByPage(pageParam).collectList(),
             service.countOrgs()
@@ -64,8 +61,8 @@ public class SysOrgController {
             Map<String, Object> map = new HashMap<>();
             map.put("list", tuple.getT1());
             map.put("total", tuple.getT2());
-            map.put("page", pageParam.getPage());
-            map.put("size", pageParam.getSize());
+            map.put("page", pageParam.getPage() + 1);
+            map.put("size", pageParam.getPageSize());
             return map;
         });
 

@@ -9,5 +9,5 @@ public class PageParam {
     private int page = 0; // Page index, starting from 0
     
     @Min(1)
-    private int size = 10; // Page size
+    private int pageSize = 10; // Page size
 }
