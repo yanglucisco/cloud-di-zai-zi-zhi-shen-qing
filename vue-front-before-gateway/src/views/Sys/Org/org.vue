@@ -14,7 +14,7 @@
                     <span>{{ orgNameText }}:</span>
                     <a-input v-model:value="orgNameSerachKeyWord" :placeholder="orgNameText" />
                     <a-button :icon="h(SearchOutlined)" type="primary" @click="findByName">{{ serachButtonText }}</a-button>
-                    <a-button :icon="h(ReloadOutlined)">重 置</a-button>
+                    <a-button :icon="h(ReloadOutlined)" @click="reset">重 置</a-button>
                     <a-button :icon="h(ReloadOutlined)" @click="test">测 试</a-button>
                 </a-space>
             </div>
@@ -114,6 +114,10 @@ const handleTableChange = (pag, filters, sorter) => {
 };
 const findByName = () => {
     find(paginationConfig.current, paginationConfig.pageSize, orgNameSerachKeyWord.value);
+};
+const reset = () => { 
+    orgNameSerachKeyWord.value = '';
+    findByName();
 };
 const find = async (page, pageSize, orgName = '') => {
     try {
