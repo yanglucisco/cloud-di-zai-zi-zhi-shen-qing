@@ -1,26 +1,26 @@
 package org.ziranziyuanting.account.vo;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysOrgVO {
-    @JsonIgnore
-    private String id;
-    @JsonIgnore
-    private String parentId;
-    private String title;
-    private String key;
-    private String label;
-    private String value;
-    private List<SysOrgVO> children;
+    private String id;       // Changed to String
+    private String parentId; // Changed to String
+    private String name;
+    private String code;
+    private Integer sortCode;
+    private String category;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
+    
+    // For tree structure if needed, otherwise can be removed for simple list
+    private List<SysOrgVO> children; 
 }

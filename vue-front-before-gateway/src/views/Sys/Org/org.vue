@@ -64,7 +64,7 @@
                         </template>
                         <template v-else-if="column.key === 'action'">
                             <span>
-                                <a>编辑</a>
+                                <a @click="editOrg(record)">编辑</a>
                                 <a-divider type="vertical" />
                                 <a style="color: red;">删除</a>
                             </span>
@@ -118,6 +118,14 @@ const findByName = () => {
 const reset = () => { 
     orgNameSerachKeyWord.value = '';
     findByName();
+};
+// New Edit Function
+const editOrg = (record) => {
+    if (addOrgRef.value) {
+        debugger
+        // Pass the record to the child component to populate the form
+        addOrgRef.value.showDrawer(record);
+    }
 };
 const find = async (page, pageSize, orgName = '') => {
     try {

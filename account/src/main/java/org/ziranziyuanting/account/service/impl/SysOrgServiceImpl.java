@@ -11,6 +11,7 @@ import org.ziranziyuanting.account.param.AddOrgParam;
 import org.ziranziyuanting.account.param.PageParam;
 import org.ziranziyuanting.account.repository.SysOrgRepository;
 import org.ziranziyuanting.account.service.SysOrgService;
+import org.ziranziyuanting.account.vo.SysOrgTreeNodeVO;
 import org.ziranziyuanting.account.vo.SysOrgVO;
 import org.ziranziyuanting.common.service.impl.CommonServiceImpl;
 
@@ -23,6 +24,7 @@ import reactor.core.publisher.Mono;
 @CacheConfig(cacheNames = "userCache")
 public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysOrgService {
     private final SysOrgRepository sysOrgRepository;
+
     public SysOrgServiceImpl(SysOrgRepository repository, SysOrgRepository sysOrgRepository) {
         super(repository);
         this.sysOrgRepository = sysOrgRepository;
@@ -60,16 +62,16 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
     }
 
     @Override
-    public Flux<SysOrgVO> orgTree() {
+    public Flux<SysOrgTreeNodeVO> orgTree() {
         return repository.findAll().collectList().flatMapMany(orgs -> {
-            List<SysOrgVO> vos = orgs.stream().map(doItem -> SysOrgVO.builder().title(doItem.getName())
+            List<SysOrgTreeNodeVO> vos = orgs.stream().map(doItem -> SysOrgTreeNodeVO.builder().title(doItem.getName())
                     .key(doItem.getId().toString())
                     .label(doItem.getName())
                     .value(doItem.getId().toString())
                     .id(doItem.getId() + "")
                     .parentId(doItem.getParentId().toString())
                     .build()).toList();
-            SysOrgVO root = SysOrgVO.builder().id("0").parentId("-1")
+            SysOrgTreeNodeVO root = SysOrgTreeNodeVO.builder().id("0").parentId("-1")
                     .title("root").key("root")
                     .label("root").value("root").build();
             buildTreeDataDO(root, vos);
@@ -77,7 +79,7 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
         });
     }
 
-    private void buildTreeDataDO(SysOrgVO dictDataDO, List<SysOrgVO> all) {
+    private void buildTreeDataDO(SysOrgTreeNodeVO dictDataDO, List<SysOrgTreeNodeVO> all) {
         var children = getChildren(dictDataDO, all);
         // SysDictVO vo = SysDictVO.builder().value(dictDataDO.getValue()).build();
         dictDataDO.setChildren(children);
@@ -86,8 +88,8 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
         }
     }
 
-    private List<SysOrgVO> getChildren(SysOrgVO parent, List<SysOrgVO> all) {
-        List<SysOrgVO> children = all.stream().filter(child -> {
+    private List<SysOrgTreeNodeVO> getChildren(SysOrgTreeNodeVO parent, List<SysOrgTreeNodeVO> all) {
+        List<SysOrgTreeNodeVO> children = all.stream().filter(child -> {
             if (child.getParentId() == null) {
                 return false;
             }
@@ -96,11 +98,21 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
         return children;
     }
 
-    @Override
-    public Flux<SysOrg> findOrgsByPage(PageParam pageParam) {
+        @Override
+    public Flux<SysOrgVO> findOrgsByPage(PageParam pageParam) {
         PageRequest pageRequest = PageRequest.of(pageParam.getPage(), pageParam.getPageSize());
-        // Pass the name parameter to the repository
-        return sysOrgRepository.findByNameContainingAndPage(pageParam.getName(), pageRequest);
+        // Fetch entities and map them to VO
+        return sysOrgRepository.findByNameContainingAndPage(pageParam.getName(), pageRequest)
+                .map(org -> SysOrgVO.builder()
+                        .id(org.getId().toString())       // Convert Long to String
+                        .parentId(org.getParentId().toString()) // Convert Long to String
+                        .name(org.getName())
+                        .code(org.getCode())
+                        .sortCode(org.getSortCode())
+                        .category(org.getCategory())
+                        .createTime(org.getCreateTime())
+                        .updateTime(org.getUpdateTime())
+                        .build());
     }
 
     @Override
@@ -108,7 +120,7 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
         // For general count, pass null or empty string to get all
         return sysOrgRepository.countByName(null);
     }
-    
+
     // Helper method if you want specific count by name in controller
     public Mono<Long> countOrgsByName(String name) {
         return sysOrgRepository.countByName(name);

@@ -6,7 +6,7 @@ import org.ziranziyuanting.account.entity.SysOrg;
 import org.ziranziyuanting.account.param.AddOrgParam;
 import org.ziranziyuanting.account.param.PageParam;
 import org.ziranziyuanting.account.service.SysOrgService;
-import org.ziranziyuanting.account.vo.SysOrgVO;
+import org.ziranziyuanting.account.vo.SysOrgTreeNodeVO;
 
 import jakarta.validation.Valid;
 import reactor.core.publisher.Flux;
@@ -41,13 +41,20 @@ public class SysOrgController {
     public ResponseEntity<Mono<String>> add(@Valid @RequestBody AddOrgParam addOrgParam, Authentication authentication) {
         return ResponseEntity.ok(service.save(addOrgParam).map(s -> "新增机构成功"));
     }
+    /**
+     * Update organization
+     */
+    @PostMapping("update")
+    public ResponseEntity<Mono<String>> update(@Valid @RequestBody AddOrgParam addOrgParam) {
+        return ResponseEntity.ok(service.update(addOrgParam).map(s -> "更新机构成功"));
+    }
     @GetMapping("test")
     public String test() {
         service.test();
         return LocalDateTime.now().toString();
     }
     @GetMapping("orgTree")
-    public ResponseEntity<Flux<SysOrgVO>> orgTree() {
+    public ResponseEntity<Flux<SysOrgTreeNodeVO>> orgTree() {
         return ResponseEntity.ok(service.orgTree());
     }
     @GetMapping("page")

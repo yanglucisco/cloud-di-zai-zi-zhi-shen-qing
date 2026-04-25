@@ -3,6 +3,7 @@ package org.ziranziyuanting.account.service;
 import org.ziranziyuanting.account.entity.SysOrg;
 import org.ziranziyuanting.account.param.AddOrgParam;
 import org.ziranziyuanting.account.param.PageParam;
+import org.ziranziyuanting.account.vo.SysOrgTreeNodeVO;
 import org.ziranziyuanting.account.vo.SysOrgVO;
 import org.ziranziyuanting.common.service.CommonService;
 
@@ -14,11 +15,11 @@ public interface SysOrgService extends CommonService<SysOrg>
     Mono<SysOrg> save(AddOrgParam parm);
     void test();
     Mono<SysOrg> update(AddOrgParam parm);
-    Flux<SysOrgVO> orgTree();
+    Flux<SysOrgTreeNodeVO> orgTree();
     /**
      * Find organizations with pagination
      */
-    Flux<SysOrg> findOrgsByPage(PageParam pageParam);
+    Flux<SysOrgVO> findOrgsByPage(PageParam pageParam);
     
     /**
      * Get total count of organizations

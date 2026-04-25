@@ -3,7 +3,6 @@ package org.ziranziyuanting.account.entity;
 import org.springframework.data.relational.core.mapping.Table;
 import org.ziranziyuanting.common.entity.CommonEntity;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

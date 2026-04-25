@@ -7,6 +7,9 @@ export function getAllOrgs() {
 export function addOrg(data){
   return request.post('/account/org/add', data);
 }
+export function updateOrg(data){
+  return request.post('/account/org/update', data);
+}
 export function findAllListOrgs(params) {
   return request.get('/account/org/page', { params });
 }
