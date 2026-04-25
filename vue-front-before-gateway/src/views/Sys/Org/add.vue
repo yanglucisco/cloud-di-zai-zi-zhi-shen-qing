@@ -117,6 +117,7 @@ const onSubmit = async () => {
         addOrg(form.value)
             .then(res => {
                 success('新增机构成功!');
+                emit('success');
                 open.value = false;
             })
             .catch(err => {
@@ -130,6 +131,7 @@ const onSubmit = async () => {
         console.log('校验失败:', validationError);
     }
 };
+const emit = defineEmits(['success']);
 onMounted(() => {
     orgTypeOptions.value = getOrgTypesDic();
     init();

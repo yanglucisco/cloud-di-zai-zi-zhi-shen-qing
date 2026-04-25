@@ -71,7 +71,7 @@
                         </template>
                     </template>
                 </a-table>
-                <add-org ref="addOrgRef"></add-org>
+                <add-org ref="addOrgRef" @success="handleAddSuccess"></add-org>
             </div>
         </div>
     </div>
@@ -99,25 +99,6 @@ const addOrgFunc = () => {
     }
 };
 const test = () => {
-    treeData.value = [{
-        title: 'parent 1-0',
-        key: '0-0-0',
-        disabled: true,
-        children: [
-            {
-                title: 'leaf',
-                key: '0-0-0-0',
-                disableCheckbox: true,
-            },
-            {
-                title: 'leaf',
-                key: '0-0-0-1',
-            },
-        ],
-    }];
-    // getAllOrgs().then(res => {
-    //     treeData.value = res;
-    // });
 };
 const treeData = ref([]);
 const expandedKeys = ref(['0-0-0', '0-0-1']);
@@ -129,11 +110,14 @@ const handleTableChange = (pag, filters, sorter) => {
     paginationConfig.pageSize = pag.pageSize;
 
     // 重新加载数据
-    loadData(pag.current, pag.pageSize);
+    find(pag.current, pag.pageSize);
 };
-const find = async () => {
+const find = async (page, pageSize) => {
     try {
-        const res = await findAllListOrgs();
+        const res = await findAllListOrgs({
+            page: page,
+            pageSize: pageSize
+        });
         // Assuming res contains the list and possibly total count
         // Adjust based on your actual API response structure
         data.value = res.list || res;
@@ -158,15 +142,9 @@ const paginationConfig = reactive({
     pageSizeOptions: ['10', '20', '50', '100'], // 页数选项
     onChange: (page, pageSize) => {
         paginationConfig.current = page;
-        loadData(page, pageSize);
+        find(page, pageSize);
     }
 })
-const loadData = (page, pageSize) => {
-    findAllListOrgs({ page: page, pageSize: pageSize }).then(res => {
-        data.value = res.list;
-    })
-
-}
 const columns = [
     {
         name: 'name',
@@ -198,29 +176,18 @@ const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
     },
 };
-// Helper function to transform label/value to title/key for a-tree
-const transformTreeData = (nodes) => {
-    if (!Array.isArray(nodes)) return [];
-    return nodes.map(node => {
-        return {
-            title: node.label, // Map label to title
-            key: node.value,   // Map value to key
-            children: node.children ? transformTreeData(node.children) : []
-        };
-    });
+const handleAddSuccess = () => {
+    find(paginationConfig.current,paginationConfig.pageSize);
 };
 onMounted(async () => {
     try {
         const res = await getAllOrgs();
-        const treeData1 = transformTreeData(res);
-        treeData.value = treeData1;
+        treeData.value = res;
         orgData.setTreeData(res);
-        loadData(1, 10);
+        find(1, 10);
     } catch (error) {
         console.error("Failed to load tree data:", error);
     }
-
-    await find();
 });
 </script>
 <style>
