@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -53,15 +52,19 @@ public class SysOrgController {
     }
     @GetMapping("page")
     public ResponseEntity<Mono<Map<String, Object>>> getOrgsByPage(@Valid PageParam pageParam) {
-        pageParam.setPage(pageParam.getPage() - 1);
+        // Adjust page index for database (0-based)
+        int dbPage = pageParam.getPage() - 1;
+        pageParam.setPage(dbPage < 0 ? 0 : dbPage);
+        String name = pageParam.getName();
         Mono<Map<String, Object>> result = Mono.zip(
             service.findOrgsByPage(pageParam).collectList(),
-            service.countOrgs()
+            service.countOrgsByName(name) // Use filtered count
         ).map(tuple -> {
             Map<String, Object> map = new HashMap<>();
             map.put("list", tuple.getT1());
             map.put("total", tuple.getT2());
-            map.put("page", pageParam.getPage() + 1);
+            // Return original 1-based page number to frontend
+            map.put("page", pageParam.getPage() + 1); 
             map.put("size", pageParam.getPageSize());
             return map;
         });

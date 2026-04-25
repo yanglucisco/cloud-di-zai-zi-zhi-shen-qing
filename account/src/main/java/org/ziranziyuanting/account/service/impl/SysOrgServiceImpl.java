@@ -99,13 +99,18 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
     @Override
     public Flux<SysOrg> findOrgsByPage(PageParam pageParam) {
         PageRequest pageRequest = PageRequest.of(pageParam.getPage(), pageParam.getPageSize());
-        
-        // Use the custom method defined in the repository
-        return sysOrgRepository.findAllBy(pageRequest);
+        // Pass the name parameter to the repository
+        return sysOrgRepository.findByNameContainingAndPage(pageParam.getName(), pageRequest);
     }
 
     @Override
     public Mono<Long> countOrgs() {
-        return repository.count();
+        // For general count, pass null or empty string to get all
+        return sysOrgRepository.countByName(null);
+    }
+    
+    // Helper method if you want specific count by name in controller
+    public Mono<Long> countOrgsByName(String name) {
+        return sysOrgRepository.countByName(name);
     }
 }

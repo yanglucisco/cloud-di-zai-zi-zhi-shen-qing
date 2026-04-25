@@ -6,6 +6,7 @@ import org.ziranziyuanting.account.entity.SysOrg;
 import org.ziranziyuanting.common.repository.CommonReactiveCrudRepository;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface SysOrgRepository extends CommonReactiveCrudRepository<SysOrg>
 //  extends ReactiveCrudRepository<SysOrg, Long>
@@ -17,4 +18,16 @@ public interface SysOrgRepository extends CommonReactiveCrudRepository<SysOrg>
      */
     @Query("SELECT * FROM sys_org ORDER BY id LIMIT :#{#pageable.pageSize} OFFSET :#{#pageable.offset}")
     Flux<SysOrg> findAllBy(Pageable pageable);
+
+    @Query("SELECT COUNT(*) FROM sys_org WHERE (:name IS NULL OR :name = '' OR name LIKE CONCAT('%', :name, '%'))")
+    Mono<Long> countByName(String name);
+
+    /**
+     * Find organizations by name with pagination.
+     * @param name The name to search for (can be null or empty for all).
+     * @param pageable Pagination information.
+     * @return Flux of SysOrg entities.
+     */
+    @Query("SELECT * FROM sys_org WHERE (:name IS NULL OR :name = '' OR name LIKE CONCAT('%', :name, '%')) ORDER BY id LIMIT :#{#pageable.pageSize} OFFSET :#{#pageable.offset}")
+    Flux<SysOrg> findByNameContainingAndPage(String name, Pageable pageable);
 }
