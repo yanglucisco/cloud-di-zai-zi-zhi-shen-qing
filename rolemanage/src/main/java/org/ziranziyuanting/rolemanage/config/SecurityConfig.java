@@ -14,11 +14,15 @@ import org.ziranziyuanting.rolemanage.util.PasswordUtil;
 @EnableReactiveMethodSecurity
 public class SecurityConfig {
         private final CustomJwtAuthenticationConverter customJwtAuthenticationConverter;
+        private final RedisFirstReactiveAuthenticationManager reactiveAuthenticationManager;
         private final SecurityProperties securityProperties;
 
-        public SecurityConfig(CustomJwtAuthenticationConverter customJwtAuthenticationConverter, SecurityProperties securityProperties) {
+        public SecurityConfig(CustomJwtAuthenticationConverter customJwtAuthenticationConverter, SecurityProperties securityProperties, 
+                RedisFirstReactiveAuthenticationManager reactiveAuthenticationManager
+        ) {
                 this.customJwtAuthenticationConverter = customJwtAuthenticationConverter;
                 this.securityProperties = securityProperties;
+                this.reactiveAuthenticationManager = reactiveAuthenticationManager;
         }
 
         @Bean
@@ -33,7 +37,7 @@ public class SecurityConfig {
                                 .formLogin(fLogin -> fLogin.disable())
                                 .httpBasic(hBasic -> hBasic.disable())
                                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt
-                                                .jwtAuthenticationConverter(customJwtAuthenticationConverter)))
+                                                .authenticationManager(reactiveAuthenticationManager)))
                                 .authorizeExchange(exchange -> exchange
                                                 // .pathMatchers("/sysrole/**").hasRole("ADMIN123123123")
                                                 // .pathMatchers("/mytest/**").permitAll()
