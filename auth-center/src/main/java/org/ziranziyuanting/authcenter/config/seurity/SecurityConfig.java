@@ -1,10 +1,5 @@
 package org.ziranziyuanting.authcenter.config.seurity;
 
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -12,26 +7,17 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.OidcScopes;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
-import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -43,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 
 @Configuration
@@ -52,6 +39,11 @@ public class SecurityConfig {
 
     public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
     @Bean
@@ -81,15 +73,16 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/login.html", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/mylogin", "/login.html", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                         .requestMatchers("/custom-login", "/login").permitAll()
                         .requestMatchers("/home").permitAll()
                         .requestMatchers("/test/**").permitAll()
+                        .requestMatchers("/my/**").permitAll()
                         .anyRequest()
                         .authenticated())
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/test/**", "/user/**"))
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/test/**", "/user/**", "/my/**"))
                 // .sessionManagement(session -> session
-                //         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                // .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .formLogin(
                         formLogin -> formLogin
                                 // 指定自定义登录页的URL
@@ -100,16 +93,16 @@ public class SecurityConfig {
     }
 
     @Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		CorsConfiguration config = new CorsConfiguration();
-		config.addAllowedHeader("*");
-		config.addAllowedMethod("*");
-		config.addAllowedOrigin("http://vue-front-before-gateway.clouddizai.com:8089");
-		config.setAllowCredentials(true);
-		source.registerCorsConfiguration("/**", config);
-		return source;
-	}
+    public CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        config.addAllowedOrigin("http://vue-front-before-gateway.clouddizai.com:8089");
+        config.setAllowCredentials(true);
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
 
     @Bean
     RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
@@ -123,9 +116,9 @@ public class SecurityConfig {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         // 关键配置：启用默认类型信息
         objectMapper.activateDefaultTyping(
-            objectMapper.getPolymorphicTypeValidator(),
-            ObjectMapper.DefaultTyping.EVERYTHING,  // 为非final类启用类型信息
-            JsonTypeInfo.As.PROPERTY               // 类型信息作为JSON属性
+                objectMapper.getPolymorphicTypeValidator(),
+                ObjectMapper.DefaultTyping.EVERYTHING, // 为非final类启用类型信息
+                JsonTypeInfo.As.PROPERTY // 类型信息作为JSON属性
         );
         GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
 
@@ -138,15 +131,16 @@ public class SecurityConfig {
     }
 
     // @Bean
-    // SessionRegistry sessionRegistry(RedisTemplate<String, Object> redisTemplate) {
-    //     // return new SessionRegistryImpl();
-    //     long defaultMaxInactiveInterval = 1800L;
-    //     return new RedisSessionRegistry(redisTemplate, defaultMaxInactiveInterval);
+    // SessionRegistry sessionRegistry(RedisTemplate<String, Object> redisTemplate)
+    // {
+    // // return new SessionRegistryImpl();
+    // long defaultMaxInactiveInterval = 1800L;
+    // return new RedisSessionRegistry(redisTemplate, defaultMaxInactiveInterval);
     // }
 
     // @Bean
     // HttpSessionEventPublisher httpSessionEventPublisher() {
-    //     return new HttpSessionEventPublisher();
+    // return new HttpSessionEventPublisher();
     // }
 
     @Bean
@@ -174,7 +168,8 @@ public class SecurityConfig {
             @Override
             public void save(RegisteredClient registeredClient) {
                 // service.save(registeredClient);
-                System.out.println("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest");
+                System.out.println(
+                        "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest");
             }
 
             @Override
