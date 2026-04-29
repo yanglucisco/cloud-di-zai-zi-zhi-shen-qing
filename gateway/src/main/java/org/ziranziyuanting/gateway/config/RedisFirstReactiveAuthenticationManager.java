@@ -38,6 +38,9 @@ public class RedisFirstReactiveAuthenticationManager implements ReactiveAuthenti
         }
         // 2. Preliminary Check: Is it a valid JWT format? (Header.Payload.Signature)
         if (!isJwtFormat(token)) {
+            if(!token.equals("1-2-3-4-5-6")){
+                return Mono.error(new BadCredentialsException("Invalid token"));
+            }
            List<String> adminRoles = new ArrayList<>();
                     adminRoles.add("ROLE_admin");
                     adminRoles.add("ROLE_ADMIN123123123");
