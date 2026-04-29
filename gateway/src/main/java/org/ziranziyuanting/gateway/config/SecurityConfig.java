@@ -18,11 +18,11 @@ import org.springframework.security.web.server.authentication.HttpStatusServerEn
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
-        private final CustomJwtAuthenticationConverter customJwtAuthenticationConverter;
+        private final RedisFirstReactiveAuthenticationManager reactiveAuthenticationManager;
         private final SecurityProperties securityProperties;
 
-        public SecurityConfig(CustomJwtAuthenticationConverter customJwtAuthenticationConverter, SecurityProperties securityProperties) {
-                this.customJwtAuthenticationConverter = customJwtAuthenticationConverter;
+        public SecurityConfig(RedisFirstReactiveAuthenticationManager reactiveAuthenticationManager, SecurityProperties securityProperties) {
+                this.reactiveAuthenticationManager = reactiveAuthenticationManager;
                 this.securityProperties = securityProperties;
         }
 
@@ -37,7 +37,7 @@ public class SecurityConfig {
                                 // .sessionManagement(session ->
                                 // session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt
-                                                .jwtAuthenticationConverter(customJwtAuthenticationConverter)
+                                                .authenticationManager(reactiveAuthenticationManager)
                                                 )
                                         )
                                 .authorizeExchange(exchange -> exchange
