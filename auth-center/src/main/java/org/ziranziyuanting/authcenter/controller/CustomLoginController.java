@@ -7,9 +7,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.ziranziyuanting.authcenter.params.MyLoginRequestParam;
 
 import com.alibaba.nacos.api.model.v2.Result;
 
@@ -30,8 +32,9 @@ public class CustomLoginController {
      * providers:
      */
     @PostMapping("/mylogin")
-    public ResponseEntity<Result<String>> performLogin(@RequestParam String username,
-            @RequestParam String password) throws IOException {
+    public ResponseEntity<Result<String>> performLogin(@RequestBody MyLoginRequestParam param) throws IOException {
+        var username = param.getUsername();
+        var password = param.getPassword();
         if (!username.equals("yanglu") || !password.equals("Htht123.com")) {
             return ResponseEntity.ok(Result.failure("用户名或者密码错误"));
         }
