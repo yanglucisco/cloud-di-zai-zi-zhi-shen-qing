@@ -1,9 +1,8 @@
 package org.ziranziyuanting.account.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.ziranziyuanting.account.entity.SysOrg;
 import org.ziranziyuanting.account.param.AddOrgParam;
 import org.ziranziyuanting.account.param.DeleteOrgParam;
@@ -13,31 +12,32 @@ import org.ziranziyuanting.account.vo.SysOrgTreeNodeVO;
 import org.ziranziyuanting.common.commonminio.MinioService;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("org")
 @Validated
+@Slf4j
 public class SysOrgController {
     private final SysOrgService service;
     private final MinioService minioService;
-    public SysOrgController(SysOrgService sysOrgService, MinioService minioService)
-    {
+
+    public SysOrgController(SysOrgService sysOrgService, MinioService minioService) {
         this.service = sysOrgService;
         this.minioService = minioService;
     }
@@ -46,10 +46,13 @@ public class SysOrgController {
     public ResponseEntity<Flux<SysOrg>> all() {
         return ResponseEntity.ok(service.findAll());
     }
+
     @PostMapping("add")
-    public ResponseEntity<Mono<String>> add(@Valid @RequestBody AddOrgParam addOrgParam, Authentication authentication) {
+    public ResponseEntity<Mono<String>> add(@Valid @RequestBody AddOrgParam addOrgParam,
+            Authentication authentication) {
         return ResponseEntity.ok(service.save(addOrgParam).map(s -> "新增机构成功"));
     }
+
     /**
      * Update organization
      */
@@ -57,15 +60,18 @@ public class SysOrgController {
     public ResponseEntity<Mono<String>> update(@Valid @RequestBody AddOrgParam addOrgParam) {
         return ResponseEntity.ok(service.update(addOrgParam).map(s -> "更新机构成功"));
     }
+
     @GetMapping("test")
     public String test() {
         service.test();
         return LocalDateTime.now().toString();
     }
+
     @GetMapping("orgTree")
     public ResponseEntity<Flux<SysOrgTreeNodeVO>> orgTree() {
         return ResponseEntity.ok(service.orgTree());
     }
+
     @GetMapping("page")
     public ResponseEntity<Mono<Map<String, Object>>> getOrgsByPage(@Valid PageParam pageParam) {
         // Adjust page index for database (0-based)
@@ -73,48 +79,50 @@ public class SysOrgController {
         pageParam.setPage(dbPage < 0 ? 0 : dbPage);
         String name = pageParam.getName();
         Mono<Map<String, Object>> result = Mono.zip(
-            service.findOrgsByPage(pageParam).collectList(),
-            service.countOrgsByName(name, pageParam.getParentId()) // Use filtered count
+                service.findOrgsByPage(pageParam).collectList(),
+                service.countOrgsByName(name, pageParam.getParentId()) // Use filtered count
         ).map(tuple -> {
             Map<String, Object> map = new HashMap<>();
             map.put("list", tuple.getT1());
             map.put("total", tuple.getT2());
             // Return original 1-based page number to frontend
-            map.put("page", pageParam.getPage() + 1); 
+            map.put("page", pageParam.getPage() + 1);
             map.put("size", pageParam.getPageSize());
             return map;
         });
 
         return ResponseEntity.ok(result);
     }
-     @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file) {
-        try {
-            // 1. Define bucket and object name
-            String bucketName = "di-zai-user-manage";
-            // Generate a unique object name to avoid conflicts, e.g., using UUID or timestamp
-            String originalFilename = file.getOriginalFilename();
-            String objectName = System.currentTimeMillis() + "_" + originalFilename;
-            
-            // 2. Get Content Type
-            String contentType = file.getContentType();
-            if (contentType == null) {
-                contentType = "application/octet-stream";
-            }
 
-            // 3. Get InputStream from MultipartFile
-            InputStream inputStream = file.getInputStream();
-
-            // 4. Call the uploadFile method
-            minioService.uploadFile(bucketName, objectName, inputStream, contentType);
-
-            return "File uploaded successfully: " + objectName;
-        } catch (Exception e) {
-            return "Failed to upload file: " + e.getMessage();
-        }
+    @SuppressWarnings("null")
+    @PostMapping("/upload")
+    public Mono<String> uploadFile(@RequestPart("file") FilePart file) { // Use @RequestPart and FilePart
+        String bucketName = "di-zai-user-manage";
+        String originalFilename = file.filename();
+        String objectName = System.currentTimeMillis() + "_" + originalFilename;
+        return DataBufferUtils.join(file.content())
+                .map(dataBuffer -> {
+                    byte[] bytes = new byte[dataBuffer.readableByteCount()];
+                    dataBuffer.read(bytes);
+                    DataBufferUtils.release(dataBuffer);
+                    return bytes;
+                })
+                .flatMap(bytes -> {
+                    try {
+                        // Convert byte array to InputStream for your existing service
+                        java.io.InputStream inputStream = new java.io.ByteArrayInputStream(bytes);
+                        String contentType = file.headers().getContentType().toString();
+                        minioService.uploadFile(bucketName, objectName, inputStream, contentType);
+                        return Mono.just("File uploaded successfully: " + objectName);
+                    } catch (Exception e) {
+                        return Mono.error(e);
+                    }
+                });
     }
+
     /**
      * Logically delete an organization.
+     * 
      * @param id The ID of the organization to delete.
      * @return Result message.
      */

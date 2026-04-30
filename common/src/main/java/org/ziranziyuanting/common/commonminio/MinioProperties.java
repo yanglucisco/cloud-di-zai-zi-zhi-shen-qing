@@ -11,20 +11,20 @@ public class MinioProperties {
     /**
      * MinIO endpoint URL (e.g., http://localhost:9000)
      */
-    private String endpoint = "http://localhost:9000";
+    private String endpoint;// = "http://localhost:9000";
     
     /**
      * Access Key (Username)
      */
-    private String accessKey = "minioadmin";
+    private String accessKey;// = "minioadmin";
     
     /**
      * Secret Key (Password)
      */
-    private String secretKey = "minioadmin";
+    private String secretKey;// = "minioadmin";
     
     /**
      * Default bucket name
      */
-    private String bucketName = "di-zai-user-manage";
+    private String bucketName;// = "di-zai-user-manage";
 }
