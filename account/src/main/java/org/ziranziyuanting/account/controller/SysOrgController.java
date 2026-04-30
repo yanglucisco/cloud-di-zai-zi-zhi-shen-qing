@@ -3,17 +3,20 @@ package org.ziranziyuanting.account.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.ziranziyuanting.account.entity.SysOrg;
 import org.ziranziyuanting.account.param.AddOrgParam;
 import org.ziranziyuanting.account.param.DeleteOrgParam;
 import org.ziranziyuanting.account.param.PageParam;
 import org.ziranziyuanting.account.service.SysOrgService;
 import org.ziranziyuanting.account.vo.SysOrgTreeNodeVO;
+import org.ziranziyuanting.common.commonminio.MinioService;
 
 import jakarta.validation.Valid;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -32,10 +35,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Validated
 public class SysOrgController {
     private final SysOrgService service;
-    public SysOrgController(SysOrgService sysOrgService)
+    private final MinioService minioService;
+    public SysOrgController(SysOrgService sysOrgService, MinioService minioService)
     {
         this.service = sysOrgService;
+        this.minioService = minioService;
     }
+
     @GetMapping("all")
     public ResponseEntity<Flux<SysOrg>> all() {
         return ResponseEntity.ok(service.findAll());
@@ -80,6 +86,32 @@ public class SysOrgController {
         });
 
         return ResponseEntity.ok(result);
+    }
+     @PostMapping("/upload")
+    public String uploadFile(@RequestParam("file") MultipartFile file) {
+        try {
+            // 1. Define bucket and object name
+            String bucketName = "di-zai-user-manage";
+            // Generate a unique object name to avoid conflicts, e.g., using UUID or timestamp
+            String originalFilename = file.getOriginalFilename();
+            String objectName = System.currentTimeMillis() + "_" + originalFilename;
+            
+            // 2. Get Content Type
+            String contentType = file.getContentType();
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            // 3. Get InputStream from MultipartFile
+            InputStream inputStream = file.getInputStream();
+
+            // 4. Call the uploadFile method
+            minioService.uploadFile(bucketName, objectName, inputStream, contentType);
+
+            return "File uploaded successfully: " + objectName;
+        } catch (Exception e) {
+            return "Failed to upload file: " + e.getMessage();
+        }
     }
     /**
      * Logically delete an organization.

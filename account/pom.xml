@@ -89,5 +89,11 @@ No Feign Client for loadBalancing defined. Did you forget to include spring-clou
             <groupId>org.ziranziyuanting</groupId>
             <artifactId>common</artifactId>
         </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/io.minio/minio -->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>8.5.17</version>
+        </dependency>
     </dependencies>
 </project>
