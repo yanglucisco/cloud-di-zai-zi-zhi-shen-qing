@@ -1,9 +1,11 @@
 package org.ziranziyuanting.account.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.ziranziyuanting.account.entity.SysOrg;
 import org.ziranziyuanting.account.param.AddOrgParam;
+import org.ziranziyuanting.account.param.DeleteOrgParam;
 import org.ziranziyuanting.account.param.PageParam;
 import org.ziranziyuanting.account.service.SysOrgService;
 import org.ziranziyuanting.account.vo.SysOrgTreeNodeVO;
@@ -14,6 +16,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -77,5 +80,14 @@ public class SysOrgController {
         });
 
         return ResponseEntity.ok(result);
+    }
+    /**
+     * Logically delete an organization.
+     * @param id The ID of the organization to delete.
+     * @return Result message.
+     */
+    @PostMapping("delete")
+    public ResponseEntity<Mono<String>> delete(@RequestBody DeleteOrgParam ids) {
+        return ResponseEntity.ok(service.logicalDelete(ids.getIds()));
     }
 }

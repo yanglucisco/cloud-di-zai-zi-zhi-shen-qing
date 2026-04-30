@@ -13,6 +13,9 @@ export function updateOrg(data){
 export function findAllListOrgs(params) {
   return request.get('/account/org/page', { params });
 }
+export function deleteOrgByIds(ids) {
+  return request.post('/account/org/delete', {ids: ids});
+};
 export function getOrgData() {
   const r = []
   for(let i = 1;i < 20 + Math.floor(Math.random() * 100);i++){

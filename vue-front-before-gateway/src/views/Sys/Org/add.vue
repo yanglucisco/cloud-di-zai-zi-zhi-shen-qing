@@ -95,6 +95,7 @@ const init = () => {
 const showDrawer = (record = null) => {
     open.value = true;
     if (record) {
+        title.value = '编辑机构';
         // Edit Mode
         isEditMode.value = true;
         // Populate form with record data
@@ -107,6 +108,8 @@ const showDrawer = (record = null) => {
         }
     } else {
         // Add Mode
+        isEditMode.value = false;
+        title.value = '新增机构';
         init();
     }
 };

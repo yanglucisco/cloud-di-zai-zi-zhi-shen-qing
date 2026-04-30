@@ -63,7 +63,7 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
 
     @Override
     public Flux<SysOrgTreeNodeVO> orgTree() {
-        return repository.findAll().collectList().flatMapMany(orgs -> {
+        return sysOrgRepository.findAllNoDelete().collectList().flatMapMany(orgs -> {
             List<SysOrgTreeNodeVO> vos = orgs.stream().map(doItem -> SysOrgTreeNodeVO.builder().title(doItem.getName())
                     .key(doItem.getId().toString())
                     .label(doItem.getName())
@@ -104,7 +104,8 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
         // Fetch entities and map them to VO
         return sysOrgRepository.findByNameContainingAndPage(pageParam.getName(), pageParam.getParentId() ,pageRequest)
                 .map(org -> SysOrgVO.builder()
-                        .id(org.getId().toString())       // Convert Long to String
+                        .id(org.getId().toString())  
+                        .key(org.getId().toString())     // Convert Long to String
                         .parentId(org.getParentId().toString()) // Convert Long to String
                         .name(org.getName())
                         .code(org.getCode())
@@ -124,5 +125,19 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
     // Helper method if you want specific count by name in controller
     public Mono<Long> countOrgsByName(String name, Long parentId) {
         return sysOrgRepository.countByName(name, parentId);
+    }
+    @Override
+     /**
+     * Batch logically delete organizations.
+     * @param ids The list of organization IDs to delete.
+     * @return A Mono indicating success.
+     */
+    public Mono<String> logicalDelete(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Mono.just("没有需要删除的机构");
+        }
+        
+        return sysOrgRepository.logicalDeleteByIds(ids)
+                .map(updatedRows -> "成功删除 " + updatedRows + " 个机构");
     }
 }

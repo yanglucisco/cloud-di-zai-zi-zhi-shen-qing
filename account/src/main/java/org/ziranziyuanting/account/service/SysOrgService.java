@@ -1,5 +1,7 @@
 package org.ziranziyuanting.account.service;
 
+import java.util.List;
+
 import org.ziranziyuanting.account.entity.SysOrg;
 import org.ziranziyuanting.account.param.AddOrgParam;
 import org.ziranziyuanting.account.param.PageParam;
@@ -26,4 +28,11 @@ public interface SysOrgService extends CommonService<SysOrg>
      */
     Mono<Long> countOrgs();
     Mono<Long> countOrgsByName(String name, Long parentId);
+
+    /**
+     * Logically delete an organization.
+     * @param id The ID of the organization to delete.
+     * @return A Mono indicating success or failure.
+     */
+    public Mono<String> logicalDelete(List<Long> ids);
 }

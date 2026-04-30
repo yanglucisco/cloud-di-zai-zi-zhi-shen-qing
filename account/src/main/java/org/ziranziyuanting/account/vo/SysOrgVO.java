@@ -20,7 +20,7 @@ public class SysOrgVO {
     private String category;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
-    
+    private String key;
     // For tree structure if needed, otherwise can be removed for simple list
     private List<SysOrgVO> children; 
 }

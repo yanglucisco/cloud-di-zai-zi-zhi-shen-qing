@@ -1,5 +1,7 @@
 package org.ziranziyuanting.account.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.ziranziyuanting.account.entity.SysOrg;
@@ -16,10 +18,13 @@ public interface SysOrgRepository extends CommonReactiveCrudRepository<SysOrg>
      * @param pageable Contains page number and size information.
      * @return Flux of SysOrg entities.
      */
-    @Query("SELECT * FROM sys_org ORDER BY id LIMIT :#{#pageable.pageSize} OFFSET :#{#pageable.offset}")
+    @Query("SELECT * FROM sys_org where delete_flag = 'NOT_DELETED' ORDER BY id LIMIT :#{#pageable.pageSize} OFFSET :#{#pageable.offset}")
     Flux<SysOrg> findAllBy(Pageable pageable);
 
-    @Query("SELECT COUNT(*) FROM sys_org WHERE (:name IS NULL OR :name = '' OR name LIKE CONCAT('%', :name, '%')) AND (:parentId IS NULL OR parent_id = :parentId)")
+    @Query("SELECT * FROM sys_org where delete_flag = 'NOT_DELETED' ORDER BY id")
+    Flux<SysOrg> findAllNoDelete();
+
+    @Query("SELECT COUNT(*) FROM sys_org WHERE (:name IS NULL OR :name = '' OR name LIKE CONCAT('%', :name, '%')) AND (:parentId IS NULL OR parent_id = :parentId) AND delete_flag = 'NOT_DELETED'")
     Mono<Long> countByName(String name, Long parentId);
 
     /**
@@ -28,6 +33,14 @@ public interface SysOrgRepository extends CommonReactiveCrudRepository<SysOrg>
      * @param pageable Pagination information.
      * @return Flux of SysOrg entities.
      */
-    @Query("SELECT * FROM sys_org WHERE (:name IS NULL OR :name = '' OR name LIKE CONCAT('%', :name, '%')) AND (:parentId IS NULL OR parent_id = :parentId) ORDER BY id LIMIT :#{#pageable.pageSize} OFFSET :#{#pageable.offset}")
+    @Query("SELECT * FROM sys_org WHERE (:name IS NULL OR :name = '' OR name LIKE CONCAT('%', :name, '%')) AND (:parentId IS NULL OR parent_id = :parentId) AND delete_flag = 'NOT_DELETED' ORDER BY id LIMIT :#{#pageable.pageSize} OFFSET :#{#pageable.offset}")
     Flux<SysOrg> findByNameContainingAndPage(String name, Long parentId, Pageable pageable);
+
+     /**
+     * Batch logically delete organizations by setting DELETE_FLAG.
+     * @param ids List of organization IDs.
+     * @return Number of rows updated.
+     */
+    @Query("UPDATE sys_org SET delete_flag = 'DELETED' WHERE id IN (:ids) AND delete_flag = 'NOT_DELETED'")
+    Mono<Integer> logicalDeleteByIds(List<Long> ids);
 }
