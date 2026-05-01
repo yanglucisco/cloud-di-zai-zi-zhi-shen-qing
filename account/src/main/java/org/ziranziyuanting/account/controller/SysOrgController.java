@@ -9,8 +9,6 @@ import org.ziranziyuanting.account.param.DeleteOrgParam;
 import org.ziranziyuanting.account.param.PageParam;
 import org.ziranziyuanting.account.service.SysOrgService;
 import org.ziranziyuanting.account.vo.SysOrgTreeNodeVO;
-import org.ziranziyuanting.common.commonminio.MinioService;
-
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
@@ -20,9 +18,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,11 +31,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Slf4j
 public class SysOrgController {
     private final SysOrgService service;
-    private final MinioService minioService;
-
-    public SysOrgController(SysOrgService sysOrgService, MinioService minioService) {
+    
+    public SysOrgController(SysOrgService sysOrgService) {
         this.service = sysOrgService;
-        this.minioService = minioService;
     }
 
     @GetMapping("all")
@@ -92,32 +86,6 @@ public class SysOrgController {
         });
 
         return ResponseEntity.ok(result);
-    }
-
-    @SuppressWarnings("null")
-    @PostMapping("/upload")
-    public Mono<String> uploadFile(@RequestPart("file") FilePart file) { // Use @RequestPart and FilePart
-        String bucketName = "di-zai-user-manage";
-        String originalFilename = file.filename();
-        String objectName = System.currentTimeMillis() + "_" + originalFilename;
-        return DataBufferUtils.join(file.content())
-                .map(dataBuffer -> {
-                    byte[] bytes = new byte[dataBuffer.readableByteCount()];
-                    dataBuffer.read(bytes);
-                    DataBufferUtils.release(dataBuffer);
-                    return bytes;
-                })
-                .flatMap(bytes -> {
-                    try {
-                        // Convert byte array to InputStream for your existing service
-                        java.io.InputStream inputStream = new java.io.ByteArrayInputStream(bytes);
-                        String contentType = file.headers().getContentType().toString();
-                        minioService.uploadFile(bucketName, objectName, inputStream, contentType);
-                        return Mono.just("File uploaded successfully: " + objectName);
-                    } catch (Exception e) {
-                        return Mono.error(e);
-                    }
-                });
     }
 
     /**
