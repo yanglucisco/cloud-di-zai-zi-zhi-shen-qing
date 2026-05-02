@@ -13,6 +13,7 @@
         <module>gateway</module>
         <module>account</module>
         <module>rolemanage</module>
+        <module>file-manage</module>
     </modules>
     <name>di-zai-zi-zhi-shen-qing</name>
 

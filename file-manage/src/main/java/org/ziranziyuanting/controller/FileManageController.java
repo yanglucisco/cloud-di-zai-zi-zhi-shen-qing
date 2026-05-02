@@ -1,6 +1,12 @@
-package org.ziranziyuanting.common.file;
+package org.ziranziyuanting.controller;
+
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,34 +17,51 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.ziranziyuanting.common.commonminio.MinioProperties;
 import org.ziranziyuanting.common.commonminio.MinioService;
 
 import reactor.core.publisher.Mono;
 
-import java.io.InputStream;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 @RestController
-// @RequestMapping("/files")
-public class FileDownloadController {
-
+@RequestMapping("file")
+public class FileManageController {
     private final MinioService minioService;
-
-    public FileDownloadController(MinioService minioService, FileUploadService fileUploadService) {
+    private final MinioProperties minioProperties;
+    public FileManageController(MinioService minioService, MinioProperties minioProperties) {
         this.minioService = minioService;
+        this.minioProperties = minioProperties;
     }
-    /**
-     * Download a file from MinIO by object name.
-     *
-     * @param objectName The name of the object in MinIO (e.g., uuid_filename.ext)
-     * @return ResponseEntity with the file content
-     */
+    @PostMapping("/upload")
+    public Mono<String> uploadFile(@RequestPart("file") FilePart file) { 
+        String bucketName = "di-zai-user-manage";
+        String originalFilename = file.filename();
+        UUID uuid = UUID.randomUUID();
+        String objectName = uuid.toString() + "_" + originalFilename;
+        return DataBufferUtils.join(file.content())
+                .map(dataBuffer -> {
+                    byte[] bytes = new byte[dataBuffer.readableByteCount()];
+                    dataBuffer.read(bytes);
+                    DataBufferUtils.release(dataBuffer);
+                    return bytes;
+                })
+                .flatMap(bytes -> {
+                    try {
+                        // Convert byte array to InputStream for your existing service
+                        java.io.InputStream inputStream = new java.io.ByteArrayInputStream(bytes);
+                        String contentType = file.headers().getContentType().toString();
+                        minioService.uploadFile(bucketName, objectName, inputStream, contentType);
+                        String fileUrl = String.format("%s", objectName);
+                        return Mono.just(fileUrl);
+                    } catch (Exception e) {
+                        return Mono.error(e);
+                    }
+                });
+    }
     @GetMapping("/download/{objectName}")
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String objectName) {
         try {
             // Define the bucket name (should match the one used in upload)
-            String bucketName = "di-zai-user-manage";
+            String bucketName = minioProperties.getBucketName();
 
             // Retrieve the file input stream from MinIO
             InputStream inputStream = minioService.downloadFile(bucketName, objectName);
