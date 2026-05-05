@@ -89,4 +89,39 @@ public class FileManageController {
             return ResponseEntity.internalServerError().build();
         }
     }
+     /**
+     * View PDF file inline in the browser.
+     * @param objectName the name of the object in MinIO
+     * @return ResponseEntity with InputStreamResource for inline viewing
+     */
+    @GetMapping("/view/{objectName}")
+    public ResponseEntity<InputStreamResource> viewPdf(@PathVariable String objectName) {
+        try {
+            String bucketName = minioProperties.getBucketName();
+            
+            // Retrieve the file input stream from MinIO
+            InputStream inputStream = minioService.downloadFile(bucketName, objectName);
+
+            // Set content type to PDF specifically
+            MediaType mediaType = MediaType.APPLICATION_PDF;
+
+            // Prepare headers
+            HttpHeaders headers = new HttpHeaders();
+            // Use 'inline' to tell the browser to display the file if possible
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + 
+                URLEncoder.encode(objectName, StandardCharsets.UTF_8.toString()) + "\"");
+            headers.add(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, must-revalidate");
+            headers.add(HttpHeaders.PRAGMA, "no-cache");
+            headers.add(HttpHeaders.EXPIRES, "0");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(mediaType)
+                    .body(new InputStreamResource(inputStream));
+
+        } catch (Exception e) {
+            // Handle exceptions (e.g., file not found)
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }
