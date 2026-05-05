@@ -19,20 +19,21 @@
                                     {{ menu.title }}
                                 </span>
                             </template>
-                            <div v-for="item in menu.children">
-                                <a-menu-item :key="item.name" @click="clickMenu(item)">
-                                    <component :is="icons.get(menu.icon)" />
-                                    <span>{{ menu.title }}</span>
-                                </a-menu-item>
-                            </div>
-                        </a-sub-menu>
-                        <a-menu-item :key="menu.name" v-else @click="clickMenu(menu)">
-                            <component :is="icons.get(menu.icon)" />
-                            <span>{{ menu.title }}</span>
-                        </a-menu-item>
-                    </div>
-                </a-menu> -->
-                <a-menu v-model:selectedKeys="leftMenu.selectedKeys" v-model:openKeys="leftMenu.openKeys" theme="dark" mode="inline">
+<div v-for="item in menu.children">
+    <a-menu-item :key="item.name" @click="clickMenu(item)">
+        <component :is="icons.get(menu.icon)" />
+        <span>{{ menu.title }}</span>
+    </a-menu-item>
+</div>
+</a-sub-menu>
+<a-menu-item :key="menu.name" v-else @click="clickMenu(menu)">
+    <component :is="icons.get(menu.icon)" />
+    <span>{{ menu.title }}</span>
+</a-menu-item>
+</div>
+</a-menu> -->
+                <a-menu v-model:selectedKeys="leftMenu.selectedKeys" v-model:openKeys="leftMenu.openKeys" theme="dark"
+                    mode="inline">
                     <LayoutMenu :menuList="menuList"></LayoutMenu>
                 </a-menu>
             </div>
@@ -59,6 +60,7 @@
                     <UserBar></UserBar>
                 </div>
             </a-layout-header>
+            <navigation></navigation>
             <a-layout-content class="content">
                 <router-view></router-view>
             </a-layout-content>
@@ -73,6 +75,7 @@ import {
 } from '@ant-design/icons-vue'
 
 import UserBar from './UserBar.vue'
+import navigation from './navigation.vue'
 import { useRouter } from 'vue-router'
 import { useMessage } from '@/utils/useMessage'
 import { onMounted, watch } from 'vue'
@@ -99,30 +102,30 @@ const clickMenu = (item) => {
     router.push(item.path)
 }
 const dynamicCreateRouter = (parentName, routerItems) => {
-  routerItems.forEach(item => {
-    let itemRoute = {
-        //此处不能直接用item.path，因为有parentName，所以需要拼接完整路径
-        path: item.component,//'sys',
-        name: item.name,//'sys',
-        component: routerMap.routerMap.get(item.name)
-    }
-    router.addRoute(parentName, itemRoute)
-    dynamicCreateRouter(item.name, item.children)
-  })
+    routerItems.forEach(item => {
+        let itemRoute = {
+            //此处不能直接用item.path，因为有parentName，所以需要拼接完整路径
+            path: item.component,//'sys',
+            name: item.name,//'sys',
+            component: routerMap.routerMap.get(item.name)
+        }
+        router.addRoute(parentName, itemRoute)
+        dynamicCreateRouter(item.name, item.children)
+    })
 }
 // 根据当前路由计算菜单状态
 const getMenuState = (path) => {
-   
-  const parts = path.split('/').filter(Boolean)
-  const selected = [parts[parts.length - 1]]
-  const open = []
-  
-  // 生成父级路径
-  for (let i = 0; i < parts.length - 1; i++) {
-    open.push(parts[i])
-  }
-  
-  return { selected, open }
+
+    const parts = path.split('/').filter(Boolean)
+    const selected = [parts[parts.length - 1]]
+    const open = []
+
+    // 生成父级路径
+    for (let i = 0; i < parts.length - 1; i++) {
+        open.push(parts[i])
+    }
+
+    return { selected, open }
 }
 // 监听路由变化
 // watch(
@@ -141,7 +144,7 @@ onMounted(() => {
     dynamicCreateRouter('root', menus)
     menuList.value = menus
     const { selected, open } = getMenuState(router.currentRoute.value.path)
-    leftMenu.selectedKeys =  selected // ['caidan1']
+    leftMenu.selectedKeys = selected // ['caidan1']
     leftMenu.openKeys = open //['/', 'orgstru', 'sanjimulu']
 })
 </script>
@@ -211,7 +214,8 @@ onMounted(() => {
 
 .content {
     /* :style="{ margin: '1px 1px', padding: '3px', background: '#fff', minHeight: '280px' } */
-    margin: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
     padding: 3px;
     background-color: #fff;
     min-height: 280px;
