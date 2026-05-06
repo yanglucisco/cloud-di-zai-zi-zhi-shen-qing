@@ -26,7 +26,6 @@ export function getOrgData() {
         sort: 1,
     })
   }
-  debugger
   for(const item of allOrg){
     r.push(item);
   }

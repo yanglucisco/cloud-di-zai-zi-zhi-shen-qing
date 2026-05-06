@@ -23,7 +23,6 @@ export function getOrgTypesDic() {
 }
 
 function getDicByValue(value) {
-  debugger;
   const root = JSON.parse(localStorage.getItem(dictsText));
   const r = root.children
     .filter((child) => child.dictValue === value)[0]

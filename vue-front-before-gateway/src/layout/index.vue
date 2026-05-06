@@ -10,31 +10,9 @@
                 </div>
             </div>
             <div class="scrollable-menu-container">
-                <!-- <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" v-for="menu in menuList">
-                    <div>
-                        <a-sub-menu :key="menu.name" v-if="menu.type === 'subMenu'">
-                            <template #title>
-                                <component :is="icons.get(menu.icon)" />
-                                <span>
-                                    {{ menu.title }}
-                                </span>
-                            </template>
-<div v-for="item in menu.children">
-    <a-menu-item :key="item.name" @click="clickMenu(item)">
-        <component :is="icons.get(menu.icon)" />
-        <span>{{ menu.title }}</span>
-    </a-menu-item>
-</div>
-</a-sub-menu>
-<a-menu-item :key="menu.name" v-else @click="clickMenu(menu)">
-    <component :is="icons.get(menu.icon)" />
-    <span>{{ menu.title }}</span>
-</a-menu-item>
-</div>
-</a-menu> -->
                 <a-menu v-model:selectedKeys="leftMenu.selectedKeys" v-model:openKeys="leftMenu.openKeys" theme="dark"
                     mode="inline">
-                    <LayoutMenu :menuList="menuList"></LayoutMenu>
+                    <LayoutMenu :menuList="menuList" @menuItemClick="menuItemClickEvent"></LayoutMenu>
                 </a-menu>
             </div>
         </a-layout-sider>
@@ -60,7 +38,7 @@
                     <UserBar></UserBar>
                 </div>
             </a-layout-header>
-            <navigation></navigation>
+            <navigation ref="navRef" @removeItem="removeItemFunc"></navigation>
             <a-layout-content class="content">
                 <router-view></router-view>
             </a-layout-content>
@@ -84,6 +62,7 @@ import { sysinfoStore } from '@/store/sysinfo'
 import appConfig from '@/store/Singleton'
 import LayoutMenu from './LayoutMenu.vue'
 import routerMap from '../router/RouterPath.js'
+import { Logger } from '@/utils/logger'
 
 const icons = new Map()
 icons.set('UserOutlined', UserOutlined)
@@ -97,9 +76,14 @@ const leftMenu = reactive({
 })
 // const selectedKeys = ref([])
 const collapsed = ref(false)
-const clickMenu = (item) => {
-    success(item.name)
-    router.push(item.path)
+const navRef = ref(null);
+const menuItemClickEvent = (item) => {
+    navRef.value.addPaneItem(item.title, item.name, item.path);
+}
+const removeItemFunc = (routeName) => {
+    console.log('removeItemFunc', routeName)
+    debugger
+    router.push(routeName);
 }
 const dynamicCreateRouter = (parentName, routerItems) => {
     routerItems.forEach(item => {
@@ -127,23 +111,16 @@ const getMenuState = (path) => {
 
     return { selected, open }
 }
-// 监听路由变化
-// watch(
-//   () => router.currentRoute.value.path,
-//   (path) => {
-//     const { selected, open } = getMenuState(path)
-//      
-//     leftMenu.selectedKeys = selected //['caidan1']
-//     leftMenu.openKeys = open //['/', 'orgstru', 'sanjimulu']
-//   },
-//   { immediate: true }
-// )
 // mounted 生命周期
 onMounted(() => {
     const menus = appConfig.getData('menus')
     dynamicCreateRouter('root', menus)
     menuList.value = menus
-    const { selected, open } = getMenuState(router.currentRoute.value.path)
+    let { selected, open } = getMenuState(router.currentRoute.value.path)
+    if(selected.length === 1 && selected[0] === 'home'){
+        selected = ['index'];
+        router.push('/index')
+    }
     leftMenu.selectedKeys = selected // ['caidan1']
     leftMenu.openKeys = open //['/', 'orgstru', 'sanjimulu']
 })

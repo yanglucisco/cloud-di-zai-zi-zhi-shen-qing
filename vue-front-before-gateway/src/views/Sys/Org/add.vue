@@ -125,7 +125,6 @@ const onSubmit = async () => {
         
          // 2. Submit the form
         let res;
-        debugger;
         if (isEditMode.value) {
             // Update existing organization
             res = await updateOrg(form.value);

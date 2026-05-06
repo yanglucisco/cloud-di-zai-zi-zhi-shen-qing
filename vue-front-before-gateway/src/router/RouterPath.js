@@ -1,5 +1,6 @@
 const routerMap = new Map()
 routerMap.set('index', () => import('@/views/Index.vue'));
+routerMap.set('index1', () => import('@/views/Index.vue'));
 routerMap.set('orgstru', () => import('@/views/Sys/Index.vue'));
 routerMap.set('orgmanage', () => import('@/views/Sys/Org/org.vue'))
 routerMap.set('usermanage', () => import('@/views/Sys/User/Index.vue'))

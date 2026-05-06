@@ -132,7 +132,7 @@ const exchangeCode = async (code) => {
     });
     appConfig.setData("menus", res);
     saveAlldics();
-    router.push("index")
+    // router.push("/");
   } catch (error) {
     console.error("Token exchange failed:", error);
   }

@@ -196,7 +196,6 @@ const reset = () => {
 // New Edit Function
 const editOrg = (record) => {
     if (addOrgRef.value) {
-        debugger
         // Pass the record to the child component to populate the form
         addOrgRef.value.showDrawer(record);
     }

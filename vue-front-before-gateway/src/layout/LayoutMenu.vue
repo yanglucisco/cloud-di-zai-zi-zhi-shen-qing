@@ -7,7 +7,7 @@
                     {{ menu.title }}
                 </span>
             </template>
-            <LayoutMenu :menuList="menu.children"></LayoutMenu>
+            <LayoutMenu :menuList="menu.children" @menuItemClick="menuItemClickFunc"></LayoutMenu>
         </a-sub-menu>
         <a-menu-item :key="menu.name" v-else @click="clickMenu(menu)">
             <component :is="icons.get(menu.icon)" />
@@ -23,7 +23,8 @@ import {
 } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 import { useMessage } from '@/utils/useMessage'
-
+// 1. Define emits
+const emit = defineEmits(['menuItemClick']);
 const router = useRouter()
 const { success, error, warning, loading } = useMessage()
 const props = defineProps({
@@ -55,8 +56,10 @@ const icons = new Map()
 icons.set('UserOutlined', UserOutlined)
 const selectedKeys = ref([])
 const clickMenu = (item) => {
-    success(item.name)
-     
-    router.push(item.path)
+    router.push(item.path);
+    emit('menuItemClick', item);
+}
+const menuItemClickFunc = (item) => {
+    emit('menuItemClick', item);;
 }
 </script>
