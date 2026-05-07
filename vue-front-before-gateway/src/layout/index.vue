@@ -34,7 +34,15 @@
                         </a-menu-item>
                     </a-menu>
                 </div>
-                <div style="display: flex;">
+                <div style="display: flex; margin: 10px;">
+                    <a-breadcrumb>
+                        <a-breadcrumb-item>Home</a-breadcrumb-item>
+                        <a-breadcrumb-item><a href="">Application Center</a></a-breadcrumb-item>
+                        <a-breadcrumb-item><a href="">Application List</a></a-breadcrumb-item>
+                        <a-breadcrumb-item>An Application</a-breadcrumb-item>
+                    </a-breadcrumb>
+                </div>
+                <div style="display: flex;margin-left: auto;">
                     <UserBar></UserBar>
                 </div>
             </a-layout-header>
@@ -85,7 +93,7 @@ const removeItemFunc = (routePath) => {
     console.log('removeItemFunc', routePath)
     router.push(routePath);
     let { selected, open } = getMenuState(routePath)
-    
+
     leftMenu.selectedKeys = selected // ['caidan1']
     leftMenu.openKeys = open //['/', 'orgstru', 'sanjimulu']
 }
@@ -121,7 +129,7 @@ onMounted(() => {
     dynamicCreateRouter('root', menus)
     menuList.value = menus
     let { selected, open } = getMenuState(router.currentRoute.value.path)
-    if(selected.length === 1 && selected[0] === 'home'){
+    if (selected.length === 1 && selected[0] === 'home') {
         selected = ['index'];
         router.push('/index')
     }
@@ -156,6 +164,7 @@ onMounted(() => {
     padding: 0;
     display: flex;
     justify-content: space-between;
+     align-items: center; /* 垂直居中 */
 }
 
 .heder .trigger {
