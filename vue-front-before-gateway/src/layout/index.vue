@@ -80,10 +80,14 @@ const navRef = ref(null);
 const menuItemClickEvent = (item) => {
     navRef.value.addPaneItem(item.title, item.name, item.path);
 }
-const removeItemFunc = (routeName) => {
-    console.log('removeItemFunc', routeName)
+const removeItemFunc = (routePath) => {
     debugger
-    router.push(routeName);
+    console.log('removeItemFunc', routePath)
+    router.push(routePath);
+    let { selected, open } = getMenuState(routePath)
+    
+    leftMenu.selectedKeys = selected // ['caidan1']
+    leftMenu.openKeys = open //['/', 'orgstru', 'sanjimulu']
 }
 const dynamicCreateRouter = (parentName, routerItems) => {
     routerItems.forEach(item => {
