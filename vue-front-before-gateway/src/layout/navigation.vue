@@ -1,7 +1,7 @@
 <template>
     <div>
         <a-tabs v-model:activeKey="activeKey" :tab-position="mode" @tabScroll="callback" type="editable-card"
-            @edit="onEdit" class="snowy-admin-tabs" hide-add>
+            @edit="onEdit" class="snowy-admin-tabs" @change="handleTabChange" hide-add>
             <a-tab-pane v-for="pane in panes" :key="pane.key" :tab="pane.title" :closable="pane.closable"></a-tab-pane>
         </a-tabs>
     </div>
@@ -53,6 +53,12 @@ const panes = ref([
         closable: false,
     }
 ]);
+// 监听切换事件，key 为当前点击的 tab-pane 的 key
+const handleTabChange = (key) => {
+  console.log('当前切换到了标签页:', key)
+  // 在这里可以执行你需要的业务逻辑，比如请求对应标签页的数据
+  router.push(key);
+}
 const callback = val => {
     console.log(val);
 };
