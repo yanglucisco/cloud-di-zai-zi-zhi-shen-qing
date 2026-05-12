@@ -4,11 +4,11 @@
             @edit="onEdit" class="snowy-admin-tabs" hide-add>
             <a-tab-pane v-for="pane in panes" :key="pane.key" :tab="pane.title" :closable="pane.closable"></a-tab-pane>
         </a-tabs>
-        <a-button type="primary" @click="testFunc">Primary Button</a-button>
     </div>
 </template>
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 const mode = ref('top');
 const activeKey = ref(1);
 const testFunc = () => {
@@ -62,7 +62,7 @@ const onEdit = (targetKey, action) => {
         removeTab(targetKey);
     }
 };
-
+const router = useRouter()
 const removeTab = (targetKey) => {
     // Find the index of the tab to be removed
     const index = panes.value.findIndex((pane) => pane.key === targetKey);
@@ -83,7 +83,7 @@ const removeTab = (targetKey) => {
             // Or you might want to pass null/undefined to indicate no change needed by parent
             newActiveKey = activeKey.value;
         }
-        debugger;
+        router.push(newActiveKey);
         emit('removeItem', newActiveKey);
     }
 };

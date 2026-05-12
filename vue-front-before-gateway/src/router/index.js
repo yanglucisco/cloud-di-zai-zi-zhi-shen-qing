@@ -8,7 +8,7 @@ import HomeView from "../views/HomeView.vue";
 import Home1View from "../views/Home1View.vue";
 import LogoutView from "../views/Logout.vue";
 import Login from "../views/Login.vue";
-import User from "../views/User/Index.vue";
+import user from "../views/user/index.vue";
 import Index from "../views/Index.vue";
 import Sys from "../views/Sys/Index.vue";
 import SysOrg from "../views/Sys/Org/Index.vue";
@@ -47,6 +47,11 @@ const router = createRouter({
           path: "home",
           name: "home",
           component: Index, //() => import('@/views/Index.vue'),
+        },
+        {
+          path: "usercenter",
+          name: "usercenter",
+          component: user, //() => import('@/views/Index.vue'),
         },
       ],
     },

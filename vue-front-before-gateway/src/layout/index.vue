@@ -43,7 +43,7 @@
                     </a-breadcrumb>
                 </div>
                 <div style="display: flex;margin-left: auto;">
-                    <UserBar></UserBar>
+                    <UserBar @usercenterClick="menuItemClickEvent"></UserBar>
                 </div>
             </a-layout-header>
             <navigation ref="navRef" @removeItem="removeItemFunc"></navigation>
@@ -89,13 +89,10 @@ const menuItemClickEvent = (item) => {
     navRef.value.addPaneItem(item.title, item.name, item.path);
 }
 const removeItemFunc = (routePath) => {
-    debugger
-    console.log('removeItemFunc', routePath)
-    router.push(routePath);
+    
     let { selected, open } = getMenuState(routePath)
-
-    leftMenu.selectedKeys = selected // ['caidan1']
-    leftMenu.openKeys = open //['/', 'orgstru', 'sanjimulu']
+    leftMenu.selectedKeys = selected 
+    leftMenu.openKeys = open 
 }
 const dynamicCreateRouter = (parentName, routerItems) => {
     routerItems.forEach(item => {

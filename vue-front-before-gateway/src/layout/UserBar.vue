@@ -12,7 +12,7 @@
             </div>
             <template #overlay>
                 <a-menu>
-                    <a-menu-item key="uc" @click="handleUser('uc')">
+                    <a-menu-item key="uc" @click="gotoUserCenter">
                         <UserOutlined style="margin-right: 8px" />
                         <span>个人中心</span>
                     </a-menu-item>
@@ -33,11 +33,13 @@
 <script setup>
 import { ref } from 'vue'
 import screenFull from 'screenfull'
+import { useRouter } from 'vue-router'
 import {
     FullscreenOutlined, FullscreenExitOutlined, UserOutlined, Loading3QuartersOutlined, ExportOutlined
 } from '@ant-design/icons-vue'
 import { getUserIdToken, cleanToken } from '../userInfo/index'
 import EnvUtil from '@/utils/EnvUtil'
+const router = useRouter()
 const isFullScreen = ref(false)
 const fullScreenClick = () => {
     isFullScreen.value = !isFullScreen.value
@@ -45,6 +47,16 @@ const fullScreenClick = () => {
     if (screenFull.isEnabled) {
         screenFull.toggle(element)
     }
+}
+const emit = defineEmits(['usercenterClick']);
+const gotoUserCenter = () => {
+    router.push('/usercenter');
+    emit('usercenterClick', {
+        // item.title, item.name, item.path
+        title: '用户中心',
+        name: 'usercenter',
+        path: '/usercenter'
+    });
 }
 const logout = () => {
     const idToken = getUserIdToken()
