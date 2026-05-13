@@ -6,13 +6,14 @@ import java.util.List;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.ziranziyuanting.authcenter.entity.SysUser;
 import org.ziranziyuanting.authcenter.service.SysUserService;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 
-@Service
+// @Service
+@Component
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final SysUserService sysUserService;

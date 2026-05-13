@@ -34,11 +34,13 @@ import org.springframework.security.config.Customizer;
 
 @Configuration
 public class SecurityConfig {
-    @SuppressWarnings("unused")
-    private final CustomUserDetailsService customUserDetailsService;
+    // @SuppressWarnings("unused")
+    // private final CustomUserDetailsService customUserDetailsService;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
-        this.customUserDetailsService = customUserDetailsService;
+    public SecurityConfig(CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
+        // this.customUserDetailsService = customUserDetailsService;
+        this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
     }
 
     @Bean
@@ -87,6 +89,7 @@ public class SecurityConfig {
                         formLogin -> formLogin
                                 // 指定自定义登录页的URL
                                 .loginPage("/custom-login")
+                                // .successHandler(customAuthenticationSuccessHandler)
                                 // 指定处理登录认证的POST请求地址，与HTML表单action一致
                                 .loginProcessingUrl("/login"));
         return http.build();
