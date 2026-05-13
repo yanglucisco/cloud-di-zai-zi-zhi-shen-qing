@@ -158,13 +158,12 @@ public class SysUser extends CommonEntity {
     /** 扩展信息 */
     private String extJson;
 
-    /** 组织名称 */
-    private String orgName;
+    // private String orgName;
 
     /** 职位名称 */
-    private String positionName;
+    // private String positionName;
 
     /** 主管名称 */
-    private String directorName;
+    // private String directorName;
 }
 

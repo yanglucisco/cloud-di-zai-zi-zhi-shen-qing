@@ -10,5 +10,7 @@ public interface SysUserService extends CommonService<SysUser>
 {
 
     Mono<String> add(SysUserParam param);
+
+    Mono<String> updatePassword(Long userId, String password);
     
 }

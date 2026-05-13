@@ -70,7 +70,7 @@ public class SecurityConfig {
                         .requestMatchers("/mylogin", "/login.html", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                         .requestMatchers("/custom-login", "/login").permitAll()
                         .requestMatchers("/home").permitAll()
-                        .requestMatchers("/test/**").permitAll()
+                        // .requestMatchers("/test/**").permitAll()
                         .requestMatchers("/my/**").permitAll()
                         .anyRequest()
                         .authenticated())

@@ -1,8 +1,10 @@
 package org.ziranziyuanting.account.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.ziranziyuanting.account.param.SysUserParam;
+import org.ziranziyuanting.account.param.UpdatePassParam;
 import org.ziranziyuanting.account.service.SysUserService;
 
 import jakarta.validation.Valid;
@@ -23,6 +25,10 @@ public class SysUserController {
     @PostMapping("add")
     public ResponseEntity<Mono<String>> add(@Valid @RequestBody SysUserParam param) {
         return ResponseEntity.ok(sysUserService.add(param));
+    }
+    @PostMapping("updatePassword")
+    public ResponseEntity<Mono<String>> updatePassword(@RequestBody UpdatePassParam updatePassParam) {
+        return ResponseEntity.ok(sysUserService.updatePassword(updatePassParam.getUserId(), updatePassParam.getPassword()));
     }
     
 }
