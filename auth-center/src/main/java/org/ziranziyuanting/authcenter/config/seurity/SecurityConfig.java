@@ -34,14 +34,6 @@ import org.springframework.security.config.Customizer;
 
 @Configuration
 public class SecurityConfig {
-    // @SuppressWarnings("unused")
-    // private final CustomUserDetailsService customUserDetailsService;
-    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-
-    public SecurityConfig(CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
-        // this.customUserDetailsService = customUserDetailsService;
-        this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
