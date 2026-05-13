@@ -19,6 +19,10 @@ export async function saveAlldics() {
 }
 
 export function getOrgTypesDic() {
+  return getDicByValue("GENDER");
+}
+
+export function getGenderDic() {
   return getDicByValue("ORG_TYPE");
 }
 
