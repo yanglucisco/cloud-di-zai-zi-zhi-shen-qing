@@ -9,7 +9,7 @@ export async function saveAlldics() {
     method: "get",
   });
   localStorage.setItem(dictsText, JSON.stringify(data));
-  startOneTimeTimer(30000, async () => {
+  startOneTimeTimer(3000000, async () => {
     const data = await request({
       url: "/account/dict/findAll",
       method: "get",

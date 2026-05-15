@@ -12,14 +12,17 @@
             </div>
         </div>
         <div class="center">
-            <a-form :model="passwordFormState" name="basic" :rules="passwordFormRules" ref="passwordFormRef" :label-col="passwordLabelCol"
-                :wrapper-col="passwordWrapperCol" @finish="passwordFormOnFinish" @finishFailed="passwordFormOnFinishFailed">
+            <a-form :model="passwordFormState" name="basic" :rules="passwordFormRules" ref="passwordFormRef"
+                :label-col="passwordLabelCol" :wrapper-col="passwordWrapperCol" @finish="passwordFormOnFinish"
+                @finishFailed="passwordFormOnFinishFailed">
                 <a-form-item label="新密码" name="password">
-                    <a-input v-model:value="passwordFormState.password" placeholder="请输入新密码" type="password" autocomplete="off"/>
+                    <a-input v-model:value="passwordFormState.password" placeholder="请输入新密码" type="password"
+                        autocomplete="off" />
                 </a-form-item>
 
                 <a-form-item label="确认密码" name="confirmPassword">
-                    <a-input v-model:value="passwordFormState.confirmPassword" placeholder="请确认新密码" type="password" autocomplete="off"/>
+                    <a-input v-model:value="passwordFormState.confirmPassword" placeholder="请确认新密码" type="password"
+                        autocomplete="off" />
                 </a-form-item>
                 <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
                     <a-button type="primary" html-type="submit">修改密码</a-button>
@@ -72,6 +75,8 @@ import { UserOutlined, ApartmentOutlined } from '@ant-design/icons-vue';
 import { onMounted, ref, reactive } from 'vue';
 import { getOrgTypesDic } from '@/api/dict';
 import { useMessage } from '@/utils/useMessage';
+import { updatePassword } from '@/api/user';
+import { logout } from '@/userInfo/index';
 
 const { success, error, warning, loading } = useMessage()
 const avatarUrl = ref('');
@@ -122,11 +127,16 @@ const passwordFormRules = {
     ]
 };
 const passwordFormOnFinish = values => {
-    if(passwordFormState.confirmPassword != passwordFormState.password){
+    if (passwordFormState.confirmPassword != passwordFormState.password) {
         error('两次密码不一致');
         return;
     }
-
+    updatePassword(passwordFormState.password).then(res => {
+        success(res);
+        logout();
+    }).catch(err => {
+        error('密码修改失败');
+    })
 };
 const passwordFormOnFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
