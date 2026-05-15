@@ -1,4 +1,5 @@
-import EnvUtil from '@/utils/EnvUtil'
+import EnvUtil from '@/utils/EnvUtil';
+import request from "@/utils/request";
 
 const accessTokenText = 'accessToken'
 const idTokenText = 'idToken'
@@ -24,6 +25,9 @@ export function logout(){
     const href = `${EnvUtil.AUTH_SERVER_URL}/connect/logout?id_token_hint=${idToken}&post_logout_redirect_uri=http://vue-front-before-gateway.clouddizai.com:${EnvUtil.apiPort}`
     localStorage.removeItem(accessTokenText)
     window.location.href = href
+}
+export function getCurrentUser(){
+    return request.get('/account/sysUser/getCurrentUser');
 }
 export function setUserIdToken(idToken){
     // 

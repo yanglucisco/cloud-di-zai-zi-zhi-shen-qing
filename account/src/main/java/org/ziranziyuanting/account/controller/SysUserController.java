@@ -6,11 +6,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.ziranziyuanting.account.param.SysUserParam;
 import org.ziranziyuanting.account.param.UpdatePassParam;
 import org.ziranziyuanting.account.service.SysUserService;
+import org.ziranziyuanting.account.vo.SysUserVO;
 
 import jakarta.validation.Valid;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -31,5 +35,18 @@ public class SysUserController {
         
         return ResponseEntity.ok(sysUserService.updatePassword(updatePassParam.getPassword()));
     }
-    
+    @GetMapping("getCurrentUser")
+    public ResponseEntity<Mono<SysUserVO>> getCurrentUser(){
+        return ResponseEntity.ok(Mono.just(
+            SysUserVO.builder()
+            .account("zhangsan")
+            .name("张三")
+            .nickName("张三")
+            .gender("MALE")
+            .birthday(LocalDateTime.now())
+            .email("123@123.com")
+            .mobil("12345678901")
+            .build()
+        ));
+    }
 }
