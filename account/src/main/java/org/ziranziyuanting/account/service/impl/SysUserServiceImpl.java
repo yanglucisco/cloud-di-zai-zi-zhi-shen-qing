@@ -2,6 +2,7 @@ package org.ziranziyuanting.account.service.impl;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.ziranziyuanting.account.config.ReactiveUserContext;
 import org.ziranziyuanting.account.entity.SysUser;
 import org.ziranziyuanting.account.param.SysUserParam;
 import org.ziranziyuanting.account.repository.SysUserRepository;
@@ -35,8 +36,11 @@ public class SysUserServiceImpl extends CommonServiceImpl<SysUser> implements Sy
     }
 
     @Override
-    public Mono<String> updatePassword(Long userId, String password) {
-        return this.findById(userId).flatMap(user -> {
+    public Mono<String> updatePassword(String password) {
+        return ReactiveUserContext.getUserId().flatMap(userId -> {
+            return this.findById(userId);
+        })
+        .flatMap(user -> {
             user.setPassword(PasswordUtil.generatePassword(password));
             return this.saveOrUpdate(user);
         }).map(u -> "修改密码成功");

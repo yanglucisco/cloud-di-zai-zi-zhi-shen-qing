@@ -28,7 +28,8 @@ public class SysUserController {
     }
     @PostMapping("updatePassword")
     public ResponseEntity<Mono<String>> updatePassword(@RequestBody UpdatePassParam updatePassParam) {
-        return ResponseEntity.ok(sysUserService.updatePassword(updatePassParam.getUserId(), updatePassParam.getPassword()));
+        
+        return ResponseEntity.ok(sysUserService.updatePassword(updatePassParam.getPassword()));
     }
     
 }

@@ -13,10 +13,11 @@ public class ReactiveUserContext {
     }
 
     // 提取 userId
-    public static Mono<String> getUserId() {
+    public static Mono<Long> getUserId() {
         return Mono.deferContextual(ctx -> {
             String userIdOptional = ctx.getOrDefault(USER_ID_KEY, null);
-            return Mono.justOrEmpty(userIdOptional);
+            Long userId = userIdOptional == null ? null : Long.valueOf(userIdOptional);
+            return Mono.justOrEmpty(userId);
         }
 
         );
