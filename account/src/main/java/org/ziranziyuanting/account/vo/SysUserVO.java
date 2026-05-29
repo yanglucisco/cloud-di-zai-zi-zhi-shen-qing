@@ -19,7 +19,6 @@ public class SysUserVO {
     private String mobil;
     private String nickName;
     private String gender;
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private LocalDateTime birthday;
+    private String birthday;
     private String email;
 }

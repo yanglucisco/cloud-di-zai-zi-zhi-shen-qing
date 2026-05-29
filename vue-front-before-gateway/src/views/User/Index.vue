@@ -75,7 +75,7 @@ import { UserOutlined, ApartmentOutlined } from '@ant-design/icons-vue';
 import { onMounted, ref, reactive } from 'vue';
 import { getOrgTypesDic } from '@/api/dict';
 import { useMessage } from '@/utils/useMessage';
-import { updatePassword } from '@/api/user';
+import { updatePassword, updateUser } from '@/api/user';
 import { logout, getCurrentUser } from '@/userInfo/index';
 
 const { success, error, warning, loading } = useMessage()
@@ -144,7 +144,11 @@ const passwordFormOnFinish = values => {
     })
 };
 const onBasicFinish = values => { 
-    debugger;
+    updateUser(formState.value).then(res => {
+        success('基本信息更新成功');
+    }).catch(err => {
+        error('基本信息更新失败');
+    })
 };
 const passwordFormOnFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);

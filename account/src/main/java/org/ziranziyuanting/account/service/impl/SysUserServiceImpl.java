@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.ziranziyuanting.account.config.ReactiveUserContext;
 import org.ziranziyuanting.account.entity.SysUser;
 import org.ziranziyuanting.account.param.SysUserParam;
+import org.ziranziyuanting.account.param.SysUserUpdateParam;
 import org.ziranziyuanting.account.repository.SysUserRepository;
 import org.ziranziyuanting.account.service.SysUserService;
 import org.ziranziyuanting.account.utils.PasswordUtil;
@@ -45,4 +46,20 @@ public class SysUserServiceImpl extends CommonServiceImpl<SysUser> implements Sy
             return this.saveOrUpdate(user);
         }).map(u -> "修改密码成功");
     }
+
+    @Override
+    public Mono<String> update(SysUserUpdateParam param) {
+        return ReactiveUserContext.getUserId().flatMap(userId -> {
+            return this.findById(userId);
+        }).flatMap(user -> {
+            if (param.getGender() != null) user.setGender(param.getGender());
+            if (param.getName() != null) user.setName(param.getName());
+            if (param.getNickName() != null) user.setNickname(param.getNickName());
+            if (param.getEmail() != null) user.setEmail(param.getEmail());
+            if (param.getMobil() != null) user.setPhone(param.getMobil());
+            if (param.getBirthday() != null) user.setBirthday(param.getBirthday());
+            return this.saveOrUpdate(user);
+        }).map(u -> "更新用户信息成功");
+    }
 }
+

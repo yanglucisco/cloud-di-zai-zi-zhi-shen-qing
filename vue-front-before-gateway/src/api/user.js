@@ -17,3 +17,12 @@ export function getInfo() {
 export function updatePassword(password) {
   return request.post('/account/sysUser/updatePassword', {password: password});
 }
+
+/**
+ * 更新用户基本信息
+ * @param {Object} data - 用户信息对象
+ * @returns {Promise} 返回一个 Promise 对象
+ */
+export function updateUser(data) {
+  return request.post('/account/sysUser/update', data);
+}
