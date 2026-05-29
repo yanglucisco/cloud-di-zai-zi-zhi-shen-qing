@@ -34,14 +34,6 @@
                         </a-menu-item>
                     </a-menu>
                 </div>
-                <div style="display: flex; margin: 10px;">
-                    <a-breadcrumb>
-                        <a-breadcrumb-item>Home</a-breadcrumb-item>
-                        <a-breadcrumb-item><a href="">Application Center</a></a-breadcrumb-item>
-                        <a-breadcrumb-item><a href="">Application List</a></a-breadcrumb-item>
-                        <a-breadcrumb-item>An Application</a-breadcrumb-item>
-                    </a-breadcrumb>
-                </div>
                 <div style="display: flex;margin-left: auto;">
                     <UserBar @usercenterClick="menuItemClickEvent"></UserBar>
                 </div>
