@@ -13,6 +13,7 @@ import Index from "../views/Index.vue";
 import Sys from "../views/Sys/Index.vue";
 import SysOrg from "../views/Sys/Org/Index.vue";
 import SysUser from "../views/Sys/User/Index.vue";
+import NotFound from "../views/NotFound.vue";
 import { sysinfoStore } from "@/store/sysinfo";
 import { saveAlldics } from "@/api/dict";
 import {
@@ -53,6 +54,11 @@ const router = createRouter({
           name: "usercenter",
           component: user, //() => import('@/views/Index.vue'),
         },
+        {
+          path: "NotFound",
+          name: 'NotFound',
+          component: NotFound,
+        },
       ],
     },
   ],
@@ -62,11 +68,19 @@ router.beforeEach((to, from, next) => {
   info('路由 to.fullPath: ', to.fullPath);
   const accessToken = getUserInfo().accessToken;
   if (accessToken) {
-    if (!router.hasRoute(to.name)) {
+    // to.matched 为空表示当前路由未被任何已注册的路由匹配到
+    if (to.matched.length === 0) {
       const menus = appConfig.getData('menus')
-      dynamicCreateRouter('root', menus)
-      // 添加后重新导航
-      return next(to.fullPath);
+      if (menus) {
+        dynamicCreateRouter('root', menus)
+        // 重新解析路径：动态添加后路由可能已经可用
+        const resolved = router.resolve(to.fullPath)
+        if (resolved.matched.length > 0) {
+          return next(to.fullPath);
+        }
+      }
+      // 动态添加后仍然没有匹配 → 跳转到 404
+      return next({ name: 'NotFound' });
     }
     next();
   } else {

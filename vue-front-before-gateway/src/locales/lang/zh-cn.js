@@ -78,5 +78,10 @@ export default {
 		classify: '分类',
 		sort: '排序',
 		addOrg: '新增组织机构'
+	},
+	notFound: {
+		title: '404',
+		subTitle: '抱歉，您访问的页面不存在。',
+		backHome: '返回首页'
 	}
 }

@@ -69,5 +69,10 @@ export default {
 		placeholderUserStatus: 'Please select status',
 		popconfirmDeleteUser: 'Are you sure you want to delete it？',
 		popconfirmResatUserPwd: 'Are you sure you want to reset？'
+	},
+	notFound: {
+		title: '404',
+		subTitle: 'Sorry, the page you visited does not exist.',
+		backHome: 'Back to Home'
 	}
 }
