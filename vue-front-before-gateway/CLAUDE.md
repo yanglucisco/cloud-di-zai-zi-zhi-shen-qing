@@ -1,4 +1,8 @@
-# 项目架构分析文档
+# 项目介绍
+
+## commit
+
+执行commit命令时，从git暂存的文件中提取commit message
 
 ## 1. 项目概览
 

@@ -1,12 +1,7 @@
 <template>
     <div class="container">
         <div class="left">
-            <a-tree v-model:expandedKeys="expandedKeys" v-model:selectedKeys="selectedKeys"
-                v-model:checkedKeys="checkedKeys" :tree-data="treeData" @select="handleTreeSelect">
-                <template #title="{ title, key }">
-                    <span>{{ title }}</span>
-                </template>
-            </a-tree>
+            <OrgTree @select="handleTreeSelect" />
         </div>
         <div class="right">
             <div class="right-top">
@@ -27,8 +22,8 @@
                         <a-button :icon="h(DeleteOutlined)" danger ghost>批量删除</a-button>
                     </a-popconfirm>
                 </a-space>
-                <a-table :columns="columns" 
-                         :data-source="data" 
+                <a-table :columns="columns"
+                         :data-source="data"
                          :row-selection="{ selectedRowKeys: tableState.selectedRowKeys, onChange: onSelectChange }"
                          :pagination="paginationConfig" @change="handleTableChange">
                     <template #headerCell="{ column }">
@@ -87,16 +82,15 @@
     </div>
 </template>
 <script setup>
-import { ref, watch, h, reactive, onMounted, getCurrentInstance } from 'vue';
+import { ref, h, reactive, onMounted } from 'vue';
 import { SearchOutlined, ReloadOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
-import { getAllOrgs, findAllListOrgs, deleteOrgByIds } from '@/api/org'
+import { findAllListOrgs, deleteOrgByIds } from '@/api/org'
 import addOrg from './add.vue'
-import { orgDataStore } from '@/store/orgData';
+import OrgTree from '@/components/OrgTree.vue'
 import { useMessage } from '@/utils/useMessage';
 
 const { success, error, warning, loading } = useMessage()
-const orgData = orgDataStore();
 const { t } = useI18n()
 const orgNameText = ref(t('org.orgName'))
 const classifyText = ref(t('org.classify'))
@@ -172,10 +166,6 @@ const handleBatchDelete = async () => {
         error('批量删除失败');
     }
 };
-const treeData = ref([]);
-const expandedKeys = ref(['0-0-0', '0-0-1']);
-const selectedKeys = ref(['0-0-0', '0-0-1']);
-const checkedKeys = ref(['0-0-0', '0-0-1']);
 const handleTableChange = (pag, filters, sorter) => {
     // 更新分页参数
     paginationConfig.current = pag.current;
@@ -220,12 +210,6 @@ const find = async (page, pageSize, orgName = '', selectId = '') => {
         tableState.loading = false;
     }
 }
-watch(expandedKeys, () => {
-});
-watch(selectedKeys, () => {
-});
-watch(checkedKeys, () => {
-});
 const paginationConfig = reactive({
     current: 1,           // 当前页码
     pageSize: 10,         // 每页条数
@@ -267,14 +251,7 @@ const handleAddSuccess = () => {
     find(paginationConfig.current, paginationConfig.pageSize);
 };
 onMounted(async () => {
-    try {
-        const res = await getAllOrgs();
-        treeData.value = res;
-        orgData.setTreeData(res);
-        find(1, 10);
-    } catch (error) {
-        console.error("Failed to load tree data:", error);
-    }
+    find(1, 10);
 });
 </script>
 <style>
