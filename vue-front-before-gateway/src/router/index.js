@@ -12,7 +12,6 @@ import user from "../views/user/index.vue";
 import Index from "../views/Index.vue";
 import Sys from "../views/Sys/Index.vue";
 import SysOrg from "../views/Sys/Org/Index.vue";
-import SysUser from "../views/Sys/User/Index.vue";
 import NotFound from "../views/NotFound.vue";
 import { sysinfoStore } from "@/store/sysinfo";
 import { saveAlldics } from "@/api/dict";

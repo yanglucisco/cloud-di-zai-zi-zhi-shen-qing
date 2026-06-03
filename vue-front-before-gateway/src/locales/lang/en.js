@@ -68,7 +68,17 @@ export default {
 		placeholderNameAndSearchKey: 'Please enter your name or keyword',
 		placeholderUserStatus: 'Please select status',
 		popconfirmDeleteUser: 'Are you sure you want to delete it？',
-		popconfirmResatUserPwd: 'Are you sure you want to reset？'
+		popconfirmResatUserPwd: 'Are you sure you want to reset？',
+		account: 'Account',
+		name: 'Name',
+		gender: 'Gender',
+		phone: 'Phone',
+		avatar: 'Avatar',
+		enable: 'Enabled',
+		disable: 'Disabled',
+		male: 'Male',
+		female: 'Female',
+		unknown: 'Unknown'
 	},
 	notFound: {
 		title: '404',

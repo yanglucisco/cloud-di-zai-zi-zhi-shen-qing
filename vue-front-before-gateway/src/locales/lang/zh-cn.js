@@ -71,7 +71,17 @@ export default {
 		placeholderNameAndSearchKey: '请输入姓名或关键词',
 		placeholderUserStatus: '请选择状态',
 		popconfirmDeleteUser: '确定要删除吗？',
-		popconfirmResatUserPwd: '确定要重置吗？'
+		popconfirmResatUserPwd: '确定要重置吗？',
+		account: '账号',
+		name: '姓名',
+		gender: '性别',
+		phone: '手机',
+		avatar: '头像',
+		enable: '启用',
+		disable: '禁用',
+		male: '男',
+		female: '女',
+		unknown: '未知'
 	},
 	org: {
 		orgName: '组织名称',

@@ -26,3 +26,39 @@ export function updatePassword(password) {
 export function updateUser(data) {
   return request.post('/account/sysUser/update', data);
 }
+
+/**
+ * 获取用户分页列表
+ * @param {Object} params - 查询参数 { page, pageSize, keyword, status, orgId }
+ * @returns {Promise} 返回一个 Promise 对象
+ */
+export function getUserPage(params) {
+  return request.get('/account/sysUser/page', { params });
+}
+
+/**
+ * 新增用户
+ * @param {Object} data - 用户信息对象
+ * @returns {Promise} 返回一个 Promise 对象
+ */
+export function addUser(data) {
+  return request.post('/account/sysUser/add', data);
+}
+
+/**
+ * 批量删除用户
+ * @param {Array} ids - 用户ID数组
+ * @returns {Promise} 返回一个 Promise 对象
+ */
+export function deleteUserByIds(ids) {
+  return request.post('/account/sysUser/delete', { ids });
+}
+
+/**
+ * 更新用户状态（启用/禁用）
+ * @param {Object} data - { id, status }
+ * @returns {Promise} 返回一个 Promise 对象
+ */
+export function updateUserStatus(data) {
+  return request.post('/account/sysUser/updateStatus', data);
+}
