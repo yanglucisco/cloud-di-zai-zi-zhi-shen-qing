@@ -10,7 +10,24 @@
 
 ## commit
 
-执行commit命令时，从git暂存的文件中提取commit message
+执行commit命令时，从git暂存的文件中提取commit message，只生成message就行不要提交，message生成规范
+
+| type     | 含义                             |
+|----------|----------------------------------|
+| feat     | 新功能（feature）                |
+| fix      | 修复 bug                         |
+| docs     | 文档变更                         |
+| style    | 代码格式（不影响逻辑）           |
+| refactor | 重构（既不修 bug 也不加功能）    |
+| perf     | 性能优化                         |
+| test     | 测试相关                         |
+| build    | 构建系统或依赖调整               |
+| ci       | CI 配置                          |
+| chore    | 其他杂项（如工具配置）           |
+
+## 回答语言
+
+一律用中文
 
 ---
 
