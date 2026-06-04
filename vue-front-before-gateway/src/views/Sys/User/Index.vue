@@ -84,6 +84,8 @@
         </a-table>
       </div>
     </div>
+    <!-- 新增/编辑用户抽屉 -->
+    <add-user ref="addUserRef" @success="handleAddSuccess" />
   </div>
 </template>
 
@@ -98,6 +100,7 @@ import {
 import OrgTree from '@/components/OrgTree.vue'
 import { getUserPage, deleteUserByIds, updateUserStatus } from '@/api/user'
 import { getTestUserPage } from '@/testData/user'
+import AddUser from './add.vue'
 
 const { t } = useI18n()
 const { success, error, warning } = useMessage()
@@ -111,6 +114,7 @@ const selectedOrgId = ref('')
 const data = ref([])
 const loading = ref(false)
 const selectedRowKeys = ref([])
+const addUserRef = ref(null)
 
 // 分页配置
 const paginationConfig = reactive({
@@ -225,7 +229,14 @@ const handleStatusChange = async (record, checked) => {
 
 // 新增用户
 const handleAdd = () => {
-  // TODO: 打开新增用户抽屉/弹窗
+  if (addUserRef.value) {
+    addUserRef.value.showDrawer()
+  }
+}
+
+// 新增/编辑成功回调
+const handleAddSuccess = () => {
+  fetchData()
 }
 
 // 编辑用户

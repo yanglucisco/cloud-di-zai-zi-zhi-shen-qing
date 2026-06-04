@@ -15,4 +15,6 @@ public class SysUserParam {
     private Long orgId;  
     private Long positionId;
     private Long directorId;
+    @NotBlank(message = "密码不能为空")
+    private String password;
 }
