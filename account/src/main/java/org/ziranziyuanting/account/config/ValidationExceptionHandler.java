@@ -15,15 +15,18 @@ import org.springframework.web.server.ServerWebInputException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import jakarta.validation.ConstraintViolationException;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.ziranziyuanting.common.api.ApiResponse;
+import org.ziranziyuanting.common.api.BusinessException;
+
 import reactor.core.publisher.Mono;
 
 @RestControllerAdvice
 public class ValidationExceptionHandler {
-    
+
+    private static final Logger log = LoggerFactory.getLogger(ValidationExceptionHandler.class);
+
     // private static final ObjectMapper objectMapper = new ObjectMapper();
     
     /**
@@ -108,43 +111,39 @@ public class ValidationExceptionHandler {
     }
     
     /**
-     * 统一响应格式
+     * 处理业务异常（如账号重复、数据不存在等已知业务规则冲突）
+     * 将异常消息原样返回给前端，HTTP 状态码由 BusinessException 决定
      */
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ApiResponse<T> {
-        private int code;
-        private String message;
-        private T data;
-        private List<String> errors;
-        private long timestamp;
-        
-        public static <T> ApiResponse<T> success(T data) {
-            return ApiResponse.<T>builder()
-                    .code(200)
-                    .message("success")
-                    .data(data)
-                    .timestamp(System.currentTimeMillis())
-                    .build();
+    @SuppressWarnings("null")
+    @ExceptionHandler(BusinessException.class)
+    public Mono<ResponseEntity<ApiResponse<Void>>> handleBusinessException(BusinessException ex) {
+        log.warn("业务异常: {}", ex.getMessage());
+        HttpStatus status = HttpStatus.resolve(ex.getHttpStatus());
+        if (status == null) {
+            status = HttpStatus.BAD_REQUEST;
         }
-        
-        public static <T> ApiResponse<T> error(int code, String message) {
-            return ApiResponse.<T>builder()
-                    .code(code)
-                    .message(message)
-                    .timestamp(System.currentTimeMillis())
-                    .build();
-        }
-        
-        public static <T> ApiResponse<T> error(int code, String message, List<String> errors) {
-            return ApiResponse.<T>builder()
-                    .code(code)
-                    .message(message)
-                    .errors(errors)
-                    .timestamp(System.currentTimeMillis())
-                    .build();
-        }
+        ApiResponse<Void> response = ApiResponse.error(
+                status.value(),
+                ex.getMessage());
+        return Mono.just(ResponseEntity
+                .status(status)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response));
+    }
+
+    /**
+     * 兜底：处理所有未捕获的异常，返回中文错误信息
+     */
+    @SuppressWarnings("null")
+    @ExceptionHandler(Exception.class)
+    public Mono<ResponseEntity<ApiResponse<Void>>> handleException(Exception ex) {
+        log.error("未捕获的异常", ex);
+        ApiResponse<Void> response = ApiResponse.error(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "服务器内部错误");
+        return Mono.just(ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response));
     }
 }
