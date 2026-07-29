@@ -67,6 +67,7 @@ public class SysUserServiceImpl extends CommonServiceImpl<SysUser> implements Sy
             if (param.getEmail() != null) user.setEmail(param.getEmail());
             if (param.getMobil() != null) user.setPhone(param.getMobil());
             if (param.getBirthday() != null) user.setBirthday(param.getBirthday());
+            if (param.getAvatar() != null) user.setAvatar(param.getAvatar());
             return this.saveOrUpdate(user);
         }).map(u -> "更新用户信息成功");
     }

@@ -10,4 +10,5 @@ public class SysUserUpdateParam {
     private String email;
     private String mobil;
     private String birthday;
+    private String avatar;
 }

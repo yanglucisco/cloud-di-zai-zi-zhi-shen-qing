@@ -6,6 +6,7 @@ import org.ziranziyuanting.account.config.ReactiveUserContext;
 import org.ziranziyuanting.account.param.SysUserParam;
 import org.ziranziyuanting.account.param.SysUserUpdateParam;
 import org.ziranziyuanting.account.param.UpdatePassParam;
+import org.ziranziyuanting.account.repository.SysOrgRepository;
 import org.ziranziyuanting.account.service.SysUserService;
 import org.ziranziyuanting.account.vo.SysUserVO;
 
@@ -24,8 +25,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/sysUser")
 public class SysUserController {
     private final SysUserService sysUserService;
-    public SysUserController(SysUserService sysUserService) {
+    private final SysOrgRepository sysOrgRepository;
+    public SysUserController(SysUserService sysUserService, SysOrgRepository sysOrgRepository) {
         this.sysUserService = sysUserService;
+        this.sysOrgRepository = sysOrgRepository;
     }
     @PostMapping("add")
     public ResponseEntity<Mono<String>> add(@Valid @RequestBody SysUserParam param) {
@@ -39,17 +42,24 @@ public class SysUserController {
     @GetMapping("getCurrentUser")
     public ResponseEntity<Mono<SysUserVO>> getCurrentUser(){
         return ResponseEntity.ok(ReactiveUserContext.getUserId().flatMap(userId ->
-            sysUserService.findById(userId).map(user ->
-                SysUserVO.builder()
-                    .account(user.getAccount())
-                    .name(user.getName())
-                    .nickName(user.getNickname())
-                    .gender(user.getGender())
-                    .email(user.getEmail())
-                    .mobil(user.getPhone())
-                    .birthday(user.getBirthday())
-                    .build()
-            )
+            sysUserService.findById(userId).flatMap(user -> {
+                Mono<String> orgNameMono = user.getOrgId() != null
+                    ? sysOrgRepository.findById(user.getOrgId()).map(org -> org.getName()).defaultIfEmpty("")
+                    : Mono.just("");
+                return orgNameMono.map(orgName ->
+                    SysUserVO.builder()
+                        .account(user.getAccount())
+                        .name(user.getName())
+                        .nickName(user.getNickname())
+                        .gender(user.getGender())
+                        .email(user.getEmail())
+                        .mobil(user.getPhone())
+                        .birthday(user.getBirthday())
+                        .avatar(user.getAvatar())
+                        .orgName(orgName)
+                        .build()
+                );
+            })
         ));
     }
     @PostMapping("update")

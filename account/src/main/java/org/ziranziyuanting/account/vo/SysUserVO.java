@@ -21,4 +21,6 @@ public class SysUserVO {
     private String gender;
     private String birthday;
     private String email;
+    private String avatar;
+    private String orgName;
 }
