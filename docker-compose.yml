@@ -62,9 +62,9 @@ services:
     ports:
       - "16379:6379"
     volumes:
-      - ./redis/data:/data
-      - ./redis/logs:/logs
-      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - E:/cloud_di_zai_cloud_data/auth_center_redis/data:/data
+      - E:/cloud_di_zai_cloud_data/auth_center_redis/logs:/logs
+      - E:/cloud_di_zai_cloud_data/auth_center_redis/redis.conf:/usr/local/etc/redis/redis.conf
     command: redis-server /usr/local/etc/redis/redis.conf
     networks:
       - app-network # 将服务连接到自定义网络，便于其他容器访问
@@ -83,9 +83,9 @@ services:
       TZ: Asia/Shanghai # 设置容器时区[2](@ref)
     volumes:
       # 数据持久化：将容器内的数据目录映射到宿主机
-      - "D:/study/cloud-di-zai-zi-zhi-shen-qing-db/auth-center/data:/var/lib/mysql" # 确保数据不随容器删除而丢失[2](@ref)[4](@ref)
+      - "E:/cloud_di_zai_cloud_data/auth-center/data:/var/lib/mysql" # 确保数据不随容器删除而丢失[2](@ref)[4](@ref)
       # 挂载自定义配置文件目录
-      - "D:/study/cloud-di-zai-zi-zhi-shen-qing-db/auth-center/config/conf.d:/etc/mysql/conf.d" # 可放置自定义配置如 my.cnf[2](@ref)[6](@ref)
+      - "E:/cloud_di_zai_cloud_data/auth-center/config/conf.d:/etc/mysql/conf.d" # 可放置自定义配置如 my.cnf[2](@ref)[6](@ref)
       # 挂载初始化SQL脚本目录：目录下的.sql文件会在数据库首次初始化时自动执行
       # - "./db/auth-center/initdb.d:/docker-entrypoint-initdb.d" # [4](@ref)[6](@ref)
     healthcheck: # 健康检查，确保数据库完全启动后再连接应用[2](@ref)[6](@ref)
@@ -110,9 +110,9 @@ services:
       TZ: Asia/Shanghai # 设置容器时区[2](@ref)
     volumes:
       # 数据持久化：将容器内的数据目录映射到宿主机
-      - "D:/study/cloud-di-zai-zi-zhi-shen-qing-db/role-manage/data:/var/lib/mysql" # 确保数据不随容器删除而丢失[2](@ref)[4](@ref)
+      - "E:/cloud_di_zai_cloud_data/role-manage/data:/var/lib/mysql" # 确保数据不随容器删除而丢失[2](@ref)[4](@ref)
       # 挂载自定义配置文件目录
-      - "D:/study/cloud-di-zai-zi-zhi-shen-qing-db/role-manage/config/conf.d:/etc/mysql/conf.d" # 可放置自定义配置如 my.cnf[2](@ref)[6](@ref)
+      - "E:/cloud_di_zai_cloud_data/role-manage/config/conf.d:/etc/mysql/conf.d" # 可放置自定义配置如 my.cnf[2](@ref)[6](@ref)
       # 挂载初始化SQL脚本目录：目录下的.sql文件会在数据库首次初始化时自动执行
       # - "./db/auth-center/initdb.d:/docker-entrypoint-initdb.d" # [4](@ref)[6](@ref)
     healthcheck: # 健康检查，确保数据库完全启动后再连接应用[2](@ref)[6](@ref)
