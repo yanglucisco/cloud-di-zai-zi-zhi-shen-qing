@@ -48,11 +48,15 @@
             <template v-else-if="column.key === 'gender'">
               <span>{{ genderText(record.gender) }}</span>
             </template>
-            <template v-else-if="column.key === 'status'">
-              <a-switch
-                :checked="record.status === 'ENABLE'"
-                @change="(checked) => handleStatusChange(record, checked)"
-              />
+            <template v-else-if="column.key === 'userStatus'">
+              <a-popconfirm
+                :title="record.userStatus === 'ENABLE' ? '确定要禁用该用户吗？' : '确定要启用该用户吗？'"
+                ok-text="确定"
+                cancel-text="取消"
+                @confirm="handleStatusToggle(record)"
+              >
+                <a-switch :checked="record.userStatus === 'ENABLE'" />
+              </a-popconfirm>
             </template>
             <template v-else-if="column.key === 'action'">
               <a-space>
@@ -99,7 +103,6 @@ import {
 } from '@ant-design/icons-vue'
 import OrgTree from '@/components/OrgTree.vue'
 import { getUserPage, deleteUserByIds, updateUserStatus } from '@/api/user'
-import { getTestUserPage } from '@/testData/user'
 import AddUser from './add.vue'
 
 const { t } = useI18n()
@@ -135,7 +138,7 @@ const columns = computed(() => [
   { title: t('user.gender'), dataIndex: 'gender', key: 'gender', width: 60, align: 'center' },
   { title: t('user.phone'), dataIndex: 'phone', key: 'phone', width: 130 },
   { title: t('model.org'), dataIndex: 'orgName', key: 'org', width: 150 },
-  { title: t('user.userStatus'), dataIndex: 'status', key: 'status', width: 80, align: 'center' },
+  { title: t('user.userStatus'), dataIndex: 'userStatus', key: 'userStatus', width: 80, align: 'center' },
   { title: t('common.action'), key: 'action', width: 220, fixed: 'right' },
 ])
 
@@ -159,21 +162,11 @@ const fetchData = async () => {
     if (selectedOrgId.value) params.orgId = selectedOrgId.value
 
     const res = await getUserPage(params)
-    data.value = res.records || res.list || []
+    data.value = res.list || []
     paginationConfig.total = res.total || 0
   } catch (err) {
-    // API 请求失败时使用测试数据
-    console.warn('使用测试数据代替 API 请求')
-    const params = {
-      page: paginationConfig.current,
-      pageSize: paginationConfig.pageSize,
-      keyword: searchKeyword.value,
-      status: searchStatus.value,
-      orgId: selectedOrgId.value,
-    }
-    const res = getTestUserPage(params)
-    data.value = res.records
-    paginationConfig.total = res.total
+    console.error('获取用户列表失败:', err)
+    error('获取用户列表失败')
   } finally {
     loading.value = false
   }
@@ -215,12 +208,12 @@ const onSelectChange = (keys) => {
 }
 
 // 状态切换
-const handleStatusChange = async (record, checked) => {
-  const newStatus = checked ? 'ENABLE' : 'DISABLE'
+const handleStatusToggle = async (record) => {
+  const newStatus = record.userStatus === 'ENABLE' ? 'DISABLE' : 'ENABLE'
   try {
     await updateUserStatus({ id: record.id, status: newStatus })
-    success(checked ? '启用成功' : '禁用成功')
-    record.status = newStatus
+    success(newStatus === 'ENABLE' ? '启用成功' : '禁用成功')
+    record.userStatus = newStatus
   } catch (err) {
     console.error('更新状态失败:', err)
     error('更新状态失败')
