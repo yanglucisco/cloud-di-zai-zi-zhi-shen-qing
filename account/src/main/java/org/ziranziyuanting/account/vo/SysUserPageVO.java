@@ -15,7 +15,9 @@ public class SysUserPageVO {
     private String account;
     private String name;
     private String gender;
+    private String nickname;
     private String phone;
+    private String orgId;
     private String orgName;
     private String userStatus;
 }

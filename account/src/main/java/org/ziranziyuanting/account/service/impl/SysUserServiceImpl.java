@@ -76,18 +76,22 @@ public class SysUserServiceImpl extends CommonServiceImpl<SysUser> implements Sy
 
     @Override
     public Mono<String> update(SysUserUpdateParam param) {
-        return ReactiveUserContext.getUserId().flatMap(userId -> {
-            return this.findById(userId);
-        }).flatMap(user -> {
-            if (param.getGender() != null) user.setGender(param.getGender());
-            if (param.getName() != null) user.setName(param.getName());
-            if (param.getNickName() != null) user.setNickname(param.getNickName());
-            if (param.getEmail() != null) user.setEmail(param.getEmail());
-            if (param.getMobil() != null) user.setPhone(param.getMobil());
-            if (param.getBirthday() != null) user.setBirthday(param.getBirthday());
-            if (param.getAvatar() != null) user.setAvatar(param.getAvatar());
-            return this.saveOrUpdate(user);
-        }).map(u -> "更新用户信息成功");
+        // 管理端编辑他人时传入 id，否则更新当前登录用户
+        Mono<Long> userIdMono = param.getId() != null
+            ? Mono.just(param.getId())
+            : ReactiveUserContext.getUserId();
+        return userIdMono.flatMap(userId -> this.findById(userId))
+            .switchIfEmpty(Mono.error(new BusinessException("用户不存在")))
+            .flatMap(user -> {
+                if (param.getGender() != null) user.setGender(param.getGender());
+                if (param.getName() != null) user.setName(param.getName());
+                if (param.getNickName() != null) user.setNickname(param.getNickName());
+                if (param.getEmail() != null) user.setEmail(param.getEmail());
+                if (param.getMobil() != null) user.setPhone(param.getMobil());
+                if (param.getBirthday() != null) user.setBirthday(param.getBirthday());
+                if (param.getAvatar() != null) user.setAvatar(param.getAvatar());
+                return this.saveOrUpdate(user);
+            }).map(u -> "更新用户信息成功");
     }
 
     @Override
@@ -116,7 +120,9 @@ public class SysUserServiceImpl extends CommonServiceImpl<SysUser> implements Sy
                                     .account(user.getAccount())
                                     .name(user.getName())
                                     .gender(user.getGender())
+                                    .nickname(user.getNickname())
                                     .phone(user.getPhone())
+                                    .orgId(user.getOrgId() != null ? user.getOrgId().toString() : null)
                                     .orgName(orgNameMap.getOrDefault(user.getOrgId(), ""))
                                     .userStatus(user.getUserStatus())
                                     .build()));

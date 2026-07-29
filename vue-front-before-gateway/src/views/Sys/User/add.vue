@@ -5,7 +5,7 @@
       <a-row :gutter="16">
         <a-col :span="12">
           <a-form-item :label="t('user.account')" name="account">
-            <a-input v-model:value="form.account" :placeholder="t('user.account')" />
+            <a-input v-model:value="form.account" :placeholder="t('user.account')" :disabled="isEditMode" />
           </a-form-item>
         </a-col>
         <a-col :span="12">
@@ -82,7 +82,7 @@
 <script setup>
 import { reactive, ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { addUser } from '@/api/user'
+import { addUser, updateUser } from '@/api/user'
 import { getOrgTypesDic } from '@/api/dict'
 import { orgDataStore } from '@/store/orgData'
 import { useMessage } from '@/utils/useMessage'
@@ -93,6 +93,7 @@ const formRef = ref()
 const open = ref(false)
 const submitting = ref(false)
 const isEditMode = ref(false)
+const editRecordId = ref(null)
 const title = ref('新增用户')
 const genderOptions = ref([])
 const orgTreeData = ref([])
@@ -145,10 +146,20 @@ const showDrawer = (record = null) => {
   open.value = true
   if (record) {
     isEditMode.value = true
+    editRecordId.value = record.id
     title.value = '编辑用户'
-    Object.assign(form, record)
+    init()
+    Object.assign(form, {
+      account: record.account || '',
+      name: record.name || '',
+      gender: record.gender || undefined,
+      nickname: record.nickname || '',
+      phone: record.phone || '',
+      orgId: record.orgId || undefined,
+    })
   } else {
     isEditMode.value = false
+    editRecordId.value = null
     title.value = '新增用户'
     init()
   }
@@ -174,7 +185,14 @@ const onSubmit = async () => {
       submitData.birthDate = submitData.birthDate.format('YYYY-MM-DD')
     }
     if (isEditMode.value) {
-      // TODO: 编辑用户，后续实现
+      const editData = {
+        id: editRecordId.value,
+        name: form.name,
+        gender: form.gender,
+        nickName: form.nickname,
+        mobil: form.phone,
+      }
+      await updateUser(editData)
       success('修改用户成功!')
     } else {
       if (!submitData.orgId) {
@@ -187,7 +205,6 @@ const onSubmit = async () => {
     open.value = false
   } catch (err) {
     console.error('提交失败:', err)
-    debugger
     error(err?.response?.data?.message || err?.message || '提交失败，请稍后重试')
   } finally {
     submitting.value = false

@@ -144,8 +144,8 @@ const columns = computed(() => [
 
 // 性别显示映射
 const genderText = (gender) => {
-  if (gender === 'M' || gender === '男') return t('user.male')
-  if (gender === 'F' || gender === '女') return t('user.female')
+  if (gender === 'MALE' || gender === 'M' || gender === '男') return t('user.male')
+  if (gender === 'FEMALE' || gender === 'F' || gender === '女') return t('user.female')
   return t('user.unknown')
 }
 
@@ -234,8 +234,9 @@ const handleAddSuccess = () => {
 
 // 编辑用户
 const handleEdit = (record) => {
-  // TODO: 打开编辑用户抽屉/弹窗
-  console.log('编辑用户', record)
+  if (addUserRef.value) {
+    addUserRef.value.showDrawer(record)
+  }
 }
 
 // 删除单个用户
