@@ -17,7 +17,7 @@ public class AddOrgParam {
    private Long id;
    @NotNull(message =  "sortCode不能为空")
    private int sortCode;
-   @NotNull(message =  "parentId不能为空")
+  //  @NotNull(message =  "parentId不能为空")
    private Long parentId;
    @NotBlank(message =  "name不能为空")
    private String name;

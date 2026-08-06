@@ -38,9 +38,9 @@
                                 {{ classifyText }}
                             </span>
                         </template>
-                        <template v-if="column.key === 'sortCode'">
+                        <template v-if="column.key === 'createTime'">
                             <span>
-                                {{ sortText }}
+                                {{ createTimeText }}
                             </span>
                         </template>
                         <template v-if="column.key === 'action'">
@@ -97,7 +97,7 @@ const { success, error, warning, loading } = useMessage()
 const { t } = useI18n()
 const orgNameText = ref(t('org.orgName'))
 const classifyText = ref(t('org.classify'))
-const sortText = ref(t('org.sort'))
+const createTimeText = ref(t('org.createTime'))
 const actionText = ref(t('common.action'))
 const serachButtonText = ref(t('common.searchButton'))
 const addOrgRef = ref(null);
@@ -187,7 +187,7 @@ const findByName = () => {
     {
         find(paginationConfig.current, paginationConfig.pageSize, orgNameSerachKeyWord.value, orgTreeSelectNodeId.value);
     }
-    success('查询机构成功!');
+    // success('查询机构成功!');
 };
 const reset = () => {
     orgNameSerachKeyWord.value = '';
@@ -214,9 +214,10 @@ const find = async (page, pageSize, orgName = '', selectId = '') => {
         // Adjust based on your actual API response structure
         data.value = res.list || res;
         paginationConfig.total = res.total || res.length;
-
+        success('查询成功');
     } catch (error) {
         console.error("Failed to load org data:", error);
+        error('查询失败');
     } finally {
         tableState.loading = false;
     }
@@ -246,9 +247,9 @@ const columns = [
         key: 'category',
     },
     {
-        title: 'sortCode',
-        dataIndex: 'sortCode',
-        key: 'sortCode',
+        title: 'createTime',
+        dataIndex: 'createTime',
+        key: 'createTime',
     },
     {
         title: 'action',

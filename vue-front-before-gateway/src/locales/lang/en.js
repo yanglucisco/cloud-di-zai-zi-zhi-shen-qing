@@ -80,6 +80,13 @@ export default {
 		female: 'Female',
 		unknown: 'Unknown'
 	},
+	org: {
+		orgName: 'org name',
+		classify: 'class',
+		sort: 'sort',
+		addOrg: 'add',
+		createTime: 'create time'
+	},
 	notFound: {
 		title: '404',
 		subTitle: 'Sorry, the page you visited does not exist.',

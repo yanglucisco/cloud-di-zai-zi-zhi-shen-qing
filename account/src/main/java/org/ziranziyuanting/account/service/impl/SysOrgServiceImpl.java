@@ -19,6 +19,8 @@ import org.ziranziyuanting.account.vo.SysOrgTreeNodeVO;
 import org.ziranziyuanting.account.vo.SysOrgVO;
 import org.ziranziyuanting.common.service.impl.CommonServiceImpl;
 
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -46,7 +48,13 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
     public Mono<SysOrg> update(AddOrgParam parm) {
         return findById(parm.getId()).flatMap(item -> {
             item.setSortCode(parm.getSortCode());
-            item.setParentId(parm.getParentId());
+            if(ObjUtil.isNotNull(parm.getParentId())){
+                item.setParentId(parm.getParentId());
+            }
+            else
+            {
+                item.setParentId(null);
+            }
             item.setName(parm.getName());
             item.setCategory(parm.getCategory());
             return saveOrUpdate(item);
@@ -70,13 +78,14 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
     @Override
     public Flux<SysOrgTreeNodeVO> orgTree() {
         return sysOrgRepository.findAllNoDelete().collectList().flatMapMany(orgs -> {
-            List<SysOrgTreeNodeVO> vos = orgs.stream().map(doItem -> SysOrgTreeNodeVO.builder().title(doItem.getName())
+            List<SysOrgTreeNodeVO> vos = orgs.stream().map(doItem -> {
+                return SysOrgTreeNodeVO.builder().title(doItem.getName())
                     .key(doItem.getId().toString())
                     .label(doItem.getName())
                     .value(doItem.getId().toString())
                     .id(doItem.getId() + "")
-                    .parentId(doItem.getParentId().toString())
-                    .build()).toList();
+                    .parentId(getOrgParentId(doItem))
+                    .build();}).toList();
             SysOrgTreeNodeVO root = SysOrgTreeNodeVO.builder().id("0").parentId("-1")
                     .title("root").key("root")
                     .label("root").value("root").build();
@@ -84,7 +93,10 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
             return Flux.fromIterable(root.getChildren());
         });
     }
-
+    private String getOrgParentId(SysOrg org){
+        var r = ObjUtil.isNull(org.getParentId())?"":org.getParentId().toString();
+        return r;
+    }
     private void buildTreeDataDO(SysOrgTreeNodeVO dictDataDO, List<SysOrgTreeNodeVO> all) {
         var children = getChildren(dictDataDO, all);
         // SysDictVO vo = SysDictVO.builder().value(dictDataDO.getValue()).build();
@@ -125,7 +137,7 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
                 var vo = SysOrgVO.builder()
                         .id(org.getId().toString())  
                         .key(org.getId().toString())     // Convert Long to String
-                        .parentId(org.getParentId().toString()) // Convert Long to String
+                        .parentId(getOrgParentId(org)) // Convert Long to String
                         .name(org.getName())
                         .code(org.getCode())
                         .sortCode(org.getSortCode())

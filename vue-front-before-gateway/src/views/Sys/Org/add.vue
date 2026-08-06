@@ -5,7 +5,7 @@
             <a-row :gutter="16">
                 <a-col :span="24">
                     <a-form-item label="上级组织：" name="parentId">
-                        <org-select-tree ref="orgSelectTreeRef"></org-select-tree>
+                        <org-select-tree ref="orgSelectTreeRef" @clear="clearParentId"></org-select-tree>
                     </a-form-item>
                 </a-col>
             </a-row>
@@ -91,6 +91,9 @@ const init = () => {
     form.value.sortCode = 0;
     form.value.parentId = '';
     form.value.name = '';
+};
+const clearParentId = () => {
+    form.value.parentId = '0';
 };
 // Modified showDrawer to accept record
 const showDrawer = (record = null) => {

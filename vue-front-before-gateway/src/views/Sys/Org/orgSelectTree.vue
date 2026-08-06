@@ -14,8 +14,14 @@ import { orgDataStore } from '@/store/orgData';
 const value = ref(undefined);
 const orgData = orgDataStore();
 const treeData = computed(() => orgData.treeData);
+const emit = defineEmits([
+  'clear'
+])
 const handleChange = (val, label, extra) => {
   orgData.setCurrentNodeValue(val);
+  if(val === undefined){
+    emit('clear');
+  }
 };
 const setCurrentNode = (currentNode) => {
   value.value = currentNode;
