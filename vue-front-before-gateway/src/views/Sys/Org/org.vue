@@ -1,17 +1,18 @@
 <template>
     <div class="container">
         <div class="left">
-            <OrgTree @select="handleTreeSelect" />
+            <OrgTree ref="orgTreeRef" @select="handleTreeSelect" />
         </div>
         <div class="right">
             <div class="right-top">
                 <a-space style="margin: 5px;">
                     <span>{{ orgNameText }}:</span>
                     <a-input v-model:value="orgNameSerachKeyWord" :placeholder="orgNameText" />
+                    <a-checkbox v-model:checked="isFindAllComponaiesChecked">查询所有公司</a-checkbox>
                     <a-button :icon="h(SearchOutlined)" type="primary" :loading="tableState.loading" @click="findByName">{{ serachButtonText
                         }}</a-button>
+                    
                     <a-button :icon="h(ReloadOutlined)" @click="reset">重 置</a-button>
-                    <a-button :icon="h(ReloadOutlined)" @click="test">测 试</a-button>
                 </a-space>
             </div>
             <div class="right-bottom">
@@ -90,6 +91,8 @@ import addOrg from './add.vue'
 import OrgTree from '@/components/OrgTree.vue'
 import { useMessage } from '@/utils/useMessage';
 
+const orgTreeRef = ref(null)
+const isFindAllComponaiesChecked = ref(true)
 const { success, error, warning, loading } = useMessage()
 const { t } = useI18n()
 const orgNameText = ref(t('org.orgName'))
@@ -129,6 +132,7 @@ const handleTreeSelect = (keys, info) => {
     if (keys.length > 0) {
         // Reset to page 1 when filtering by tree node
         paginationConfig.current = 1;
+        orgTreeSelectNodeId.value = info.node.id;
         find(1, paginationConfig.pageSize, orgNameSerachKeyWord.value, info.node.id);
     }
 };
@@ -174,9 +178,15 @@ const handleTableChange = (pag, filters, sorter) => {
     // 重新加载数据
     find(pag.current, pag.pageSize);
 };
-
+const orgTreeSelectNodeId = ref("");
 const findByName = () => {
-    find(paginationConfig.current, paginationConfig.pageSize, orgNameSerachKeyWord.value);
+    if(isFindAllComponaiesChecked.value === true){
+        find(paginationConfig.current, paginationConfig.pageSize, orgNameSerachKeyWord.value);
+    }
+    else
+    {
+        find(paginationConfig.current, paginationConfig.pageSize, orgNameSerachKeyWord.value, orgTreeSelectNodeId.value);
+    }
     success('查询机构成功!');
 };
 const reset = () => {
@@ -249,6 +259,9 @@ const columns = [
 const data = ref([
 ]);
 const handleAddSuccess = () => {
+    if(orgTreeRef.value){
+        orgTreeRef.value.getData();
+    }
     find(paginationConfig.current, paginationConfig.pageSize);
 };
 onMounted(async () => {

@@ -98,7 +98,12 @@ onMounted(async () => {
     if (orgData.treeData && orgData.treeData.length > 0) {
       localTreeData.value = orgData.treeData
     } else {
-      try {
+      getData();
+    }
+  }
+})
+const getData = async () => {
+  try {
         const res = await getAllOrgs()
         localTreeData.value = res
         orgData.setTreeData(res)
@@ -107,8 +112,9 @@ onMounted(async () => {
       } catch (error) {
         console.error('加载组织树数据失败:', error)
       }
-    }
-  }
+};
+defineExpose({
+  getData
 })
 </script>
 
