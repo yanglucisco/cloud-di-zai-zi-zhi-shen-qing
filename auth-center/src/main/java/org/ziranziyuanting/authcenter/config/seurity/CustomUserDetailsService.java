@@ -22,7 +22,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        SysUser sysUser = sysUserService.getOneOpt(new LambdaQueryWrapper<>(SysUser.class).eq(SysUser::getAccount, username)).orElse(new SysUser());
+        SysUser sysUser = sysUserService.getOneOpt(new LambdaQueryWrapper<>(SysUser.class).eq(SysUser::getAccount, username)).orElse(null);
+        if (sysUser == null) {
+            throw new UsernameNotFoundException("用户不存在");
+        }
+        // 用户被禁用时不在此处抛异常，而是通过 enabled=false 交给 Spring Security 的
+        // preAuthenticationChecks 在密码校验前抛出 DisabledException。
+        // 在 loadUserByUsername 里手动抛 DisabledException 会被 DaoAuthenticationProvider
+        // 包装成 InternalAuthenticationServiceException，导致登录页无法识别为"用户已禁用"。
         List<String> adminRoles = new ArrayList<>();
         adminRoles.add("ROLE_admin");
         adminRoles.add("ROLE_ADMIN123123123");
@@ -47,7 +54,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .accountNonExpired(true)
                 .accountNonLocked(true)
                 .credentialsNonExpired(true)
-                .enabled(true)
+                .enabled(!"DISABLE".equals(sysUser.getUserStatus()))
                 .build();
         return customUserDetails;
         // if ("yanglu1".equals(username)) {
