@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -18,6 +19,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -62,13 +64,14 @@ public class SecurityConfig {
 
     @Bean
     @Order(2)
-    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http, StringRedisTemplate redisTemplate) throws Exception {
         http
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/mylogin", "/login.html", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                         .requestMatchers("/custom-login", "/login").permitAll()
+                        .requestMatchers("/captcha").permitAll()
                         .requestMatchers("/home").permitAll()
                         // .requestMatchers("/test/**").permitAll()
                         .requestMatchers("/my/**").permitAll()
@@ -83,7 +86,9 @@ public class SecurityConfig {
                                 .loginPage("/custom-login")
                                 // .successHandler(customAuthenticationSuccessHandler)
                                 // 指定处理登录认证的POST请求地址，与HTML表单action一致
-                                .loginProcessingUrl("/login"));
+                                .loginProcessingUrl("/login"))
+                // 登录验证码校验：位于 CSRF 之后、用户名密码认证之前
+                .addFilterBefore(new CaptchaVerifyFilter(redisTemplate), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
