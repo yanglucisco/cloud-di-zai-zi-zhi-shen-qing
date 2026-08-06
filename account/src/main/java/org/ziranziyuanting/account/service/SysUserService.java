@@ -1,5 +1,7 @@
 package org.ziranziyuanting.account.service;
 
+import java.util.List;
+
 import org.ziranziyuanting.account.entity.SysUser;
 import org.ziranziyuanting.account.param.SysUserPageParam;
 import org.ziranziyuanting.account.param.SysUserParam;
@@ -33,6 +35,11 @@ public interface SysUserService extends CommonService<SysUser>
      * 更新用户状态（启用/禁用）
      */
     Mono<String> updateStatus(SysUserStatusParam param);
+
+    /**
+     * 批量逻辑删除用户
+     */
+    Mono<String> delete(List<Long> ids);
 
 }
 

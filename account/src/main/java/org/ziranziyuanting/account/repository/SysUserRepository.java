@@ -1,5 +1,7 @@
 package org.ziranziyuanting.account.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.ziranziyuanting.account.entity.SysUser;
@@ -23,4 +25,10 @@ public interface SysUserRepository extends CommonReactiveCrudRepository<SysUser>
      */
     @Query("SELECT COUNT(*) FROM sys_user WHERE delete_flag = 'NOT_DELETED' AND (:keyword IS NULL OR :keyword = '' OR account LIKE CONCAT('%', :keyword, '%') OR name LIKE CONCAT('%', :keyword, '%')) AND (:status IS NULL OR :status = '' OR user_status = :status) AND (:orgId IS NULL OR org_id = :orgId)")
     Mono<Long> countUsers(String keyword, String status, Long orgId);
+
+    /**
+     * 批量逻辑删除用户
+     */
+    @Query("UPDATE sys_user SET delete_flag = 'DELETED' WHERE id IN (:ids) AND delete_flag = 'NOT_DELETED'")
+    Mono<Integer> logicalDeleteByIds(List<Long> ids);
 }

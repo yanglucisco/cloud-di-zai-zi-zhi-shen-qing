@@ -14,6 +14,7 @@ import org.ziranziyuanting.account.config.ReactiveUserContext;
 import org.ziranziyuanting.account.param.SysUserPageParam;
 import org.ziranziyuanting.account.param.SysUserParam;
 import org.ziranziyuanting.account.param.SysUserStatusParam;
+import org.ziranziyuanting.account.param.DeleteUserParam;
 import org.ziranziyuanting.account.param.SysUserUpdateParam;
 import org.ziranziyuanting.account.param.UpdatePassParam;
 import org.ziranziyuanting.account.repository.SysOrgRepository;
@@ -93,6 +94,11 @@ public class SysUserController {
     @PostMapping("updateStatus")
     public ResponseEntity<Mono<String>> updateStatus(@Valid @RequestBody SysUserStatusParam param) {
         return ResponseEntity.ok(sysUserService.updateStatus(param));
+    }
+
+    @PostMapping("delete")
+    public ResponseEntity<Mono<String>> delete(@RequestBody DeleteUserParam param) {
+        return ResponseEntity.ok(sysUserService.delete(param.getIds()));
     }
 }
 

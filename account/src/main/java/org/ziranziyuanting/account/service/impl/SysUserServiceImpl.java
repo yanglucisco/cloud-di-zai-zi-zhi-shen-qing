@@ -145,5 +145,15 @@ public class SysUserServiceImpl extends CommonServiceImpl<SysUser> implements Sy
                 })
                 .map(u -> "更新用户状态成功");
     }
+
+    @Override
+    public Mono<String> delete(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Mono.just("没有需要删除的用户");
+        }
+        SysUserRepository repo = (SysUserRepository) this.repository;
+        return repo.logicalDeleteByIds(ids)
+                .map(updatedRows -> "成功删除 " + updatedRows + " 个用户");
+    }
 }
 
