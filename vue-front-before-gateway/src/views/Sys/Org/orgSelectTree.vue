@@ -8,19 +8,20 @@
   </a-tree-select>
 </template>
 <script setup>
-import { ref, onMounted, onUnmounted, getCurrentInstance } from 'vue';
+import { ref, computed } from 'vue';
 import { orgDataStore } from '@/store/orgData';
 
-const value = ref({});
+const value = ref(undefined);
 const orgData = orgDataStore();
-const treeData = ref([]);
-const handleChange = (value, label, extra) => {
-  console.log('change 事件触发，当前值：', value);
-  orgData.setCurrentNodeValue(value);
+const treeData = computed(() => orgData.treeData);
+const handleChange = (val, label, extra) => {
+  orgData.setCurrentNodeValue(val);
 };
-onMounted(() => {
-  treeData.value = orgData.treeData;
-});
-onUnmounted(() => {
-});
+const setCurrentNode = (currentNode) => {
+  value.value = currentNode;
+  orgData.setCurrentNodeValue(currentNode);
+};
+defineExpose({
+  setCurrentNode
+})
 </script>

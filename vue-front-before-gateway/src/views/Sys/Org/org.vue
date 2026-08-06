@@ -188,6 +188,7 @@ const editOrg = (record) => {
     if (addOrgRef.value) {
         // Pass the record to the child component to populate the form
         addOrgRef.value.showDrawer(record);
+        addOrgRef.value.setParentOrg();
     }
 };
 const find = async (page, pageSize, orgName = '', selectId = '') => {

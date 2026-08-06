@@ -1,11 +1,11 @@
 <template>
     <a-drawer :title="title" :width="360" :open="open" :body-style="{ paddingBottom: '80px' }"
-        :footer-style="{ textAlign: 'right' }" @close="onClose">
+        :footer-style="{ textAlign: 'right' }" :force-render="true" @close="onClose">
         <a-form ref="formRef" :model="form" :rules="rules" layout="vertical">
             <a-row :gutter="16">
                 <a-col :span="24">
                     <a-form-item label="上级组织：" name="parentId">
-                        <org-select-tree></org-select-tree>
+                        <org-select-tree ref="orgSelectTreeRef"></org-select-tree>
                     </a-form-item>
                 </a-col>
             </a-row>
@@ -85,6 +85,7 @@ const rules = {
     ]
 };
 const open = ref(false);
+const orgSelectTreeRef = ref({});
 const init = () => {
     form.value.category = undefined;
     form.value.sortCode = 0;
@@ -100,8 +101,11 @@ const showDrawer = (record = null) => {
         isEditMode.value = true;
         // Populate form with record data
         // Use spread operator or individual assignment to avoid reactivity issues if needed
+        // debugger
         form.value = { ...record };
-        
+        // if(orgSelectTreeRef.value){
+        //     orgSelectTreeRef.value.setCurrentNode(form.value.parentId);
+        // }
         // Ensure parentId is set correctly if it comes from a different field name in backend
         if (!form.value.parentId && record.parentId) {
              form.value.parentId = record.parentId;
@@ -151,8 +155,14 @@ onMounted(() => {
     orgTypeOptions.value = getOrgTypesDic();
     init();
 });
+const setParentOrg = () => {
+    if (orgSelectTreeRef.value && typeof orgSelectTreeRef.value.setCurrentNode === 'function') {
+        orgSelectTreeRef.value.setCurrentNode(form.value.parentId);
+    }
+};
 // 只暴露指定的方法/数据
 defineExpose({
-    showDrawer
+    showDrawer,
+    setParentOrg
 });
 </script>

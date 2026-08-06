@@ -1,14 +1,18 @@
 package org.ziranziyuanting.account.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.ziranziyuanting.account.entity.SysDict;
 import org.ziranziyuanting.account.entity.SysOrg;
 import org.ziranziyuanting.account.param.AddOrgParam;
 import org.ziranziyuanting.account.param.PageParam;
+import org.ziranziyuanting.account.repository.SysDictRepository;
 import org.ziranziyuanting.account.repository.SysOrgRepository;
 import org.ziranziyuanting.account.service.SysOrgService;
 import org.ziranziyuanting.account.vo.SysOrgTreeNodeVO;
@@ -24,10 +28,12 @@ import reactor.core.publisher.Mono;
 @CacheConfig(cacheNames = "userCache")
 public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysOrgService {
     private final SysOrgRepository sysOrgRepository;
+    private final SysDictRepository sysDictRepository;
 
-    public SysOrgServiceImpl(SysOrgRepository repository, SysOrgRepository sysOrgRepository) {
+    public SysOrgServiceImpl(SysOrgRepository repository, SysOrgRepository sysOrgRepository, SysDictRepository sysDictRepository) {
         super(repository);
         this.sysOrgRepository = sysOrgRepository;
+        this.sysDictRepository = sysDictRepository;
     }
 
     @Override
@@ -101,9 +107,22 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
         @Override
     public Flux<SysOrgVO> findOrgsByPage(PageParam pageParam) {
         PageRequest pageRequest = PageRequest.of(pageParam.getPage(), pageParam.getPageSize());
-        // Fetch entities and map them to VO
-        return sysOrgRepository.findByNameContainingAndPage(pageParam.getName(), pageParam.getParentId() ,pageRequest)
-                .map(org -> SysOrgVO.builder()
+        Mono<Map<String, String>> dictMono = sysDictRepository.findByType("ORG_TYPE")
+        .collectMap(dict -> dict.getDictValue(), dict -> dict.getDictLabel())
+        .cache();
+
+        Mono<List<SysOrg>> orgMono = sysOrgRepository.findByNameContainingAndPage(pageParam.getName(), pageParam.getParentId() ,pageRequest)
+        .collectList();
+
+        Mono<List<SysOrgVO>> resultMono = Mono.zip(dictMono, orgMono)
+        .map(tuple -> {
+            Map<String, String> dictMap = tuple.getT1();
+            List<SysOrg> orgs = tuple.getT2();
+            List<SysOrgVO> orgVos = new ArrayList<SysOrgVO>();
+            orgs.forEach(org -> {
+                String label = dictMap.get(org.getCategory());
+                org.setCategory(label);
+                var vo = SysOrgVO.builder()
                         .id(org.getId().toString())  
                         .key(org.getId().toString())     // Convert Long to String
                         .parentId(org.getParentId().toString()) // Convert Long to String
@@ -113,7 +132,13 @@ public class SysOrgServiceImpl extends CommonServiceImpl<SysOrg> implements SysO
                         .category(org.getCategory())
                         .createTime(org.getCreateTime())
                         .updateTime(org.getUpdateTime())
-                        .build());
+                        .build();
+                orgVos.add(vo);
+            });
+            return orgVos;
+        });
+        var r = resultMono.flatMapMany(Flux::fromIterable);
+        return r;
     }
 
     @Override
