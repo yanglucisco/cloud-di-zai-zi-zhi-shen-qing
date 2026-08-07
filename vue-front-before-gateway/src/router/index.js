@@ -108,12 +108,15 @@ async function isFromAuthorServer() {
 }
 const dynamicCreateRouter = (parentName, routerItems) => {
   routerItems.forEach(item => {
+    console.log('item.name = ' + item.name);
     let itemRoute = {
         //此处不能直接用item.path，因为有parentName，所以需要拼接完整路径
         path: item.component,//'sys',
         name: item.name,//'sys',
         component: routerMap.routerMap.get(item.name)
     }
+    const component = routerMap.routerMap.get(item.name);
+    console.log('component = ' + component);
     router.addRoute(parentName, itemRoute)
     dynamicCreateRouter(item.name, item.children)
   })

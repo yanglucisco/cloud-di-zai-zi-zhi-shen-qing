@@ -23,16 +23,10 @@
                         @click="() => (collapsed = !collapsed)" />
                     <menu-fold-outlined style="margin-left: 5px;" v-else class="trigger"
                         @click="() => (collapsed = !collapsed)" />
-                    <a-menu class="layout-items-center">
-                        <a-menu-item key="xiTong" style="width: auto; overflow: visible;">
-                            <AppstoreAddOutlined />
-                            <span>系统</span>
-                        </a-menu-item>
-                        <a-menu-item key="yeWu">
-                            <AppstoreOutlined />
-                            <span>业务</span>
-                        </a-menu-item>
-                    </a-menu>
+                    <a-breadcrumb style="margin-left: 10px;">
+                        <a-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="item.path">{{ item.title
+                        }}</a-breadcrumb-item>
+                    </a-breadcrumb>
                 </div>
                 <div style="display: flex;margin-left: auto;">
                     <UserBar @usercenterClick="menuItemClickEvent"></UserBar>
@@ -46,7 +40,7 @@
     </a-layout>
 </template>
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, watchEffect } from 'vue'
 import {
     MenuUnfoldOutlined, MenuFoldOutlined, VideoCameraOutlined, UserOutlined, UploadOutlined, AppstoreAddOutlined,
     AppstoreOutlined, HomeOutlined, SettingOutlined
@@ -63,7 +57,10 @@ import appConfig from '@/store/Singleton'
 import LayoutMenu from './LayoutMenu.vue'
 import routerMap from '../router/RouterPath.js'
 import { Logger } from '@/utils/logger'
+import { useRoute } from 'vue-router'
+import { generateBreadcrumbs } from '@/utils/breadcrumb'  // 导入 TS 函数
 
+const route = useRoute()
 const icons = new Map()
 icons.set('UserOutlined', UserOutlined)
 const { success, error, warning, loading } = useMessage();
@@ -81,21 +78,25 @@ const menuItemClickEvent = (item) => {
     navRef.value.addPaneItem(item.title, item.name, item.path);
 }
 const removeItemFunc = (routePath) => {
-    
+
     let { selected, open } = getMenuState(routePath)
-    leftMenu.selectedKeys = selected 
-    leftMenu.openKeys = open 
+    leftMenu.selectedKeys = selected
+    leftMenu.openKeys = open
 }
-const dynamicCreateRouter = (parentName, routerItems) => {
+const dynamicCreateRouter = (parentName, routerItems, pathTitleMap) => {
     routerItems.forEach(item => {
+        console.log('item.name = ' + item.name);
         let itemRoute = {
             //此处不能直接用item.path，因为有parentName，所以需要拼接完整路径
             path: item.component,//'sys',
             name: item.name,//'sys',
             component: routerMap.routerMap.get(item.name)
         }
-        router.addRoute(parentName, itemRoute)
-        dynamicCreateRouter(item.name, item.children)
+        const component = routerMap.routerMap.get(item.name);
+        console.log('component = ' + component);
+        router.addRoute(parentName, itemRoute);
+        pathTitleMap.push({ title: item.title, path: item.path });
+        dynamicCreateRouter(item.name, item.children, pathTitleMap);
     })
 }
 // 根据当前路由计算菜单状态
@@ -112,10 +113,22 @@ const getMenuState = (path) => {
 
     return { selected, open }
 }
+const pathTitleMapArra = [];
+let pathTitleMap = {};
 // mounted 生命周期
 onMounted(() => {
+    // breadcrumbs.value = [
+    //     {name: '名称1', path: 'path1'},{name: '名称2', path: 'path1/paht2'},
+    //     {name: '名称3', path: 'path1/path2/path3'},{name: '名称4', path: 'paht1/path2/path3/path4'}
+    // ];
     const menus = appConfig.getData('menus')
-    dynamicCreateRouter('root', menus)
+    dynamicCreateRouter('root', menus, pathTitleMapArra)
+    debugger
+    // 转换为 pathTitleMap
+    pathTitleMap = pathTitleMapArra.reduce((map, item) => {
+        map[item.path] = item.title
+        return map
+    }, {});
     menuList.value = menus
     let { selected, open } = getMenuState(router.currentRoute.value.path)
     if (selected.length === 1 && selected[0] === 'home') {
@@ -125,6 +138,29 @@ onMounted(() => {
     leftMenu.selectedKeys = selected // ['caidan1']
     leftMenu.openKeys = open //['/', 'orgstru', 'sanjimulu']
 })
+const breadcrumbs = ref([]);
+// 监听路由变化
+watchEffect(() => {
+    if (route.path) {
+        // 模拟数据库数据
+        // const pathTitleMap = {
+        //     '/orgstru/sanjimulu/caidan1': '菜单1',
+        //     '/index1': '系统首页1',
+        //     '/index': '系统首页',
+        //     '/orgstru': '组织架构',
+        //     '/orgstru/orgmanage': '组织管理',
+        //     '/orgstru/usermanage': '用户管理',
+        //     '/orgstru/positionmanage': '职位管理',
+        //     '/menumanage': '菜单管理'
+        // };
+        if (breadcrumbs != undefined) {
+            breadcrumbs.value = generateBreadcrumbs(route.path, pathTitleMap)
+        }
+
+    }
+})
+
+
 </script>
 <style scoped>
 /* 可滚动的菜单容器 */
@@ -153,7 +189,8 @@ onMounted(() => {
     padding: 0;
     display: flex;
     justify-content: space-between;
-     align-items: center; /* 垂直居中 */
+    align-items: center;
+    /* 垂直居中 */
 }
 
 .heder .trigger {
